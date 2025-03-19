@@ -1,0 +1,162 @@
+# vim: ft=gitconfig:
+
+# Identity
+[user]
+    name = {{ .name }}
+    email = {{ .email }}
+
+[credential]
+    helper = {{ .chezmoi.homeDir }}/.local/bin/pass-git-helper
+    useHttpPath = true
+
+# Reasonable defaults
+[init]
+    defaultBranch = main
+[core]
+    pager = less
+[submodule]
+    recurse = true
+[push]
+    default = simple
+[pull]
+    ff = only
+[commit]
+    verbose = true
+[color]
+    ui = true
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+
+# Editor
+[core]
+    editor = nvim
+    autocrlf = input
+    pager = delta
+	fsmonitor = true
+[interactive]
+    diffFilter = delta --color-only
+[delta]
+    navigate = true
+[diff]
+    colorMoved = default
+    tool = nvimdiff
+[difftool]
+    prompt = false
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[merge]
+    conflictstyle = diff3
+    tool = vimdiff
+[mergetool]
+    prompt = false
+    keepBackup = false
+[mergetool "vimdiff"]
+    path = nvim
+
+# Aliases
+#
+# See the following website article for a good introduction:
+#   http://haacked.com/archive/2014/07/28/github-flow-aliases/
+#
+[alias]
+    cc = commit
+    cf = commit --fixup
+    ca = commit --amend
+
+    # Edit this file
+    ec = config --global -e
+
+# Inspection
+    # Show short status.
+    st = status -s
+
+    # Show latest commit.
+    last = log -1 HEAD
+    lastdiff = diff HEAD~
+
+    # Show a compact log.
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%an]" --decorate
+
+    # Show the commit graph.
+    graph = log --decorate=short --simplify-merges --oneline --graph
+    glog = log --color --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Open status within Vim using the fugitive plugin.
+    # - Make the status window the only one.
+    # - Add a buffer mapping that will stage a hunk and move the screen so the cursor is on top.
+    vstatus = !vim -c Git -c \"silent only\" -c \"autocmd FileType fugitive nmap <buffer> S szt\"
+    vs = !git vstatus
+
+    # Open log within Vim using the fugitive plugin.
+    vlog = !vim +"Git\\ log" +"only"
+    vl = !git vlog
+
+    # Search the repository for the text
+    vack = "!f() { vim -c \"Ack '$@'\"; }; f"
+    vv = !vim -c GV
+    vf = !vim -c "GV!"
+
+    # Launch a GUI without messing up the terminal.
+    gui = !gitg </dev/null >/dev/null 2>&1 &
+
+    # List all text files in repository
+    ls-text-files = grep --cached -Il ''
+
+# Checking out
+    co = checkout
+    cob = checkout -b
+    prev = checkout HEAD~1
+    sync = !git submodule sync --recursive && git submodule update --init --recursive
+
+# Cleaning working directory
+    undo = reset HEAD~1 --mixed
+    save = !git add -A && git commit -m 'SAVEPOINT'
+    wip = !git add -u && git commit -m 'WIP'
+    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
+    snap = !git add -A && git commit -qm 'SNAP SAVEPOINT' && git reset HEAD~1
+    shred = "!f() { git checkout -- ${1-.} && git clean -f ${1-.}; }; f"
+    sweep = "!f() { git clean -n $*; printf 'Clean? [Y/n] '; read answer; if echo ${answer} | grep -Eq '^[nN][oO]?$'; then return; fi; git clean -f $*; }; f"
+
+# Branch management
+    up = pull -p
+    usurp = push --force
+    surrender = !git reset --hard $(git rev-parse --abbrev-ref HEAD@{upstream})
+    pushthis = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
+
+    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
+    bdone = "!f() { git checkout ${1-master} && git pull -p && git bclean ${1-master}; }; f"
+
+# Rebasing
+    rb = rebase
+    rbc = rebase --continue
+    rba = rebase --abort
+    rbs = !git rebase -i --autosquash \"${REVIEW_BASE-master}\"
+
+# Cherry-picking
+    cp = cherry-pick
+    cpc = cherry-pick --continue
+    cpa = cherry-pick --abort
+
+# Code review
+    shame = blame -w -M
+
+    # List files which have changed since REVIEW_BASE.
+    files = !git diff --name-only $(git merge-base HEAD \"${REVIEW_BASE-master}\")
+
+    # List files which have changed since REVIEW_BASE and show diff stat for each.
+    stat = !git diff --stat $(git merge-base HEAD \"${REVIEW_BASE-master}\")
+
+    # Open all files changed since REVIEW_BASE in Vim tabs and run fugitive's
+    # :Gdiff in each tab.
+    review = !vim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-master}\"
+
+    # Same as the above, except specify names of files as arguments,
+    # instead of opening all files.
+    reviewone = !vim -p +\"tabdo Gdiff ${REVIEW_BASE-master}\"
+
+# Online
+    serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
+    package = !sh -c 'git archive --format=tar --prefix=$1/ $2 | gzip > $1.tar.gz' -

@@ -1,0 +1,44 @@
+# i3 config file (v4)
+# vim: set ft=i3config tw=100 cc=100 nowrap:
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+set $mod Mod4
+set $alt Mod1
+
+set $terminal             /usr/bin/alacritty
+set $terminal_alternate   /usr/bin/urxvt
+set $browser              /usr/bin/firefox
+set $launcher             "rofi -show run"
+set $monitor_primary      DP-6.1
+set $monitor_secondary    DP-6.2
+set $border_width         3
+set $gaps_inner           6
+set $gaps_outer           0
+set $lock_image           ~/.local/share/i3lock/default.png
+
+font pango:Noto Sans 9
+
+# hide borders when there is only one container
+hide_edge_borders smart
+
+# enable popup during fullscreen
+popup_during_fullscreen smart
+
+# window focus follows your mouse movements as the mouse crosses window borders
+focus_follows_mouse yes
+
+# disable titlebar
+default_border pixel $border_width
+default_floating_border pixel $border_width
+
+# set gaps (i3-gaps)
+gaps inner $gaps_inner
+gaps outer $gaps_outer
+
+# only enable gaps on a workspace when there is at least one container
+smart_gaps on
+
+include /etc/sway/config.d/*
+include config.d/*.conf
+include `hostname`.conf

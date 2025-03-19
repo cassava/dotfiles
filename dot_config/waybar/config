@@ -1,0 +1,153 @@
+// vim: ft=jsonc:
+
+{
+    // "layer": "top", // Waybar at top layer
+    // "position": "bottom", // Waybar position (top|bottom|left|right)
+    "height": 32, // Waybar height (to be removed for auto height)
+    // "width": 1280, // Waybar width
+    "spacing": 4, // Gaps between modules (4px)
+    // Choose the order of the modules
+    "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad", "sway/window" ],
+    "modules-center": [],
+    "modules-right": ["idle_inhibitor", "pulseaudio", "network", "cpu", "memory", "temperature", "backlight", "battery", "clock", "tray"],
+    // Modules configuration
+    // "sway/workspaces": {
+    //     "disable-scroll": true,
+    //     "all-outputs": true,
+    //     "warp-on-scroll": false,
+    //     "format": "{name}: {icon}",
+    //     "format-icons": {
+    //         "1": "",
+    //         "2": "",
+    //         "3": "",
+    //         "4": "",
+    //         "5": "",
+    //         "urgent": "",
+    //         "focused": "",
+    //         "default": ""
+    //     }
+    // },
+    "sway/mode": {
+        "format": "<span style=\"italic\">{}</span>"
+    },
+    "sway/scratchpad": {
+        "format": "{icon}  {count}",
+        "show-empty": false,
+        "format-icons": ["", ""],
+        "tooltip": true,
+        "tooltip-format": "{app}: {title}"
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        // "icon-size": 21,
+        "spacing": 10
+    },
+    "clock": {
+        "timezone": "Europe/Berlin",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d  / %H:%M}"
+    },
+    "cpu": {
+        "tooltip": false,
+        "interval": 1,
+        "format": "<span color='#ffffff'></span>  {icon0}{icon1}{icon2}{icon3}{icon4}{icon5}{icon6}{icon7}",
+        "format-icons": [
+            "<span color='#98971a'>▁</span> ", // white
+            "<span color='#98971a'>▂</span> ", // white
+            "<span color='#d79921'>▃</span> ", // yellow
+            "<span color='#d79921'>▄</span> ", // yellow
+            "<span color='#d65d0e'>▅</span> ", // orange
+            "<span color='#d65d0e'>▆</span> ", // orange
+            "<span color='#cc241d'>▇</span> ", // red
+            "<span color='#cc241d'>█</span> "  // red
+        ]
+    },
+    "memory": {
+        "format": "<span color='#ffffff'></span>  {icon} {}%",
+        "format-icons": [
+            "<span color='#98971a'>▁</span> ", // white
+            "<span color='#98971a'>▂</span> ", // white
+            "<span color='#d79921'>▃</span> ", // yellow
+            "<span color='#d79921'>▄</span> ", // yellow
+            "<span color='#d65d0e'>▅</span> ", // orange
+            "<span color='#d65d0e'>▆</span> ", // orange
+            "<span color='#cc241d'>▇</span> ", // red
+            "<span color='#cc241d'>█</span> "  // red
+        ]
+    },
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "interval": 1,
+        "critical-threshold": 90,
+        // "format-critical": "{temperatureC}°C {icon}",
+        "format": "{icon} {temperatureC}°C",
+        "format-icons": [
+            "<span color='#ffffff'></span>",
+            "<span color='#98971a'></span>",
+            "<span color='#d79921'></span>",
+            "<span color='#d65d0e'></span>",
+            "<span color='#cc241d'></span>"
+        ]
+    },
+    "backlight": {
+        // "device": "acpi_video1",
+        "format": "{icon} {percent}%",
+        "format-icons": ["", "", "", "", "", "", "", "", ""]
+    },
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}   {capacity}%",
+        "format-charging": "<span color='#ffffff'></span>  {capacity}%",
+        "format-plugged": "<span color='#ffffff'></span>  {capacity}%",
+        "format-alt": "{icon}   {time}",
+        // "format-good": "", // An empty format will hide the module
+        // "format-full": "",
+        "format-icons": [
+            "<span color='#cc241d'></span>",
+            "<span color='#d65d0e'></span>",
+            "<span color='#d79921'></span>",
+            "<span color='#ffffff'></span>",
+            "<span color='#ffffff'></span>"
+        ]
+    },
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "<span color='#ffffff'></span>  {essid} ({signalStrength}%)",
+        "format-ethernet": "<span color='#ffffff'></span> {ipaddr}/{cidr}",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr} via {gwaddr}",
+        "format-linked": "<span color='#ffffff'></span> {ifname} (No IP)",
+        "format-disconnected": "⚠  Disconnected",
+        "on-click": "iwgtk"
+    },
+    "pulseaudio": {
+        // "scroll-step": 1, // %, can be a float
+        "format": "<span color='#ffffff'>{icon}</span> {volume}%  {format_source}",
+        "format-muted": "<span color='#cc241d'></span>  {format_source}",
+        "format-bluetooth": "<span color='#ffffff'>{icon}</span> {volume}%   {format_source}",
+        "format-bluetooth-muted": "<span color='#cc241d'></span>  {icon}  {format_source}",
+        "format-source": "<span color='#ffffff'></span>  {volume}%",
+        "format-source-muted": "<span color='#cc241d'></span>",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    }
+}
+

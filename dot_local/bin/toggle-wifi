@@ -1,0 +1,13 @@
+#!/bin/sh
+# Toggle system wifi
+
+device_id=$(rfkill list | sed -nr 's/([0-9]+):.*Wireless LAN/\1/p')
+device_blocked=$(rfkill list ${device_id} | sed -nr 's/^.*Soft blocked:\s*(\S+).*/\1/p')
+if [[ "${device_blocked}" == "no" ]]; then
+    echo "Disabling wireless device: ${device_id}"
+    notify-send "Wifi disabled"
+else
+    echo "Enabling wireless device: ${device_id}"
+    notify-send "Wifi enabled"
+fi
+sudo rfkill toggle ${device_id}

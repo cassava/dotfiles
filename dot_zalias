@@ -1,0 +1,51 @@
+# ~/.zalias
+# vim: set ft=zsh:
+#
+# This file contains extra alias definitions for the interactive Zsh
+# and can be sourced by .zshrc
+#
+
+# Aliases redefining commands
+alias ls='ls -bhCF --color=auto'
+alias lsd='lsd --icon=never -F'
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias pacman='pacman --color=auto'
+alias du='du -h'
+alias df='df -h'
+alias lsblk='lsblk -o NAME,RM,SIZE,RO,TYPE,MOUNTPOINT,UUID'
+alias rg='rg --max-columns=192 --max-columns-preview'
+
+# Other than ls...
+alias ll='ls -lbhCF --color=auto'
+alias la='ls -abhCF --color=auto'
+alias lal='ls -ablhCF --color=auto'
+
+# no spelling correction for important commands
+alias cp='nocorrect cp'
+alias mkdir='nocorrect mkdir -p'
+alias mv='nocorrect mv'
+alias rm='nocorrect rm'
+
+# Additional aliases
+alias mux="tmuxinator"
+alias sys="sudo systemctl"
+alias sysu="systemctl --user"
+alias sue="sudoedit"
+alias dotnow="dotbot -c install.conf.yaml"
+
+function cdz() { cd $(git rev-parse --show-toplevel) }
+
+# Chezmoi aliases
+alias ched="chezmoi edit --watch"
+alias chezvous="chezmoi -S ~/.local/share/chezvous"
+
+# Neovim aliases
+function vimz() { vim "$(which "$1")" }
+alias vimi="chezmoi edit --watch ~/.config/nvim/init.lua"
+alias vimr="nvim +Renamer"
+alias vi="nvim --clean"
+
+function pass() {
+    EDITOR="nvim -u NONE -n" /usr/bin/pass "$@"
+}

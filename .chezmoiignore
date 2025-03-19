@@ -1,0 +1,10 @@
+README.md
+
+# Nvim
+.config/nvim/lazy-lock.json
+
+{{ if .is_headless -}}
+.config/alacritty
+.config/ghostty
+.xkb
+{{ end -}}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xkbConfigRegistry SYSTEM "xkb.dtd">
+<xkbConfigRegistry version="1.1">
+  <layoutList>
+    <layout>
+      <configItem>
+        <name>usi</name>
+        <shortDescription>usde</shortDescription>
+        <description>English (US, intl., cassava custom)</description>
+        <countryList>
+          <iso3166Id>US</iso3166Id>
+          <iso3166Id>DE</iso3166Id>
+        </countryList>
+        <languageList>
+          <iso639Id>eng</iso639Id>
+          <iso639Id>deu</iso639Id>
+        </languageList>
+      </configItem>
+    </layout>
+  </layoutList>
+</xkbConfigRegistry>

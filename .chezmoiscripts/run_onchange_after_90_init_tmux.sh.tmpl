@@ -1,0 +1,15 @@
+#!/bin/bash
+# 
+# .tmux.conf hash: {{ include "dot_tmux.conf" | sha256sum }}
+#
+
+tpm_dir=~/.local/state/tmux/plugins/tpm
+
+if [[ ! -d "$tpm_dir" ]]; then
+    git clone https://github.com/tmux-plugins/tpm "$tpm_dir"
+fi
+
+echo "Initializing tmux configuration..."
+"$tpm_dir/bin/clean_plugins"
+"$tpm_dir/bin/install_plugins"
+"$tpm_dir/bin/update_plugins" all

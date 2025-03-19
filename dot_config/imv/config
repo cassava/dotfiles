@@ -1,0 +1,7 @@
+; vim: set ft=ini:
+
+[options]
+
+[binds]
+
+Shift+x = exec rm $imv_current_file

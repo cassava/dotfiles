@@ -1,0 +1,12 @@
+#!/bin/sh
+# Toggle system wifi
+
+touchpad_enabled=$(synclient -l | grep -ce 'TouchpadOff.*0')
+if [[ "${touchpad_enabled}" == "1" ]]; then
+    echo "Disabling touchpad"
+    notify-send "Touchpad disabled"
+else
+    echo "Enabling touchpad"
+    notify-send "Touchpad enabled"
+fi
+synclient TouchpadOff=${touchpad_enabled}

@@ -1,0 +1,140 @@
+# ~/.zshrc is loaded after ~/.zshenv and /etc/zshrc
+# vim: set ft=zsh fdm=marker:
+#
+# Add this line to enable profiling:
+#
+#   zmodload zsh/zprof
+#
+
+ZSH_USER_ZALIAS=~/.zalias
+ZSH_USER_ZDIR=~/.zdir
+ZSH_HOST_ZDIR=~/.zdir/+$(hostname)
+
+# Functions {{{1
+function source_zdir_files() {
+    local glob="$1"
+
+    if [[ -d "$ZSH_USER_ZDIR" ]]; then
+        local globpath="$ZSH_USER_ZDIR/$glob"
+        for file in $~globpath(N); do
+            source "$file"
+        done
+    fi
+
+    if [[ -d "$ZSH_HOST_ZDIR" ]]; then
+        local globpath="$ZSH_HOST_ZDIR/$glob"
+        for file in $~globpath(N); do
+            source "$file"
+        done
+    fi
+}
+
+# Environment {{{1
+typeset -U PATH path        # Remove duplicates from array.
+typeset -U CDPATH cdpath
+typeset -U FPATH fpath
+typeset -U MANPATH manpath
+
+# Options {{{1
+#
+# For help on these options, see: man zshoptions
+# The options are arranged in the order of the man page.
+#
+
+# :Changing Directories: {{{2
+setopt AUTO_PUSHD           # Automatically call pushd when using cd.
+setopt PUSHD_IGNORE_DUPS    # Don't push multiple copies of the same directory.
+export DIRSTACKSIZE=20
+export DIRSTACKFILE=$HOME/.zdirstack
+
+# :Completion: {{{2
+setopt COMPLETE_IN_WORD     # Complete inside words instead of jumping to the end.
+
+# :Expansion and Globbing: {{{2
+setopt NO_EXTENDED_GLOB     # Do not treat the `#`, `~` and `^` as patterns for globbing.
+setopt NO_GLOB_DOTS         # Require a leading `.` in a filename to match hidden files.
+setopt MARK_DIRS            # Append a trailing `/` to all directories from globs.
+
+# :History: {{{2
+setopt APPEND_HISTORY       # Append history to the history file. [default]
+setopt EXTENDED_HISTORY     # Save `: timestamp:duration;` for each history item.
+setopt HIST_FCNTL_LOCK      # Use more efficient locking available on modern systems.
+setopt HIST_IGNORE_ALL_DUPS # Remove older duplicate entries when appending an entry.
+setopt HIST_IGNORE_SPACE    # Don't append to history if command starts with a space.
+setopt HIST_NO_STORE        # Don't append `history` command to history.
+setopt HIST_REDUCE_BLANKS   # Remove superfluous blanks from commands added to history.
+setopt SHARE_HISTORY        # Import new commands from the history file.
+export HISTFILE="$HOME/.zhistory"
+export HISTSIZE=10000
+export SAVEHIST=10000
+
+# :Input / Output: {{{2
+setopt NO_CORRECT           # Don't ever correct what I write. [default]
+setopt NO_FLOW_CONTROL      # Disable ^S/^Q output flow control keybindings.
+setopt INTERACTIVE_COMMENTS # Allow comments even in interactive shells.
+setopt HASH_CMDS            # Remember location of command after first-use. [default]
+umask 022                   # Ensure default permissions are 755 and 644 respectively.
+
+# :Job Control: {{{2
+setopt NO_BG_NICE           # Do not run background jobs at lower priority.
+setopt LONG_LIST_JOBS       # Print job notifications in the long format.
+
+# :Prompting: {{{2
+setopt PROMPT_SUBST         # Allow param, command and arithmetic expansion in prompts.
+export REPORTTIME=10        # Seconds after which to print running time of commands.
+watch=(notme root)          # Watch for everyone but me and root.
+
+# :Zle: {{{2
+setopt NO_BEEP              # Do not beep on error in ZLE.
+
+# :Keybindings: {{{2
+bindkey -e                  # Use emacs keybindings by default.
+
+# Plugins {{{1
+#
+# Plugins are defined in ~/.zimrc and options in ~/.zimenv
+# See: https://github.com/zimfw/zimfw
+#
+ZIM_HOME=~/.local/opt/zim
+ZIM_ENV=~/.zimenv
+
+# Download zimfw plugin manager if missing.
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  echo "Installing zim:fw ..."
+  curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
+      https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+fi
+
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  echo "Updating zim:fw modules ..."
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+
+source ${ZIM_ENV}
+source ${ZIM_HOME}/init.zsh
+
+# Source External {{{1
+#
+# This needs to happen after zsh-vi-mode plugin is loaded.
+# That's why it's wrapped in here.
+#
+function zvm_after_init() {
+    bindkey '\e.' insert-last-word
+
+    # Up and Down navigate the global history
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+
+    autoload -z edit-command-line
+    zle -N edit-command-line
+    bindkey "^X^E" edit-command-line
+
+    [[ -f "$ZSH_USER_ZALIAS" ]] && source "$ZSH_USER_ZALIAS"
+    [[ -f ~/.dircolors ]] && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+    source_zdir_files "*.zsh"
+}
+
+# Clean Up {{{1
+unset source_zdir_files
