@@ -1,0 +1,16 @@
+# ~/.zimrc is only loaded when using zim commands such as
+# zim install, zim update, etc.
+# vim: set ft=zsh:
+#
+
+zmodule jeffreytse/zsh-vi-mode
+zmodule mafredri/zsh-async
+zmodule sindresorhus/pure --source async.zsh --source pure.zsh
+zmodule tarrasch/zsh-autoenv
+zmodule djui/alias-tips
+zmodule supercrabtree/k
+zmodule zsh-users/zsh-completions
+zmodule zsh-users/zsh-autosuggestions
+zmodule cassava/zsh-dirhist --on-pull 'cargo install --force --path .'
+zmodule completion
+zmodule zsh-users/zsh-syntax-highlighting

@@ -1,0 +1,20 @@
+# ~/.zimenv is loaded before zim plugins are initialized.
+# vim: set ft=zsh fdm=marker:
+#
+
+# zmodule sindresorhus/pure {{{1
+zstyle :prompt:pure:git:stash show yes
+PURE_PROMPT_SYMBOL='$'
+PURE_PROMPT_VICMD_SYMBOL='<'
+if [[ "$TERM" == "alacritty" ]]; then
+    PURE_PROMPT_SYMBOL=''        # U+F105
+    PURE_PROMPT_VICMD_SYMBOL=''  # U+F104
+fi
+
+# zmodule mafredri/zsh-autoenv {{{1
+AUTOENV_FILE_ENTER=.autoenv.zsh
+AUTOENV_FILE_LEAVE=.autoenv.zsh
+AUTOENV_HANDLE_LEAVE=1
+
+# zmodule completion {{{1
+zstyle ':completion::complete:*' cache-path ~/.cache/zsh/zcompcache

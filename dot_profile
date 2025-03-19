@@ -1,0 +1,25 @@
+# vim: set ft=sh:
+#
+# /etc/profile or ~/.profile is read once every login.
+# If you make any changes here, you will need to manually source the
+# file or log out and in again for them to take effect.
+#
+
+profile_dir="$HOME/.profile.d"
+
+# Set reasonable defaults
+export DE="xfce"
+export BROWSER="microsoft-edge"
+export EDITOR="nvim"
+export PAGER="less"
+export TERMINAL="alacritty"
+export LESS="-AFIRs"
+export PATH="$HOME/.local/bin:$HOME/.local/sbin:$PATH"
+
+# Source user profile files
+[[ -n "$(echo "$ZSH_VERSION")" ]] && setopt nullglob || shopt -s nullglob
+if [[ -d ${profile_dir} ]]; then
+    for file in ${profile_dir}/*.{zsh,sh}; do
+        source "$file"
+    done
+fi
