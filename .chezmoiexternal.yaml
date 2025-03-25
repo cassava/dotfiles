@@ -1,0 +1,61 @@
+# ".local/deb":
+#   type: "archive"
+#   url: "https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz"
+#   stripComponents: 1
+#   exclude: LICENSE
+#
+# ".local/bin/bat":
+#   type: "archive-file"
+#   url: "https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz"
+#   stripComponents: 1
+#   path: "bat"
+#
+# ".local/bin/binocle":
+#   type: "archive-file"
+#   url: "https://github.com/sharkdp/binocle/releases/download/v0.3.2/binocle-v0.3.2-x86_64-unknown-linux-musl.tar.gz"
+#   stripComponents: 1
+#   path: "binocle"
+#
+# ".local/bin/btm":
+#   type: "archive-file"
+#   url: "https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom_x86_64-unknown-linux-musl.tar.gz"
+#   stripComponents: 1
+#   path: "btm"
+#
+# ".local/bin/diskus":
+# ".local/bin/fd":
+# ".local/bin/fzf":
+# ".local/bin/git-delta":
+# ".local/bin/gojq":
+#   type: "archive-file"
+#   url: "https://github.com/itchyny/gojq/releases/download/v0.12.17/gojq_v0.12.17_linux_amd64.tar.gz"
+#   stripComponents: 1
+#   path: "gojq"
+#
+# ".local/bin/hexyl":
+# ".local/bin/hyperfine":
+# ".local/bin/lsd":
+# ".local/bin/nvim":
+#
+# ".local/bin/numbat":
+#   type: "archive-file"
+#   url: "https://github.com/sharkdp/numbat/releases/download/v1.16.0/numbat-v1.16.0-x86_64-unknown-linux-musl.tar.gz"
+#   stripComponents: 1
+#   path: "numbat"
+#
+# ".local/bin/rg":
+#   type: "archive-file"
+#   url: "https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz"
+#   stripComponents: 1
+#   path: "rg"
+#
+# ".local/bin/sd":
+# ".local/bin/uv":
+# ".local/bin/watchexec":
+#
+# # If python
+# "ruff":
+#
+# # If bazel
+# "buildifier":
+# "bazel":

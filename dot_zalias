@@ -53,5 +53,8 @@ alias sue="sudoedit"
 alias dotnow="dotbot -c install.conf.yaml"
 alias vimi="nvim ~/.config/nvim/init.lua"
 
+alias cze="chezmoi edit"
+alias chezvous="chezmoi -S ~/.local/share/chezvous"
+
 function cdz() { cd $(git rev-parse --show-toplevel) }
 function vimz() { vim $(which $@) }
