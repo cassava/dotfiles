@@ -1,0 +1,45 @@
+archlinux:
+  packages:
+    - bat
+    - bat-extras
+    - binocle
+    - bottom
+    - duf
+    - diskus
+    - exa
+    - fasd
+    - fd
+    - fzf
+    - git
+    - git-delta
+    - htop
+    - hexyl
+    - hyperfine
+    - inetutils
+    - jq
+    - yq
+    - lsd
+    - lsof
+    - mc
+    - mlocate
+    - neovim
+    - pv
+    - ripgrep
+    - sd
+    - the_silver_searcher
+    - tmate
+    - tmux
+    - tree
+    - watchexec
+    - zsh
+    - uv
+    - pass
+    - ruff
+    - rustup
+    # gui apps: {{ if .opts.with_gui }}
+    - otf-firamono-nerd
+    - ttf-firacode-nerd
+    - ghostty
+    - alacritty
+    - flameshot
+    # / {{ end }}

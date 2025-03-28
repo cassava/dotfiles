@@ -5,9 +5,11 @@
 
 ---
 data:
-  name: {{ $name | $quote }}
+  name: {{ $name | quote }}
   email: {{ $email | quote }}
   opts:
     with_gui: {{ $with_gui }}
     with_extras: true
     with_dev: true
+  sys:
+    uname_arch: {{ output "uname" "-m" | trim }}

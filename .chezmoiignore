@@ -1,1 +1,6 @@
-pkgs_*
+README.md
+{{ if not .opts.with_gui -}}
+.config/alacritty
+.config/ghostty
+.xkb
+{{ end -}}
