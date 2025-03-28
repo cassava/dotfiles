@@ -1,0 +1,13 @@
+# vim: set ft=yaml:
+# {{- $name     := promptStringOnce . "name"      "Name" "Benjamin Morgan" -}}
+# {{- $email    := promptStringOnce . "email"     "Email address" "cassava@iexu.de" -}}
+# {{- $with_gui := promptBoolOnce   . "with_gui"  "Install GUI configuration and apps" false -}}
+
+---
+data:
+  name: {{ $name | $quote }}
+  email: {{ $email | quote }}
+  opts:
+    with_gui: {{ $with_gui }}
+    with_extras: true
+    with_dev: true

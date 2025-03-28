@@ -27,34 +27,20 @@ alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv'
 alias rm='nocorrect rm'
 
-# Filetype Aliases
-alias -s jar="/usr/bin/java -jar"
-alias -s pdf="/usr/bin/evince"
-alias -s dvi="/usr/bin/evince"
-alias -s hs="/usr/bin/vim"
-alias -s tex="/usr/bin/vim"
-alias -s mp3="/usr/bin/mpg123"
-alias -s wav="/usr/bin/aplay"
-alias -s ogg="/usr/bin/alsaplayer"
-alias -s html="/usr/bin/firefox"
-
-# Video files
-alias -s flv="/usr/bin/mpv"
-alias -s avi="/usr/bin/mpv"
-alias -s mpg="/usr/bin/mpv"
-alias -s mkv="/usr/bin/mpv"
-alias -s mp4="/usr/bin/mpv"
-
 # Additional aliases
 alias mux="tmuxinator"
 alias sys="sudo systemctl"
 alias sysu="systemctl --user"
 alias sue="sudoedit"
 alias dotnow="dotbot -c install.conf.yaml"
-alias vimi="nvim ~/.config/nvim/init.lua"
 
+function cdz() { cd $(git rev-parse --show-toplevel) }
+
+# Chezmoi aliases
 alias cze="chezmoi edit"
 alias chezvous="chezmoi -S ~/.local/share/chezvous"
 
-function cdz() { cd $(git rev-parse --show-toplevel) }
-function vimz() { vim $(which $@) }
+# Neovim aliases
+function vimz() { vim "$(which "$1")" }
+alias vimi="chezmoi edit --watch ~/.config/nvim/init.lua"
+alias vimr="nvim +Renamer"

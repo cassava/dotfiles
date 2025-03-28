@@ -1,0 +1,81 @@
+packages:
+  archlinux:
+    - bat
+    - bat-extras
+    - binocle
+    - bottom
+    - duf
+    - diskus
+    - exa
+    - fasd
+    - fd
+    - fzf
+    - git
+    - git-delta
+  # - gojq
+    - htop
+    - hexyl
+    - hyperfine
+    - inetutils
+    - jq
+    - yq
+    - lsd
+    - lsof
+    - mc
+    - mlocate
+    - neovim
+  # - numbat
+    - pv
+    - ripgrep
+    - sd
+    - the_silver_searcher
+    - tmate
+    - tmux
+    - tree
+    - watchexec
+    - zsh
+    # python
+    - uv
+    - ruff
+    # bazel
+  # - buildifier
+    - bazel
+    # rust
+    - rustup
+    # {{- if .opts.with_gui -}}
+    - otf-firamono-nerd
+    - ttf-firacode-nerd
+    - ghostty
+    - alacritty
+    - flameshot
+    - pass
+    # {{- endif -}}
+  ubuntu:
+    - bat
+    - fasd
+    - fd-find
+    - fzf
+    - git
+    - glances
+    - htop
+    - inetutils-ping
+    - inetutils-telnet
+    - inetutils-tools
+    - lsof
+    - mc
+    - mlocate
+    - ripgrep
+    - silversearcher-ag
+    - tmate
+    - tmux
+    - tmuxinator
+    - tree
+    - zsh
+    - https://github.com/ClementTsang/bottom/releases/download/0.10.2/bottom-musl_0.10.2-1_amd64.deb
+    - https://github.com/FiloSottile/age/releases/download/v1.2.1/age-v1.2.1-linux-amd64.tar.gz
+  github:
+    - https://github.com/sharkdp/bat/releases/download/v0.25.0/bat-v0.25.0-x86_64-unknown-linux-musl.tar.gz
+    - https://github.com/sharkdp/binocle/releases/download/v0.3.2/binocle-v0.3.2-x86_64-unknown-linux-musl.tar.gz
+    - https://github.com/itchyny/gojq/releases/download/v0.12.17/gojq_v0.12.17_linux_amd64.tar.gz
+    - https://github.com/sharkdp/numbat/releases/download/v1.16.0/numbat-v1.16.0-x86_64-unknown-linux-musl.tar.gz
+    - https://github.com/BurntSushi/ripgrep/releases/download/14.1.1/ripgrep-14.1.1-x86_64-unknown-linux-musl.tar.gz
