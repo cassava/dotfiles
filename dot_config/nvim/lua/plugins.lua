@@ -466,7 +466,7 @@ return {
       { ",o", "<cmd>AerialToggle!<cr>", desc = "Toggle outline" },
     },
     config = true,
-  }
+  },
 
 
 -- Colorscheme
@@ -928,7 +928,7 @@ return {
 
   -- { "RaafatTurki/hex.nvim",
   --   config = true,
-  -- }
+  -- },
 
 -- Treesitter
 
