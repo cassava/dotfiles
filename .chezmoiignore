@@ -1,4 +1,8 @@
 README.md
+
+# Nvim
+lazy-lock.json
+
 {{ if not .opts.with_gui -}}
 .config/alacritty
 .config/ghostty

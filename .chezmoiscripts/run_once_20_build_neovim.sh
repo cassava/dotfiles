@@ -6,16 +6,20 @@
 set -o
 
 version_min="0.10.0"
-version_cur=$(nvim_version)
 build_neovim=true
 
 nvim_version() {
-    if command -v nvim >/dev/null; then
-        nvim --version | sed -rn 's/^NVIM v([0-9]+\.[0-9]+\.[0-9]+).*$/\1/p'
-    else
-        echo 0.0.0
-    fi
+    (
+        PATH="${PATH}:/usr/local/bin:$HOME/.local/bin"
+        if command -v nvim >/dev/null; then
+            nvim --version 2>/dev/null | sed -rn 's/^NVIM v([0-9]+\.[0-9]+\.[0-9]+).*$/\1/p'
+        else
+            echo 0.0.0
+        fi
+    )
 }
+
+version_cur=$(nvim_version)
 
 is_ubuntu() {
     command -v apt-get >/dev/null

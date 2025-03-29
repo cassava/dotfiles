@@ -1,0 +1,5 @@
+{{- if (eq .chezmoi.osRelease.id "arch") }}
+{{- template "archlinux.sh" . }}
+{{- else if (eq .chezmoi.osRelease.id "ubuntu") }}
+{{- template "ubuntu.sh" . }}
+{{- end }}

@@ -2,8 +2,8 @@
 
 # Identity
 [user]
-    name = Ben Morgan
-    email = {{- .email | quote -}}
+    name = {{ .name }}
+    email = {{ .email }}
 
 [credential]
     helper = cache --timeout=14400
@@ -19,6 +19,8 @@
     default = simple
 [pull]
     ff = only
+[commit]
+    verbose = true
 [color]
     ui = true
 [filter "lfs"]
@@ -43,8 +45,6 @@
     keepBackup = false
 [mergetool "vimdiff"]
     path = nvim
-[commit]
-    verbose = true
 
 # Aliases
 #
