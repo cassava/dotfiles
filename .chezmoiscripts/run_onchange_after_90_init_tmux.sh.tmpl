@@ -1,0 +1,9 @@
+#!/bin/bash
+# 
+# .tmux.conf hash: {{ include "dot_tmux.conf" | sha256sum }}
+#
+
+echo "Initializing tmux configuration..."
+~/.local/state/tmux/plugins/tpm/bin/clean_plugins
+~/.local/state/tmux/plugins/tpm/bin/install_plugins
+~/.local/state/tmux/plugins/tpm/bin/update_plugins

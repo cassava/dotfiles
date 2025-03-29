@@ -1,4 +1,4 @@
-require("config.options")
+require("options")
 require("util").bootstrap()
 require("lazy").setup({
   spec = {
@@ -15,7 +15,7 @@ require("lazy").setup({
       end,
     },
     { import = "plugins" },
-    { import = "plugins.lang" },
+    { import = "lang" },
   },
   defaults = {
     lazy = false
@@ -44,6 +44,4 @@ require("lazy").setup({
     },
   },
 })
-require("config.keymaps")
-require("config.autocmds")
-require("config.neovide")
+require("config")

@@ -37,10 +37,11 @@ alias dotnow="dotbot -c install.conf.yaml"
 function cdz() { cd $(git rev-parse --show-toplevel) }
 
 # Chezmoi aliases
-alias cze="chezmoi edit"
+alias ched="chezmoi edit --watch"
 alias chezvous="chezmoi -S ~/.local/share/chezvous"
 
 # Neovim aliases
 function vimz() { vim "$(which "$1")" }
 alias vimi="chezmoi edit --watch ~/.config/nvim/init.lua"
 alias vimr="nvim +Renamer"
+alias vimv="nvim -u NONE"
