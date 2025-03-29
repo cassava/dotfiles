@@ -4,10 +4,19 @@ set -e
 
 cache_dir="${XDG_CACHE_DIR-$HOME/.cache}/chezmoi"
 install_dir=/usr/local
+font_dir=~/.local/share/fonts
 
 apt_packages=(
     age
+    autoconf
+    automake
+    cmake
+    curl
     fasd
+    fzf
+    g++
+    gettext
+    git
     git
     htop
     inetutils-ping
@@ -15,15 +24,15 @@ apt_packages=(
     inetutils-tools
     lsof
     mc
-    mlocate
-    ripgrep
+    pass
     silversearcher-ag
     tmate
     tmux
     tmuxinator
     tree
+    unzip
     zsh
-    pass
+
 # {{ if .opts.with_gui }}
     ghostty
     alacritty
@@ -32,7 +41,7 @@ apt_packages=(
 )
 
 github_debs=(
-    {{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat-musl_*-%s.deb" .chezmoi.arch) }}
+    {{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd-musl_*_%s.deb" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "sharkdp/numbat" (printf "numbat-musl_*_%s.deb" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "sharkdp/hyperfine" (printf "hyperfine-musl_*_%s.deb" .chezmoi.arch) }}
@@ -47,24 +56,40 @@ github_debs=(
 )
 
 github_tarballs=(
-    {{ gitHubLatestReleaseAssetURL "junegunn/fzf" (printf "fzf-*-linux_%s.tar.gz" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "neovim/neovim" (printf "nvim-linux-%s.tar.gz" "x86_64") }}
+)
+
+github_binballs=(
     {{ gitHubLatestReleaseAssetURL "itchyny/gojq" (printf "gojq_*_linux_%s.tar.gz" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "chmln/sd" (printf "sd-*-%s-unknown-linux-musl.tar.gz" "x86_64") }}
     {{ gitHubLatestReleaseAssetURL "astral-sh/uv" (printf "uv-%s-unknown-linux-musl.tar.gz" "x86_64") }}
 )
+github_binballs_want=(
+    gojq
+    uv
+    uvx
+    sd
+)
 
-github_binaries=(
+github_binfiles=(
     {{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildifier-linux-%s" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildozer-linux-%s" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "unused_deps-linux-%s" .chezmoi.arch) }}
 )
 
 github_fonts=(
+# {{ if .opts.with_gui }}
     {{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "FiraCode.tar.xz" }}
     {{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "FiraMono.tar.xz" }}
     {{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "Inconsolata.tar.xz" }}
+# {{ end }}
 )
+
+package_debs=()
+package_tarballs=()
+binary_tarballs=()
+binary_files=()
+font_tarballs=()
 
 download_asset() {
     local list="$1"
@@ -73,51 +98,57 @@ download_asset() {
     local filename="$(basename "$url")"
     local dest="$cache_dir/$filename"
 
-    if [[ ! -f "$dest" ]]; then
-        return
+    if [[ -f "$dest" ]]; then
+	echo "found: $filename"
+    else
+        echo "downloading: $filename"
+        wget -O "$dest" "$url"
     fi
-
-    wget -O "$dest" "$url"
-    declare "$list+=("$filename")"
+    eval "$list+=('$dest')"
 }
 
-package_debs=()
-package_tarballs=()
-binary_files=()
-font_tarballs=()
 download_assets() {
     for url in "${github_debs[@]}"; do download_asset package_debs "$url"; done
     for url in "${github_tarballs[@]}"; do download_asset package_tarballs "$url"; done
+    for url in "${github_binballs[@]}"; do download_asset binary_tarballs "$url"; done
     for url in "${github_binaries[@]}"; do download_asset binary_files "$url"; done
     for url in "${github_fonts[@]}"; do download_asset font_tarballs "$url"; done
 }
 
 install_assets() {
-    # Intall packages
+    # Install packages
+    echo "installing: ${apt_packages[@]}"
     sudo apt install -y "${apt_packages[@]}"
 
     # Install debs
+    echo "installing: ${package_debs[@]}"
     sudo dpkg -i "${package_debs[@]}"
 
     # Install tarballs
-    (
-        cd /usr/local || exit 1
-        for file in "${package_tarballs[@]}"; do
-            sudo tar xf --strip-components=1 "$file"
-        done
-    )
+    for file in "${package_tarballs[@]}"; do
+        echo "extracting: ${file}"
+        sudo tar -C "$install_dir" --strip-components=1 -xf "$file"
+    done
+
+    # Install binballs
+    for file in "${binary_tarballs[@]}"; do
+        echo "extracting: ${file}"
+        sudo tar -C "$install_dir/bin" --strip-components=1 -xf "$file" "${github_binballs_wants[@]}"
+    done
 
     # Install binaries
-    (
-        for file in "${binary_files[@]}"; do
-            sudo install -m755 "$file" /usr/local/bin/
-        done
-    )
+    for file in "${binary_files[@]}"; do
+        echo "copying: ${binary_files[@]}"
+        sudo install -m755 "$file" "$install_dir/bin/"
+    done
 
     # Install fonts
-    (
-        # TODO
-    )
+    mkdir -p ~/.local/share/fonts
+    for file in "${font_tarballs[@]}"; do
+        echo "extracting font: $file"
+        tar -C "$font_dir" -xf "$file" --wildcards "*.ttf" "*.otf"
+    done
 }
 
 download_assets
+install_assets
