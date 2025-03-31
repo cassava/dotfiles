@@ -8,3 +8,7 @@ README.md
 .config/ghostty
 .xkb
 {{ end -}}
+
+{{ if not .is_private -}}
+.config/pass-git-helper
+{{ end -}}
