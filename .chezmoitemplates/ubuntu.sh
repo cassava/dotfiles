@@ -2,7 +2,9 @@
 
 set -e
 
-cache_dir="{{ .chezmoi.cacheDir }}/scripts"
+cache_dir="{{ .chezmoi.cacheDir }}/packages"
+state_dir="{{ .chezmoi.homeDir }}/.local/state/chezmoi"
+install_list="$state_dir/installed_packages.txt"
 install_dir=/usr/local
 font_dir=~/.local/share/fonts
 
@@ -89,18 +91,31 @@ binary_tarballs=()
 binary_files=()
 font_tarballs=()
 
+asset_filename() {
+    local url="$1"
+    local sum="$(echo "$url" | md5sum - | cut -f1 -d' ')"
+    local base="$(basename "$url")"
+    echo "$base" | sed -r "s/.*/${sum}_\\0/"
+}
+
 download_asset() {
     local list="$1"
     local url="$2"
 
-    local filename="$(basename "$url")"
+    local basename="$(basename "$url")"
+    local filename="$(asset_filename "$url")"
     local dest="$cache_dir/$filename"
 
+    if grep --fixed-strings --quiet "$filename" "$install_list"; then
+        echo "skipping: $basename"
+        return
+    fi
+
     if [[ -f "$dest" ]]; then
-	echo "found: $filename"
+        echo "found: $filename"
     else
         echo "downloading: $filename"
-        wget -O "$dest" "$url"
+        wget -q -O "$dest" "$url"
     fi
     eval "$list+=('$dest')"
 }
@@ -113,47 +128,80 @@ download_assets() {
     for url in "${github_fonts[@]}"; do download_asset font_tarballs "$url"; done
 }
 
-install_assets() {
-    # Install packages
-    echo "installing: ${apt_packages[@]}"
-    sudo apt install -y "${apt_packages[@]}"
+install_packages() {
+    local filtered_packages=()
+    for pkg in "${apt_packages[@]}"; do
+        if ! grep --quiet "^$pkg$" "$install_list"; then
+            filtered_packages+=("$pkg")
+            echo "installing: ${pkg}"
+        fi
+    done
 
-    # Install debs
-    echo "installing: ${package_debs[@]}"
-    sudo dpkg -i "${package_debs[@]}"
+    if [[ ${#filtered_packages[@]} -gt 0 ]]; then
+        sudo apt-get -qq install -y "${filtered_packages[@]}"
+        for pkg in "${filtered_packages[@]}"; do
+            echo "${pkg}" >> "$install_list"
+        done
+    fi
+}
 
+install_debs() {
+    for file in "${package_debs[@]}"; do
+        echo "installing: ${file}"
+        sudo dpkg -i "${file}" >/dev/null || continue
+        echo "${file}" >> "$install_list"
+    done
+}
+
+install_tarballs() {
     # Install tarballs
     for file in "${package_tarballs[@]}"; do
         echo "extracting: ${file}"
-        sudo tar -C "$install_dir" --strip-components=1 -xf "$file"
+        sudo tar -C "$install_dir" --strip-components=1 -xf "$file" || continue
+        echo "${file}" >> "$install_list"
     done
 
     # Install binballs
     for file in "${binary_tarballs[@]}"; do
         echo "extracting: ${file}"
-        sudo tar -C "$install_dir/bin" --strip-components=1 -xf "$file" "${github_binballs_wants[@]}"
+        sudo tar -C "$install_dir/bin" --strip-components=1 -xf "$file" "${github_binballs_wants[@]}" || continue
+        echo "${file}" >> "$install_list"
     done
 
     # Install binaries
     for file in "${binary_files[@]}"; do
         echo "copying: ${binary_files[@]}"
-        sudo install -m755 "$file" "$install_dir/bin/"
+        sudo install -m755 "$file" "$install_dir/bin/" || continue
+        echo "${file}" >> "$install_list"
     done
+}
 
+install_fonts() {
     # Install fonts
+    mkdir -p ~/.local/share/fonts
+    for file in "${font_tarballs[@]}"; do
+        echo "extracting font: $file"
+        local extract_pattern="*.ttf"
+        if tar -tf "$file" | grep -q '.*\.otf$'; then
+            extract_pattern="*.otf"
+        fi
+        tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern" || continue
+        echo "${file}" >> "$install_list"
+    done
+    fc-cache -f "$font_dir"
+}
+
+install_assets() {
+    install_packages
+    install_debs
+    install_tarballs
     if {{ not .is_headless }}; then
-        mkdir -p ~/.local/share/fonts
-        for file in "${font_tarballs[@]}"; do
-            echo "extracting font: $file"
-            local extract_pattern="*.ttf"
-            if tar -tf "$file" | grep -q '.*\.otf$'; then
-                extract_pattern="*.otf"
-            fi
-            tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern"
-        done
-        fc-cache -fv "$font_dir"
+        install_fonts
     fi
 }
 
+mkdir -p "$cache_dir"
+mkdir -p "$state_dir"
+touch "$install_list"
 download_assets
 install_assets
