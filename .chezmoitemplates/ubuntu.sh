@@ -12,6 +12,7 @@ apt_packages=(
     age
     autoconf
     automake
+    calc
     cmake
     curl
     fasd

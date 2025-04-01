@@ -2,10 +2,13 @@
 
 remove_packages=()
 install_packages=(
+    base-devel
     bat
     bat-extras
     binocle
     bottom
+    calc
+    cmake
     diskus
     duf
     exa
