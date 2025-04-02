@@ -42,7 +42,7 @@ alias chezvous="chezmoi -S ~/.local/share/chezvous"
 
 # Neovim aliases
 function vimz() { vim "$(which "$1")" }
-alias vimi="chezmoi edit --watch ~/.config/nvim/init.lua"
+alias vimi="chezmoi edit --watch ~/.config/nvim"
 alias vimr="nvim +Renamer"
 alias vi="nvim --clean"
 
