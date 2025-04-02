@@ -34,4 +34,6 @@ return {
       { ",m", "<cmd>MarkdownPreviewToggle<cr>", "Toggle Markdown preview" },
     },
   },
+
+  { "jghauser/follow-md-links.nvim" },
 }
