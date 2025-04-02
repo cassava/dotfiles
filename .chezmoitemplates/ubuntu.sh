@@ -38,7 +38,7 @@ apt_packages=(
 
 # {{ if not .is_headless }}
     flameshot
-# / {{ end }}
+# {{ end }}
 )
 
 github_debs=(
@@ -54,6 +54,9 @@ github_debs=(
     {{ gitHubLatestReleaseAssetURL "lsd-rs/lsd" (printf "lsd-musl_*_%s.deb" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "dandavison/delta" (printf "git-delta-musl_*_%s.deb" .chezmoi.arch) }}
     {{ gitHubLatestReleaseAssetURL "watchexec/watchexec" (printf "watchexec-*-%s-unknown-linux-musl.deb" "x86_64") }}
+# {{ if not .is_headless }}
+    {{ gitHubLatestReleaseAssetURL "wezterm/wezterm" (printf "wezterm-*.%s%s.deb" .chezmoi.osRelease.name .chezmoi.osRelease.versionID) }}
+# {{ end }}
 )
 
 github_tarballs=(

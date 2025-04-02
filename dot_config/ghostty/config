@@ -1,5 +1,0 @@
-theme = nordfox
-window-theme = ghostty
-gtk-titlebar = false
-font-family = "FiraCodeNerd Font Mono"
-scrollback-limit = 10000

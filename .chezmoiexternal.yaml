@@ -3,3 +3,10 @@
   url: "https://raw.githubusercontent.com/languitar/pass-git-helper/v3.3.0/passgithelper.py"
   checksum.sha256: 7e05e24f2880093d2273040a3ee9ef2da178733e488e1c96c1fb8919fa2cef83
   executable: true
+
+{{ if not .is_headless -}}
+".local/share/wezterm/plugins/httpssCssZssZsgithubsDscomsZsmichaelbrusegardsZstablinesDswez":
+  type: "git-repo"
+  url: "https://github.com/michaelbrusegard/tabline.wez"
+  refreshPeriod: "168h"
+{{ end -}}

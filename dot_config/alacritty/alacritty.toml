@@ -1,2 +1,0 @@
-[general]
-import = ["/home/ben/.config/alacritty/default.toml", "/home/ben/.config/alacritty/theme.toml", "/home/ben/.config/alacritty/dpi.toml"]

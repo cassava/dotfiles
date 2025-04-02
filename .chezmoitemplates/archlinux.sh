@@ -46,8 +46,7 @@ install_packages=(
 # {{ if not .is_headless }}
     otf-firamono-nerd
     ttf-firacode-nerd
-    ghostty
-    alacritty
+    wezterm
     flameshot
 # {{ end }}
 )
