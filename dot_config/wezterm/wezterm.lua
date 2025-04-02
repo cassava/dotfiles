@@ -30,8 +30,8 @@ tabline.setup({
     },
   },
   sections = {
-    tabline_a = { 'mode' },
-    tabline_b = { 'workspace' },
+    tabline_a = { 'workspace' },
+    tabline_b = { '' },
     tabline_c = { ' ' },
     tab_active = {
       'index',
