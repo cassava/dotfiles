@@ -51,7 +51,7 @@
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [merge]
     conflictstyle = diff3
-    tool = vimdiff
+    tool = nvimdiff
 [mergetool]
     prompt = false
     keepBackup = false
@@ -89,17 +89,17 @@
     # Open status within Vim using the fugitive plugin.
     # - Make the status window the only one.
     # - Add a buffer mapping that will stage a hunk and move the screen so the cursor is on top.
-    vstatus = !vim -c Git -c \"silent only\" -c \"autocmd FileType fugitive nmap <buffer> S szt\"
+    vstatus = !nvim -c Git -c \"silent only\" -c \"autocmd FileType fugitive nmap <buffer> S szt\"
     vs = !git vstatus
 
     # Open log within Vim using the fugitive plugin.
-    vlog = !vim +"Git\\ log" +"only"
+    vlog = !nvim +"Git\\ log" +"only"
     vl = !git vlog
 
     # Search the repository for the text
-    vack = "!f() { vim -c \"Ack '$@'\"; }; f"
-    vv = !vim -c GV
-    vf = !vim -c "GV!"
+    vack = "!f() { nvim -c \"Ack '$@'\"; }; f"
+    vv = !nvim -c GV
+    vf = !nvim -c "GV!"
 
     # Launch a GUI without messing up the terminal.
     gui = !gitg </dev/null >/dev/null 2>&1 &
@@ -153,11 +153,11 @@
 
     # Open all files changed since REVIEW_BASE in Vim tabs and run fugitive's
     # :Gdiff in each tab.
-    review = !vim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-main}\"
+    review = !nvim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-main}\"
 
     # Same as the above, except specify names of files as arguments,
     # instead of opening all files.
-    reviewone = !vim -p +\"tabdo Gdiff ${REVIEW_BASE-main}\"
+    reviewone = !nvim -p +\"tabdo Gdiff ${REVIEW_BASE-main}\"
 
 # Online
     serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
