@@ -73,6 +73,7 @@ setopt NO_CORRECT           # Don't ever correct what I write. [default]
 setopt NO_FLOW_CONTROL      # Disable ^S/^Q output flow control keybindings.
 setopt INTERACTIVE_COMMENTS # Allow comments even in interactive shells.
 setopt HASH_CMDS            # Remember location of command after first-use. [default]
+setopt COMBINING_CHARS      # Combine character sequences correctly
 umask 022                   # Ensure default permissions are 755 and 644 respectively.
 
 # :Job Control: {{{2
