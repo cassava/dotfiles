@@ -4,8 +4,7 @@
 # {{- $email := promptStringOnce . "email" "Email address" "cassava@iexu.de" -}}
 # {{- $githubUser := promptStringOnce . "github_user" "Github user" "cassava" -}}
 # {{- $isHeadless := promptBoolOnce . "is_headless"  "Is headless" true -}}
-# {{- $hasPass := eq (joinPath .chezmoi.homeDir ".password-store" | lstat).type "directory" -}}
-# {{- $isPrivate := promptBoolOnce . "is_private"  "Is private" $hasPass -}}
+# {{- $isPrivate := promptBoolOnce . "is_private"  "Is private" false -}}
 # {{- $isWork := promptBoolOnce . "is_work"  "Is work" false -}}
 # {{- $doInstall := promptBoolOnce . "do_install"  "Install packages" false -}}
 
@@ -18,8 +17,10 @@ gpg:
     - "0x0A28F14C19363770"
 github:
   refreshPeriod: "168h"
+{{ if $isPrivate -}}
 env:
   GITHUB_TOKEN: {{ pass "tokens/github.com" }}
+{{ end -}}
 data:
   name: {{ $name | quote }}
   email: {{ $email | quote }}

@@ -4,8 +4,7 @@ README.md
 .config/nvim/lazy-lock.json
 
 {{ if .is_headless -}}
-.config/alacritty
-.config/ghostty
+.config/wezterm
 .xkb
 {{ end -}}
 

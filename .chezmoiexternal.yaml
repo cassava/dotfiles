@@ -1,8 +1,10 @@
+{{ if .is_private -}}
 ".local/bin/pass-git-helper":
   type: file
   url: "https://raw.githubusercontent.com/languitar/pass-git-helper/v3.3.0/passgithelper.py"
   checksum.sha256: 7e05e24f2880093d2273040a3ee9ef2da178733e488e1c96c1fb8919fa2cef83
   executable: true
+{{ end -}}
 
 {{ if not .is_headless -}}
 ".local/share/wezterm/plugins/httpssCssZssZsgithubsDscomsZsmichaelbrusegardsZstablinesDswez":
