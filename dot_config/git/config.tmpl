@@ -126,14 +126,14 @@
     surrender = !git reset --hard $(git rev-parse --abbrev-ref HEAD@{upstream})
     pushthis = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
 
-    bclean = "!f() { git branch --merged ${1-master} | grep -v " ${1-master}$" | xargs -r git branch -d; }; f"
-    bdone = "!f() { git checkout ${1-master} && git pull -p && git bclean ${1-master}; }; f"
+    bclean = "!f() { git branch --merged ${1-main} | grep -v " ${1-main}$" | xargs -r git branch -d; }; f"
+    bdone = "!f() { git checkout ${1-main} && git pull -p && git bclean ${1-main}; }; f"
 
 # Rebasing
     rb = rebase
     rbc = rebase --continue
     rba = rebase --abort
-    rbs = !git rebase -i --autosquash \"${REVIEW_BASE-master}\"
+    rbs = !git rebase -i --autosquash \"${REVIEW_BASE-main}\"
 
 # Cherry-picking
     cp = cherry-pick
@@ -144,18 +144,18 @@
     shame = blame -w -M
 
     # List files which have changed since REVIEW_BASE.
-    files = !git diff --name-only $(git merge-base HEAD \"${REVIEW_BASE-master}\")
+    files = !git diff --name-only $(git merge-base HEAD \"${REVIEW_BASE-main}\")
 
     # List files which have changed since REVIEW_BASE and show diff stat for each.
-    stat = !git diff --stat $(git merge-base HEAD \"${REVIEW_BASE-master}\")
+    stat = !git diff --stat $(git merge-base HEAD \"${REVIEW_BASE-main}\")
 
     # Open all files changed since REVIEW_BASE in Vim tabs and run fugitive's
     # :Gdiff in each tab.
-    review = !vim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-master}\"
+    review = !vim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-main}\"
 
     # Same as the above, except specify names of files as arguments,
     # instead of opening all files.
-    reviewone = !vim -p +\"tabdo Gdiff ${REVIEW_BASE-master}\"
+    reviewone = !vim -p +\"tabdo Gdiff ${REVIEW_BASE-main}\"
 
 # Online
     serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
