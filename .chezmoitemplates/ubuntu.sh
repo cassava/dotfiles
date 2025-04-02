@@ -27,13 +27,16 @@ apt_packages=(
     inetutils-tools
     lsof
     mc
+    ripgrep
     pass
+    python3-xdg
     silversearcher-ag
     tmate
     tmux
     tmuxinator
     tree
     unzip
+    universal-ctags
     zsh
 
 # {{ if not .is_headless }}
