@@ -6,7 +6,7 @@
 zstyle :prompt:pure:git:stash show yes
 PURE_PROMPT_SYMBOL='$'
 PURE_PROMPT_VICMD_SYMBOL='<'
-if [[ "$TERM" == "alacritty" ]]; then
+if [[ "$TERM" == "xterm-256color" ]]; then
     PURE_PROMPT_SYMBOL=''        # U+F105
     PURE_PROMPT_VICMD_SYMBOL=''  # U+F104
 fi
