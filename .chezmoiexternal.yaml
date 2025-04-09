@@ -1,3 +1,8 @@
+---
+".zdir/20-fzf-git.sh":
+  type: file
+  url: "https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh"
+
 {{ if .is_private -}}
 ".local/bin/pass-git-helper":
   type: file

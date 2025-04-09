@@ -129,12 +129,15 @@ function zvm_after_init() {
 
     autoload -z edit-command-line
     zle -N edit-command-line
-    bindkey "^X^E" edit-command-line
+    bindkey "^X" edit-command-line
+
+    # Unbind ^G so that I can use fzf-git.sh keybindings
+    bindkey -r "^G"
 
     [[ -f "$ZSH_USER_ZALIAS" ]] && source "$ZSH_USER_ZALIAS"
     [[ -f ~/.dircolors ]] && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
     source_zdir_files "*.zsh"
+    source_zdir_files "*.sh"
 }
 
 # Clean Up {{{1
