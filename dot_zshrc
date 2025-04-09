@@ -87,6 +87,7 @@ watch=(notme root)          # Watch for everyone but me and root.
 
 # :Zle: {{{2
 setopt NO_BEEP              # Do not beep on error in ZLE.
+export KEYTIMEOUT=1         # Hundredths of a second to wait for keys.
 
 # :Keybindings: {{{2
 bindkey -e                  # Use emacs keybindings by default.
@@ -121,7 +122,7 @@ source ${ZIM_HOME}/init.zsh
 # That's why it's wrapped in here.
 #
 function zvm_after_init() {
-    bindkey '\e.' insert-last-word
+    bindkey '^[.' insert-last-word
 
     # Up and Down navigate the global history
     bindkey '^[[A' history-substring-search-up
