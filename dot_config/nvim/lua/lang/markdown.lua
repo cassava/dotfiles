@@ -36,4 +36,20 @@ return {
   },
 
   { "jghauser/follow-md-links.nvim" },
+
+  { "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        markdown_oxide = {
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true
+              }
+            }
+          }
+        }
+      }
+    }
+  },
 }

@@ -26,20 +26,20 @@ return {
     end
   },
 
-  { "nvimtools/none-ls.nvim",
+  { "williamboman/mason.nvim",
     opts = function(_, opts)
-      local nls = require("null-ls")
-      vim.list_extend(opts.sources, {
-        nls.builtins.formatting.stylua,
+      vim.list_extend(opts.ensure_installed, {
+        "lua_ls",
+        "stylua",
       })
     end
   },
 
-  { "williamboman/mason.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "stylua",
-      })
-    end
+  { "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" }
+      }
+    }
   },
 }

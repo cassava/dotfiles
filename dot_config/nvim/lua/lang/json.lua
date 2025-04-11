@@ -7,15 +7,6 @@ return {
     end
   },
 
-  { "nvimtools/none-ls.nvim",
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      vim.list_extend(opts.sources, {
-        nls.builtins.formatting.jq,
-      })
-    end
-  },
-
   { "neovim/nvim-lspconfig",
     dependencies = {
       "b0o/SchemaStore.nvim",

@@ -23,11 +23,11 @@ key.add({
   mode = { "i", "n", "t" },
 
   -- Focus windows:
-  { "<a-h>", "<c-\\><c-n><c-w>h", desc = "Focus left window" },
-  { "<a-j>", "<c-\\><c-n><c-w>j", desc = "Focus below window" },
-  { "<a-k>", "<c-\\><c-n><c-w>k", desc = "Focus right window" },
-  { "<a-l>", "<c-\\><c-n><c-w>l", desc = "Focus above window" },
-  { "<a-o>", "<c-\\><c-n>gt", desc = "Focus next tab" },
+  -- { "<a-h>", "<c-\\><c-n><c-w>h", desc = "Focus left window" },
+  -- { "<a-j>", "<c-\\><c-n><c-w>j", desc = "Focus below window" },
+  -- { "<a-k>", "<c-\\><c-n><c-w>k", desc = "Focus right window" },
+  -- { "<a-l>", "<c-\\><c-n><c-w>l", desc = "Focus above window" },
+  -- { "<a-o>", "<c-\\><c-n>gt", desc = "Focus next tab" },
 
   { "<a-w>", "<c-\\><c-n><c-w>c", desc = "Close focused window" },
   { "<a-W>", "<cmd>tabclose<cr>", desc = "Close current tab" },
@@ -182,7 +182,6 @@ key.add({
 key.add({
   silent = false,
   { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>", desc = "Close quicklist" },
-  { "<leader>f", "gqip", desc = "Format paragraph" },
   { "<leader>m", function() require("util").make() end, desc = "Make" },
   { ",z", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", desc = "Cd to file directory" },
 })
