@@ -1,8 +1,14 @@
-{{- if not .do_install }}
+{{- if not .do_install -}}
 #!/bin/bash
 echo "note: installing packages is disabled."
-{{- else if (eq .chezmoi.osRelease.id "arch") }}
-{{- template "archlinux.sh" . }}
-{{- else if (eq .chezmoi.osRelease.id "ubuntu") }}
-{{- template "ubuntu.sh" . }}
+exit 0
+{{- else -}}
+{{ template "package_manager.sh" . }}
+{{ if (eq .chezmoi.osRelease.id "arch") }}
+{{ template "pkgconfig_archlinux.sh" . }}
+{{ else if (eq .chezmoi.osRelease.id "ubuntu") }}
+{{ template "pkgconfig_ubuntu.sh" . }}
+{{ end }}
+install_packages
+install_assets
 {{- end }}
