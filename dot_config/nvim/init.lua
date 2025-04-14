@@ -14,8 +14,12 @@ require("lazy").setup({
         })
       end,
     },
-    { import = "plugins" },
+    { import = "core" },
+    { import = "ui" },
+    { import = "edit" },
+    { import = "lspx" },
     { import = "lang" },
+    { import = "tools" },
   },
   defaults = {
     lazy = false

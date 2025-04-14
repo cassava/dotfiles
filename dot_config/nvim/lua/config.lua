@@ -1,3 +1,4 @@
+-- TODO: Can just use vim.keymap.set now I think?
 local key = require("util").keymapper()
 
 vim.keymap.set("v", "<", "<gv", { silent = true})
@@ -78,7 +79,7 @@ key.add({
 
 -- Git [g] -------------------------------------------------------------------
 key.add({
-  { 
+  {
     "<leader>gz",
     function()
       local fid = vim.fn.expand("%:p:h")
@@ -104,8 +105,7 @@ end
 
 key.add({
   { "<leader>o", group = "editor" },
-  { 
-    "<leader>oc",
+  { "<leader>oc",
     function()
       local def_width = 80
       if vim.o.colorcolumn == "" then
@@ -121,8 +121,7 @@ key.add({
     end,
     desc = "Toggle colorcolumn"
   },
-  { 
-    "<leader>oi",
+  { "<leader>oi",
     function()
       local enabled = true
       if vim.opt.indentexpr:get() == "" then
@@ -184,14 +183,6 @@ key.add({
   { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>", desc = "Close quicklist" },
   { "<leader>m", function() require("util").make() end, desc = "Make" },
   { ",z", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", desc = "Cd to file directory" },
-})
-
--- Set cursorline in insert mode and unset it when leaving.
-vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-    callback = function() vim.wo.cursorline = false end,
-})
-vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-    callback = function() vim.wo.cursorline = true end,
 })
 
 -- Load exrc files from parent directories
