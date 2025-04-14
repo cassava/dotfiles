@@ -28,6 +28,9 @@ return {
 --- USER INTERFACE ------------------------------------------------------------
 
   { "b0o/incline.nvim",
+    about = [[
+      Replace vim windowbar with a floating equivalent.
+    ]],
     event = "BufReadPre",
     opts = {
       hide = {
@@ -39,7 +42,22 @@ return {
     end,
   },
 
-  { "rcarriga/nvim-notify",
+  { "vigoux/notifier.nvim",
+    enabled = false,
+    opts = {}
+  },
+
+  -- TODO: Actually, I think I'd prefer to have this in the lastline
+  { "j-hui/fidget.nvim",
+    enabled = true,
+    opts = {},
+    config = function(_, opts)
+      require("fidget").setup(opts)
+      require("telescope").load_extension("fidget")
+    end
+  },
+
+  { "rcarriga/nvim-notify", -- TODO: Remove if fidget.nvim is better
     about = "Better vim.notify",
     event = "VeryLazy",
     opts = {
@@ -111,6 +129,16 @@ return {
     end,
   },
 
+  { "lewis6991/satellite.nvim",
+    about = [[
+      Provide a decorated scrollbar with information from the buffer.
+
+      Simpler alternative: petertriho/nvim-scrollbar
+    ]],
+    event = "VeryLazy",
+    config = true,
+  },
+
   { "nvim-lualine/lualine.nvim",
     about = "Fancy statusline with information from various sources.",
     event = "VeryLazy",
@@ -123,11 +151,6 @@ return {
         }
       })
     end,
-  },
-
-  { "petertriho/nvim-scrollbar",
-    event = "VeryLazy",
-    config = true,
   },
 
   { "folke/noice.nvim", -- DISABLED
@@ -157,6 +180,13 @@ return {
     -- },
   },
 
+  { "stevearc/quicker.nvim",
+    event = "FileType qf",
+    ---@module "quicker"
+    ---@type quicker.SetupOptions
+    opts = {},
+  },
+
   { "sindrets/winshift.nvim",
     about = "Allow full window moving capabilities.",
     event = "VeryLazy",
@@ -174,7 +204,8 @@ return {
   -- FIXME: This doesn't seem to work anymore?
   { "echasnovski/mini.indentscope",
     version = "*",
-    lazy = false,
+    event = "VeryLazy",
+    enabled = false,
     keys = {
       {
         "<leader>oi",
@@ -240,6 +271,7 @@ return {
 
   -- FIXME: Fix re-folding on changing contents
   { "csams/pretty-fold.nvim",
+    enabled = false,
     about = "Improve folding appearnce.",
     event = "VeryLazy",
     config = true,
@@ -248,16 +280,39 @@ return {
     }
   },
 
-  { "kevinhwang91/nvim-hlslens",
-    config = function()
-      require("scrollbar.handlers.search").setup({
-        -- hlslens config overrides
-      })
-    end
+  { "chrisgrieser/nvim-origami",
+    about = [[
+      A collection of Quality-of-life features related to folding.
+    ]],
+    event = "VeryLazy",
+    init = function()
+      vim.cmd([[
+        augroup folds
+        " Don't screw up folds when inserting text that might affect them, until
+        " leaving insert mode. Foldmethod is local to the window. Protect against
+        " screwing up folding when switching between windows.
+        autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
+        autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
+        augroup END
+      ]])
+    end,
+    opts = {},
   },
 
-  { "nvim-tree/nvim-web-devicons",
-    lazy = true
+  { "kevinhwang91/nvim-hlslens",
+    event = "VeryLazy",
+    -- config = function()
+    --   require("scrollbar.handlers.search").setup({
+    --     -- hlslens config overrides
+    --   })
+    -- end
+  },
+
+  { "echasnovski/mini.icons",
+    about = [[
+      Provide icons for other plugins; shims nvim-web-devicons.
+    ]],
+    version = false
   },
 
   { "EdenEast/nightfox.nvim",
@@ -360,10 +415,11 @@ return {
     }
   },
 
+  -- TODO: Update keys, which appear to be broken.
   { "folke/trouble.nvim",
     about = "Pretty error and warnings list.",
     keys = {
-      { 
+      {
         "]k",
         function()
           require("trouble").next({skip_groups = true, jump = true});
@@ -635,6 +691,13 @@ return {
     config = true,
   },
 
+  { "echasnovski/mini.files",
+    opts = {},
+    keys = {
+      { "_", function() MiniFiles.open() end, desc = "Open file browser" },
+    }
+  },
+
   { "mg979/vim-visual-multi",
     -- ABOUT: Mutliple cursors.
     -- HELP: visual-multi.txt
@@ -652,158 +715,55 @@ return {
 
 --- CODING --------------------------------------------------------------------
 
-  { "folke/neodev.nvim",
-    opts = {
-      experimental = {
-        pathStrict = true
-      },
-      library = {
-        plugins = {
-          "nvim-dap-ui"
-        },
-        types = true
-      },
-    }
-  },
-
-  { "neovim/nvim-lspconfig",
-    about = "Built-in LSP configuration mechanism.",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-      { "folke/neodev.nvim" },
-      { "mason.nvim" },
-      { "williamboman/mason-lspconfig.nvim" },
-      { "hrsh7th/cmp-nvim-lsp" },
-    },
-    opts = {
-      -- Automatically format on save
-      autoformat = false,
-
-      -- Options for vim.diagnostic.config()
-      diagnostics = {
-        underline = true,
-        update_in_insert = false,
-        virtual_text = { spacing = 4, prefix = "●" },
-        severity_sort = true,
-      },
-
-      -- Options for vim.lsp.buf.format
-      format = {
-        formatting_options = nil,
-        timeout_ms = nil,
-      },
-
-      -- LSP Server Settings
-      servers = {},
-      setup = {},
-    },
-    config = function(_, opts)
-      require("lspconfig.ui.windows").default_options.border = "rounded"
-
-      -- Enable completion triggered by <c-x><c-o>
-      vim.api.nvim_create_autocmd("LspAttach", {
-        callback = function(args)
-          if not (args.data and args.data.client_id) then
-            return
-          end
-
-          require("util").keymapper().register({
-            -- Replace Vim standard keybindings to use LSP:
-            ["gD"] = { vim.lsp.buf.declaration, "Goto declaration [lsp]" },
-            ["gd"] = { vim.lsp.buf.definition, "Goto definition [lsp]" },
-            ["gi"] = { vim.lsp.buf.implementation, "Goto implementation [lsp]" },
-            ["gr"] = { vim.lsp.buf.references, "Show references [lsp]" },
-            ["K"] = { vim.lsp.buf.hover, "Hover entity [lsp]" },
-            ["<c-e>"] = { vim.lsp.buf.signature_help, "Show signature help [lsp]" },
-            [",e"] = { vim.diagnostic.open_float, "Open diagnostics [lsp]" },
-            [",q"] = { vim.diagnostic.setloclist, "Send diagnostics to QuickList [lsp]" },
-            [",wa"] = { vim.lsp.buf.add_workspace_folder, "Add workspace folder [lsp]" },
-            [",wr"] = { vim.lsp.buf.remove_workspace_folder, "Remove workspace folder [lsp]" },
-            [",wl"] = { function() print(vim.inspectp.buf.list_workspace_folders()) end, "Show workspace folders [lsp]" },
-            [",d"] = { vim.lsp.buf.type_definition, "Goto type definition [lsp]" },
-            [",r"] = { vim.lsp.buf.rename, "Rename entity [lsp]" },
-            [",c"] = { vim.lsp.buf.code_action, "Code actions [lsp]" },
-            [",s"] = { "<cmd>Telescope lsp_document_symbols<cr>", "Search symbols [lsp]" },
-            [",f"] = { function() vim.lsp.buf.format() end, "Format file [lsp]" },
-          })
-          vim.cmd "command! LspFormat execute 'lua vim.lsp.buf.formatting()'"
-        end
-      })
-
-      -- diagnostics
-      -- for name, icon in pairs(require("lazyvim.config").icons.diagnostics) do
-      --   name = "DiagnosticSign" .. name
-      --   vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
-      -- end
-      vim.diagnostic.config(opts.diagnostics)
-
-      local servers = opts.servers
-      local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-
-      local function setup_server(server)
-        local server_opts = vim.tbl_deep_extend("force", {
-          capabilities = vim.deepcopy(capabilities),
-        }, servers[server] or {})
-
-        if opts.setup[server] then
-          if opts.setup[server](server, server_opts) then
-            return
-          end
-        elseif opts.setup["*"] then
-          if opts.setup["*"](server, server_opts) then
-            return
-          end
-        end
-        require("lspconfig")[server].setup(server_opts)
-      end
-
-      local mlsp = require("mason-lspconfig")
-      local available = mlsp.get_available_servers()
-
-      local ensure_installed = {} ---@type string[]
-      for server, server_opts in pairs(servers) do
-        if server_opts then
-          server_opts = server_opts == true and {} or server_opts
-          -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
-          if server_opts.mason == false or not vim.tbl_contains(available, server) then
-            setup_server(server)
-          else
-            ensure_installed[#ensure_installed + 1] = server
-          end
-        end
-      end
-
-      require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
-      require("mason-lspconfig").setup_handlers({ setup })
-    end
-  },
-
   { "williamboman/mason.nvim",
     about = "Manage external editor tooling such as for LSP and DAP.",
     version = "*",
     cmd = "Mason",
     opts = {
       ui = {
-        border = "rounded"
+        backdrop = 0,
+        border = "rounded",
       },
+    },
+  },
+
+  { "williamboman/mason-lspconfig.nvim",
+    about = [[
+      Bridges mason.nvim with the nvim-lspconfig plugin.
+
+      Provides automatic language server setup, see:
+        :h mason-lspconfig-automatic-server-setup
+    ]],
+    dependencies = {
+      "mason.nvim"
+    },
+    opts = {
       ensure_installed = {
         -- Put sources that aren't language specific here.
-      }
+      },
     },
     config = function(_, opts)
-      require("mason").setup(opts)
-      local mr = require("mason-registry")
-      for _, tool in ipairs(opts.ensure_installed) do
-        local p = mr.get_package(tool)
-        if not p:is_installed() then
-          p:install()
+      require("mason-lspconfig").setup(opts)
+      require("mason-lspconfig").setup_handlers {
+        function(server_name) -- default handler
+          vim.lsp.enable(server_name)
         end
-      end
-    end,
+      }
+    end
+  },
+
+  { "whoissethdaniel/mason-tool-installer.nvim",
+    about = [[
+      Bridges mason.nvim with conform.nvim and nvim-lint plugins.
+    ]],
+    event = "VeryLazy",
+    opts = {
+      ensure_installed = {}
+    }
   },
 
   { "stevearc/conform.nvim",
+    about = "Format code and text using formatters.",
     config = true,
     keys = {
       { "<leader>f", "gqip", desc = "Format paragraph" },
@@ -811,10 +771,22 @@ return {
   },
 
   { "mfussenegger/nvim-lint",
+    about = "Lint code using external linters.",
   },
 
-  { "onsails/lspkind-nvim",
+  { "neovim/nvim-lspconfig",
+    about = "Built-in LSP configuration mechanism.",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      { "mason.nvim" },
+      { "williamboman/mason-lspconfig.nvim" },
+      { "hrsh7th/cmp-nvim-lsp" },
+    },
+  },
+
+  { "onsails/lspkind-nvim", -- TODO: Replace with mini.icons
     about = "Provide fancy icons for LSP information, in particular for nvim-cmp.",
+    enabled = false,
   },
 
   { "tami5/lspsaga.nvim", -- DISABLED
@@ -842,17 +814,17 @@ return {
           },
         }),
         formatting = {
-          format = require("lspkind").cmp_format({
-            mode = "symbol_text",
-            menu = ({
-              buffer = "[buffer]",
-              calc = "[calc]",
-              cmdline = "[cmdline]",
-              luasnip = "[snip]",
-              nvim_lsp = "[lsp]",
-              path = "[path]",
-            })
-          }),
+          -- format = require("lspkind").cmp_format({
+          --   mode = "symbol_text",
+          --   menu = ({
+          --     buffer = "[buffer]",
+          --     calc = "[calc]",
+          --     cmdline = "[cmdline]",
+          --     luasnip = "[snip]",
+          --     nvim_lsp = "[lsp]",
+          --     path = "[path]",
+          --   })
+          -- }),
         },
         snippet = {
           expand = function(args)
@@ -1157,11 +1129,13 @@ return {
   { "theHamsta/nvim-treesitter-pairs",
     -- ABOUT: Provide language-specific % pairs
     event = "VeryLazy",
+    enabled = false, -- Because according to profile.nvim this takes up so much time
     config = function()
       require("nvim-treesitter.configs").setup {
         pairs = {
-          enable = true,
+          enable = false,
           disable = is_unsupported,
+          -- WARNING: ESPECIALLY BAD PERFORMANCE ON "CURSORMOVED":
           highlight_pair_events = {"CursorMoved"}, -- when to highlight the pairs, {} to deactivate highlighting
           highlight_self = true, -- whether to highlight also the part of the pair under cursor (or only the partner)
           goto_right_end = false, -- whether to go to the xend of the right partner or the beginning
@@ -1288,7 +1262,17 @@ return {
     lazy = true
   },
 
-  { "stevearc/profile.nvim", -- DISABLED
+  { "stevearc/profile.nvim",
+    about = [[
+      Gigantic hack to profile Lua in neovim by monkeypatching all functions.
+
+      1. Start with: NVIM_PROFILE=1 nvim ...
+      2. Press <F1> to start
+      3. Do stuff
+      4. Press <F1> to stop and save
+
+      Keep #3 as short as possible. Each second is about 100M of data.
+    ]],
     lazy = false,
     enabled = false,
     config = function()
@@ -1301,23 +1285,27 @@ return {
           require("profile").instrument("*")
         end
       end
-
-      local function toggle_profile()
-        local prof = require("profile")
-        if prof.is_recording() then
-          prof.stop()
-          vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
-            if filename then
-              prof.export(filename)
-              vim.notify(string.format("Wrote %s", filename))
-            end
-          end)
-        else
-          vim.notify("Start profiling...")
-          prof.start("*")
-        end
-      end
-      vim.keymap.set("", "<f1>", toggle_profile)
-    end
+    end,
+    keys = {
+      {
+        "<F1>",
+        function()
+          local prof = require("profile")
+          if prof.is_recording() then
+            prof.stop()
+            vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
+              if filename then
+                prof.export(filename)
+                vim.notify(string.format("Wrote %s", filename))
+              end
+            end)
+          else
+            vim.notify("Start profiling...")
+            prof.start("*")
+          end
+        end,
+        desc = "Start/Stop Profiling"
+      }
+    },
   }
 }

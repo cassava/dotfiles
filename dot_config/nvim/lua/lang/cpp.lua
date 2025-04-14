@@ -9,14 +9,6 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 return {
-  { "neovim/nvim-lspconfig",
-    opts = function(_, opts)
-      vim.list_extend(opts.servers, {
-        clangd = {},
-      })
-    end
-  },
-
   { "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
@@ -24,15 +16,6 @@ return {
       end
     end
   },
-
-  -- { "nvimtools/none-ls.nvim",
-  --   opts = function(_, opts)
-  --     local nls = require("null-ls")
-  --     vim.list_extend(opts.sources, {
-  --       nls.builtins.formatting.clang_format,
-  --     })
-  --   end
-  -- },
 
   { "ludovicchabant/vim-gutentags",
     about = "Automatically manages the tags for your projects.",
@@ -44,7 +27,7 @@ return {
     end,
   },
 
-  { "williamboman/mason.nvim",
+  { "whoissethdaniel/mason-tool-installer.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         "clangd",

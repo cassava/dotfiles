@@ -38,9 +38,8 @@ return {
   { "jghauser/follow-md-links.nvim" },
 
   { "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        markdown_oxide = {
+    init = function()
+        vim.lsp.config("markdown_oxide", {
           capabilities = {
             workspace = {
               didChangeWatchedFiles = {
@@ -48,8 +47,7 @@ return {
               }
             }
           }
-        }
-      }
-    }
+        })
+    end,
   },
 }

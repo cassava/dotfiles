@@ -1,23 +1,4 @@
 return {
-  { "neovim/nvim-lspconfig",
-    opts = function(_, opts)
-      vim.list_extend(opts.servers, {
-        lua_ls = {
-          settings = {
-            Lua = {
-              workspace = {
-                checkThirdParty = false,
-              },
-              completion = {
-                callSnippet = "Replace",
-              },
-            },
-          },
-        },
-      })
-    end
-  },
-
   { "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
       if type(opts.ensure_installed) == "table" then
@@ -26,7 +7,7 @@ return {
     end
   },
 
-  { "williamboman/mason.nvim",
+  { "whoissethdaniel/mason-tool-installer.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         "lua_ls",
@@ -41,5 +22,26 @@ return {
         lua = { "stylua" }
       }
     }
+  },
+
+  { "folke/lazydev.nvim",
+    ft = "lua", -- only load on lua files
+    opts = {
+      library = {
+        -- See the configuration section for more details
+        -- Load luvit types when the `vim.uv` word is found
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+
+  { "hrsh7th/nvim-cmp",
+    opts = function(_, opts)
+      opts.sources = opts.sources or {}
+      table.insert(opts.sources, {
+        name = "lazydev",
+        group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+      })
+    end,
   },
 }
