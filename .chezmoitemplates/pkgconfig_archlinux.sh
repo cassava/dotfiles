@@ -11,7 +11,6 @@
 #     sudo_untar_fonts FILE
 
 declare -a packages=(
-    ast-grep
     base-devel
     bat
     bat-extras
@@ -37,6 +36,7 @@ declare -a packages=(
     mc
     mlocate
     neovim
+    npm
     pass
     pv
     ripgrep
