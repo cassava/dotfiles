@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+verbose=false
 cache_dir="{{ .chezmoi.cacheDir }}/packages"
 state_dir="{{ .chezmoi.homeDir }}/.local/state/chezmoi"
 mark_file="$state_dir/installed_packages.txt"
@@ -112,7 +113,7 @@ install_assets() {
             echo "error: asset url is empty: $key"
             continue
         elif asset_is_marked "$url"; then
-            echo "skipping: $key" >&2
+            $verbose && echo "skipping: $key" >&2
             continue
         fi
 
