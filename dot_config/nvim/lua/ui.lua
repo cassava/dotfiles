@@ -1,3 +1,10 @@
+-- ui.lua
+--
+-- Contains plugins modifying or extending the user interface.
+--
+-- This module returns a list of plugin specs for lazy.nvim
+--
+
 -- Set cursorline in insert mode and unset it when leaving.
 vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     callback = function() vim.wo.cursorline = false end,
@@ -195,7 +202,7 @@ return {
     -- end
   },
 
-  { "EdenEast/nightfox.nvim",
+  { "edeneast/nightfox.nvim",
     lazy = false,
     priority = 1000,
     opts = {
@@ -223,19 +230,6 @@ return {
       require("nightfox").setup(opts)
       vim.cmd "colorscheme nordfox"
     end
-  },
-
-  { "folke/tokyonight.nvim",
-    lazy = true,
-  },
-
-  { "ethanholz/nvim-lastplace",
-    about = "Jumps to the last place you were in a file on open.",
-    opts = {
-      lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-      lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-      lastplace_open_folds = true
-    }
   },
 
   { "nvim-telescope/telescope.nvim",
@@ -292,47 +286,40 @@ return {
     }
   },
 
-  -- TODO: Update keys, which appear to be broken.
   { "folke/trouble.nvim",
-    about = "Pretty error and warnings list.",
+    about = [[
+      A pretty list for showing diagnostics, references, telescope results,
+      quickfix and location lists to help you solve all the trouble your code is causing.
+    ]],
+    opts = {},
+    cmd = "Trouble",
     keys = {
-      {
-        "]k",
-        function()
-          require("trouble").next({skip_groups = true, jump = true});
-        end,
-        desc = "Next Trouble"
-      },
-
-      {
-        "[k",
-        function()
-          require("trouble").previous({skip_groups = true, jump = true});
-        end,
-        desc = "Previous Trouble"
-      },
-
-      {
-        "[K",
-        function()
-          require("trouble").first({skip_groups = true, jump = true});
-        end,
-        desc = "First Trouble"
-      },
-
-      {
-        "]K",
-        function()
-          require("trouble").last({skip_groups = true, jump = true});
-        end,
-        desc = "Last Trouble"
-      },
+      { "<leader>xc", "<cmd>Trouble close<cr>", desc = "Close Trouble", },
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Diagnostics (Trouble)", },
+      { "<leader>xX", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Buffer Diagnostics (Trouble)", },
+      { "<leader>cs", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols (Trouble)", },
+      { "<leader>cl", "<cmd>Trouble lsp toggle focus=false win.position=right<cr>", desc = "LSP Definitions / references / ... (Trouble)", },
+      { "<leader>xL", "<cmd>Trouble loclist toggle<cr>", desc = "Location List (Trouble)", },
+      { "<leader>xQ", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List (Trouble)", },
+      { "]k", function() require("trouble").next() end, desc = "Next trouble" },
+      { "[k", function() require("trouble").prev() end, desc = "Previous trouble" },
+      { "]K", function() require("trouble").last() end, desc = "Last trouble" },
+      { "[K", function() require("trouble").first() end, desc = "First trouble" },
     },
   },
 
   { "folke/todo-comments.nvim",
+    about = [[
+      Highlight and search for todo comments like TODO, HACK, BUG in your code base.
+    ]],
     event = "VeryLazy",
     opts = {},
+    cmd = {
+      "TodoTelescope", -- cwd=PATH keywords=TODO,FIX
+      "TodoQuickFix",
+      "TodoLocList",
+      "TodoFzfLua",
+      "TodoTrouble",
+    }
   },
-
 }

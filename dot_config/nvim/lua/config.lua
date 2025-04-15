@@ -105,58 +105,6 @@ end
 
 key.add({
   { "<leader>o", group = "editor" },
-  { "<leader>oc",
-    function()
-      local def_width = 80
-      if vim.o.colorcolumn == "" then
-        if vim.o.textwidth ~= 0 then
-          vim.opt.colorcolumn = { vim.o.textwidth }
-        else
-          vim.opt.colorcolumn = { def_width }
-          vim.opt.textwidth = def_width
-        end
-      else
-        vim.opt.colorcolumn = {}
-      end
-    end,
-    desc = "Toggle colorcolumn"
-  },
-  { "<leader>oi",
-    function()
-      local enabled = true
-      if vim.opt.indentexpr:get() == "" then
-        vim.opt.indentexpr = "nvim_treesitter#indent()"
-      else
-        vim.opt.indentexpr = ""
-        enabled = false
-      end
-      notify_option("Indent", enabled)
-    end,
-    desc = "Toggle indent"
-  },
-  { "<leader>oh",
-    function()
-      local enable = not vim.lsp.inlay_hint.is_enabled()
-      vim.lsp.inlay_hint.enable(enable)
-      notify_option("Inlay hinting", enable)
-    end,
-    desc = "Toggle inlay hinting"
-  },
-  { "<leader>ol",
-    function()
-      local clients = vim.lsp.get_clients()
-      if #clients > 0 then
-        vim.lsp.stop_client(clients)
-      else
-        vim.cmd "edit"
-      end
-    end,
-    desc = "Toggle LSP",
-  },
-  { "<leader>ow", function() vim.opt.wrap = not vim.o.wrap end, desc = "Toggle wrap" },
-  { "<leader>on", function() vim.opt.number = not vim.o.number end, desc = "Toggle number" },
-  { "<leader>or", function() vim.opt.relativenumber = not vim.o.relativenumber end, desc = "Toggle relativenumber" },
-  { "<leader>ot", function() vim.opt.expandtab = not vim.o.expandtab end, desc = "Toggle expandtab" },
   {
     "<leader>o>",
     function()

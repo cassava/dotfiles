@@ -24,6 +24,10 @@ require("lazy").setup({
   defaults = {
     lazy = false
   },
+  dev = {
+    path = "~/lang",
+    patterns = { "cassava" },
+  },
   install = {
     colorscheme = { "nordfox", "slate" }
   },
