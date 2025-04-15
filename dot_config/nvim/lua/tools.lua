@@ -17,18 +17,13 @@ return {
     about = "Rename files in the system with: nvim +Renamer",
     cmd = "Renamer",
   },
-  { "raghur/vim-ghost",
+  { "subnut/nvim-ghost.nvim",
     about = "Bi-directionally edit text content in the browser.",
-    build = function()
-      vim.fn.system "python3 -m pip install --user --upgrade neovim"
-      vim.cmd "GhostInstall"
-    end,
     cmd = {
-      "GhostStart",
-      "GhostInstall",
+      "GhostTextStart",
     },
     init = function()
-      vim.g.ghost_autostart = 0
+      vim.g.nvim_ghost_autostart = 0
     end
   },
 
