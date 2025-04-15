@@ -229,6 +229,14 @@ return {
     config = function(_, opts)
       require("nightfox").setup(opts)
       vim.cmd "colorscheme nordfox"
+
+      local Snacks = require("snacks")
+      Snacks.toggle.new({
+        id = "colorscheme",
+        name = "Light Colorscheme",
+        get = function() return vim.g.colors_name == "dayfox" end,
+        set = function() vim.cmd.colorscheme(vim.g.colors_name == "dayfox" and "nordfox" or "dayfox") end
+      }):map("<leader>ob")
     end
   },
 

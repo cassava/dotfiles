@@ -33,6 +33,15 @@ return {
     event = "VeryLazy"
   },
 
+  { "ethanholz/nvim-lastplace",
+    about = "Jumps to the last place you were in a file on open.",
+    opts = {
+      lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
+      lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
+      lastplace_open_folds = true
+    }
+  },
+
   { "folke/snacks.nvim",
     about = [[
       If you want to profile:
@@ -47,11 +56,12 @@ return {
     config = function(_, opts)
       local Snacks = require("snacks")
       Snacks.setup(opts)
-      Snacks.toggle.animate():map("<leader>ua")
-      Snacks.toggle.diagnostics():map("<leader>od")
-      Snacks.toggle.indent():map("<leader>ui")
-      Snacks.toggle.line_number():map("<leader>ol")
-      Snacks.toggle.option("background", { off = "light", on = "dark" , name = "Dark Background" }):map("<leader>ob")
+      -- Toggle Snack features:
+      Snacks.toggle.animate():map("<leader>oa")
+      Snacks.toggle.scroll():map("<leader>oS")
+      Snacks.toggle.indent():map("<leader>og")
+
+      -- Toggle options:
       Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }):map("<leader>oc")
       Snacks.toggle.option("number", { name = "Number" }):map("<leader>on")
       Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>oN")
@@ -59,23 +69,6 @@ return {
       Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>oz")
       Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>ow")
       Snacks.toggle.option("expandtab", { name = "Expand Tab" }):map("<leader>ot")
-      Snacks.toggle.scroll():map("<leader>oS")
-      Snacks.toggle.indent():map("<leader>og")
-      Snacks.toggle.treesitter():map("<leader>oT")
-      Snacks.toggle.new({
-        id = "indent",
-        name = "Treesitter Indenting",
-        get = function()
-          return vim.opt.indentexpr ~= ""
-        end,
-        set = function()
-          if vim.opt.indentexpr == "" then
-            vim.opt.indentexpr = "nvim_treesitter#indent()"
-          else
-            vim.opt.indentexpr = ""
-          end
-        end
-      }):map("<leader>oI")
       Snacks.toggle.new({
         id = "colorcolumn",
         name = "Color Column",
@@ -96,22 +89,6 @@ return {
           end
         end
       }):map("<leader>oc")
-      Snacks.toggle.new({
-        id = "lsp",
-        name = "LSP",
-        get = function()
-          return #vim.lsp.get_clients() > 0
-        end,
-        set = function()
-          local clients = vim.lsp.get_clients()
-          if #clients > 0 then
-            vim.lsp.stop_client(clients)
-          else
-            vim.cmd "edit"
-          end
-        end,
-      }):map("<leader>oL")
-      Snacks.toggle.inlay_hints():map("<leader>oh")
     end,
   },
 

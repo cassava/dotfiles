@@ -153,25 +153,6 @@ vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
   end
 })
 
--- Set redact options when editing passwords
-vim.api.nvim_create_autocmd({ "BufReadPre" }, {
-    pattern = {
-        "/dev/shm/pass.?*/?*.txt",
-        "/tmp/pass.?*/?*.txt",
-        (vim.env.TMPDIR or "") .. "/pass.?*/?*.txt",
-    },
-    callback = function()
-        vim.opt.backup = false
-        vim.opt.writebackup = false
-        vim.opt.swapfile = false
-        vim.opt.viminfo = ""
-        vim.opt.undofile = false
-
-        vim.notify("Password redaction options set.")
-        vim.g.password_redaction = 1
-    end
-})
-
 -- Open help window in a vertical split to the right.
 vim.api.nvim_create_autocmd("BufWinEnter", {
     group = vim.api.nvim_create_augroup("help_window_right", {}),
@@ -187,11 +168,6 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
     pattern = { "Dockerfile.*" },
     callback = function() vim.bo.filetype = "dockerfile" end,
-})
-
-vim.api.nvim_create_autocmd({ "TermOpen" }, {
-    pattern = { "*" },
-    callback = function() vim.wo.number = false end,
 })
 
 return true

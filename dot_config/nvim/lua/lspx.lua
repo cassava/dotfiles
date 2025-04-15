@@ -120,7 +120,54 @@ return {
           end
         end,
       })
-    end
+
+      -- keys
+      local Snacks = require("snacks")
+      Snacks.toggle.diagnostics():map("<leader>od")
+      Snacks.toggle.inlay_hints():map("<leader>oh")
+      Snacks.toggle.new({
+        id = "virtual_text",
+        name = "Virtual Text",
+        get = function()
+          return vim.diagnostics.config().virtual_text
+        end,
+        set = function()
+          vim.diagnostics.config({virtual_text = not vim.diagnostics.config().virtual_text })
+        end,
+      }):map("<leader>ov")
+      Snacks.toggle.new({
+        id = "virtual_lines",
+        name = "Virtual Lines",
+        get = function()
+          return vim.diagnostics.config().virtual_lines
+        end,
+        set = function()
+          local value = vim.diagnostics.config().virtual_lines
+          if type(value) == "table" then
+            vim.diagnostics.config({virtual_lines = false})
+          elseif value == true then
+            vim.diagnostics.config({virtual_lines = true})
+          else
+            vim.diagnostics.config({virtual_lines = { current_line = true }})
+          end
+        end,
+      }):map("<leader>oV")
+      Snacks.toggle.new({
+        id = "lsp",
+        name = "LSP",
+        get = function()
+          return #vim.lsp.get_clients() > 0
+        end,
+        set = function()
+          local clients = vim.lsp.get_clients()
+          if #clients > 0 then
+            vim.lsp.stop_client(clients)
+          else
+            vim.cmd "edit"
+          end
+        end,
+      }):map("<leader>oL")
+    end,
   },
 
   { "hrsh7th/nvim-cmp",
@@ -393,6 +440,24 @@ return {
         },
       },
     },
+    init = function()
+      local Snacks = require("snacks")
+      Snacks.toggle.treesitter():map("<leader>oT")
+      Snacks.toggle.new({
+        id = "indent",
+        name = "Treesitter Indenting",
+        get = function()
+          return vim.opt.indentexpr ~= ""
+        end,
+        set = function()
+          if vim.opt.indentexpr == "" then
+            vim.opt.indentexpr = "nvim_treesitter#indent()"
+          else
+            vim.opt.indentexpr = ""
+          end
+        end
+      }):map("<leader>oI")
+    end,
     config = function(_, opts)
       require("nvim-treesitter.configs").setup(opts)
       vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -494,18 +559,14 @@ return {
   { "HiPhish/rainbow-delimiters.nvim",
     about = "Highlight parenthesis to matching pairs.",
     event = "VeryLazy",
-    config = function()
-        require("rainbow-delimiters.setup").setup{}
+    init = function()
+      local Snacks = require("snacks")
+      Snacks.toggle.new({
+        id = "rainbow_delimiters",
+        name = "Rainbow Delimiters",
+        get = function() return require("rainbow-delimiters").is_enabled(0) end,
+        set = function() require("rainbow-delimiters").toggle() end,
+      }):map("<leader>oR")
     end,
-    keys = {
-      {
-        "<leader>ob",
-        function()
-          require("rainbow-delimiters").toggle(0)
-          notify_option("Rainbow delimiters", require("rainbow-delimiters").is_enabled(0))
-        end,
-        desc = "Toggle rainbow delimiters",
-      }
-    }
   },
 }
