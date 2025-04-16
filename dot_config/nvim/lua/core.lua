@@ -33,15 +33,6 @@ return {
     event = "VeryLazy"
   },
 
-  { "ethanholz/nvim-lastplace",
-    about = "Jumps to the last place you were in a file on open.",
-    opts = {
-      lastplace_ignore_buftype = {"quickfix", "nofile", "help"},
-      lastplace_ignore_filetype = {"gitcommit", "gitrebase", "svn", "hgcommit"},
-      lastplace_open_folds = true
-    }
-  },
-
   { "folke/snacks.nvim",
     about = [[
       If you want to profile:
@@ -133,7 +124,9 @@ return {
   },
 
   { "tpope/vim-eunuch",
-    -- ABOUT: Sugar for the UNIX shell commands that need it most.
+    about = [[
+      Sugar for the UNIX shell commands that need it most.
+    ]],
     cmd = {
       "Delete",    -- Delete current file from disk
       "Unlink",    -- Delete current file from disk and reload buffer
@@ -144,7 +137,7 @@ return {
       "Mkdir",     -- Create directory [with -p]
       "SudoEdit",  -- Edit a file using sudo
       "SudoWrite", -- Write current file using sudo, uses :SudoEdit
-    }
+    },
   },
 
   { "stevearc/oil.nvim",
