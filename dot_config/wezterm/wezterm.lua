@@ -1,7 +1,12 @@
+-- Wezterm configuration
+-- See: https://wezterm.org/config/lua/config/index.html
+--
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.adjust_window_size_when_changing_font_size = false
+config.hide_tab_bar_if_only_one_tab = true
+config.tab_max_width = 24
 config.window_decorations = "RESIZE"
 config.color_scheme = "nordfox"
 config.font = wezterm.font { family = "FiraCode Nerd Font" }
@@ -47,8 +52,8 @@ config.keys = {
 
 -- Event: maximize on first startup
 wezterm.on("gui-startup", function(cmd)
-    local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
-    window:gui_window():perform_action(wezterm.action.ToggleFullScreen, pane)
+    local _, pane, window = wezterm.mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
 end)
 
 -- Plugin tabline: provide configurable wezterm topbar in style of lualine.nvim
