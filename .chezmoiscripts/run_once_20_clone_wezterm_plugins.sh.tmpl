@@ -1,0 +1,75 @@
+#!/bin/bash
+# vim: set ft=bash:
+#
+# wezterm.lua hash: {{ include "dot_config/wezterm/wezterm.lua" | sha256sum }}
+#
+set -e
+
+chezmoi_is_headless="{{ .is_headless }}"
+chezmoi_wezterm_config="{{ .chezmoi.sourceDir }}/dot_config/wezterm/wezterm.lua"
+wezterm_plugin_dir="${XDG_DATA_HOME-$HOME/.local/share}/wezterm/plugins"
+
+# This is a re-implementation of wezterm's compute_repo_dir function in Bash.
+# It is used for translating a URL of a plugin source to a target directory.
+compute_repo_dir() {
+    local input="$1"
+    local output=""
+
+    for (( i=0; i<${#input}; i++ )); do
+        c="${input:$i:1}"
+        case "$c" in
+            "\\")
+                if (( i+1 == ${#input} )); then
+                    continue
+                fi
+                output+="sZs" ;;
+            "/")
+                output+="sZs" ;;
+            ":")
+                output+="sCs" ;;
+            ".")
+                output+="sDs" ;;
+            [a-zA-Z0-9_-])
+                output+="$c" ;;
+            *)
+                output+=$(printf "u%d" "'$c") ;;
+        esac
+    done
+    echo "$output"
+}
+
+clone_wezterm_plugin() {
+    local url="$1"
+    local repo_name
+    repo_name="$(basename "$url")"
+    local repo_dir
+    repo_dir="$(compute_repo_dir "$url")"
+    local target="${wezterm_plugin_dir}/${repo_dir}"
+
+    if [[ ! -e "${wezterm_plugin_dir}" ]]; then
+        mkdir -p "${wezterm_plugin_dir}"
+    fi
+
+    if [[ -d "${target}" ]]; then
+        echo "skipping wezterm plugin: $repo_name"
+        return
+    fi
+
+    echo "cloning wezterm plugin: $repo_name"
+    git clone -q "$url" "$target"
+}
+
+read_wezterm_plugin_requires() {
+    local config="$1"
+
+    sed -nr "s/^.*wezterm\\.plugin\\.require[ (]*[\"']([^\"']+)[\"'].*$/\\1/p" "$config"
+}
+
+if $chezmoi_is_headless; then
+    echo "skipping wezterm plugin installation"
+    exit 0
+fi
+
+read_wezterm_plugin_requires "$chezmoi_wezterm_config" | while read -r url; do
+    clone_wezterm_plugin "$url"
+done

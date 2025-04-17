@@ -9,10 +9,3 @@
   url: "https://raw.githubusercontent.com/cassava/git-credential-pass/main/git-credential-pass"
   executable: true
 {{ end -}}
-
-{{ if not .is_headless -}}
-".local/share/wezterm/plugins/httpssCssZssZsgithubsDscomsZsmichaelbrusegardsZstablinesDswez":
-  type: "git-repo"
-  url: "https://github.com/michaelbrusegard/tabline.wez"
-  refreshPeriod: "168h"
-{{ end -}}
