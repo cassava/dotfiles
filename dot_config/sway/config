@@ -6,8 +6,8 @@
 set $mod Mod4
 set $alt Mod1
 
-set $terminal             /usr/bin/alacritty
-set $terminal_alternate   /usr/bin/urxvt
+set $terminal             /usr/bin/wezterm
+set $terminal_alternate   /usr/bin/alacritty
 set $browser              /usr/bin/firefox
 set $launcher             "rofi -show run"
 set $monitor_primary      DP-6.1
