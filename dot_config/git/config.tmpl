@@ -7,7 +7,7 @@
 
 {{ if .is_private -}}
 [credential]
-    helper = {{ .chezmoi.homeDir }}/.local/bin/pass-git-helper
+    helper = pass --prefix tokens
     useHttpPath = true
 {{ end -}}
 
