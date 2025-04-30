@@ -110,7 +110,7 @@ return {
       { "williamboman/mason-lspconfig.nvim" },
       { "hrsh7th/cmp-nvim-lsp" },
     },
-    init = function()
+    opts = function()
       -- @since neovim 0.11
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(ev)
