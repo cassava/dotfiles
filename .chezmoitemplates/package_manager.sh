@@ -36,13 +36,14 @@ sudo_install_deb() {
 
 sudo_untar_fonts() {
     local file="$1"
+    local font_dir=/usr/local/share/fonts
 
-    sudo mkdir -p /usr/local/share/fonts
+    sudo mkdir -p "$font_dir"
     local extract_pattern="*.ttf"
     if tar -tf "$file" | grep -q '.*\.otf$'; then
         extract_pattern="*.otf"
     fi
-    tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern" || return
+    sudo tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern" || return
     fc-cache -f "$font_dir"
 }
 
