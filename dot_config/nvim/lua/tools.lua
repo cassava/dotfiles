@@ -58,59 +58,24 @@ return {
     opts = {},
   },
 
-  { "dstein64/vim-startuptime",
-    about = "Measure startup time.",
-    cmd = "StartupTime",
-    config = function()
-      vim.g.startuptime_tries = 10
-    end,
-  },
-
-  { "stevearc/profile.nvim",
-    about = [[
-      Gigantic hack to profile Lua in neovim by monkeypatching all functions.
-
-      0. Enable this plugin.
-      1. Start with: NVIM_PROFILE=1 nvim ...
-      2. Press <F1> to start.
-      3. Do stuff.
-      4. Press <F1> to stop and save.
-
-      Keep #3 as short as possible. Each second is about 100M of data.
-    ]],
-    lazy = false,
-    enabled = false,
-    config = function()
-      local should_profile = os.getenv("NVIM_PROFILE")
-      if should_profile then
-        require("profile").instrument_autocmds()
-        if should_profile:lower():match("^start") then
-          require("profile").start("*")
-        else
-          require("profile").instrument("*")
-        end
-      end
+  {
+    "folke/snacks.nvim",
+    opts = function()
+      -- Toggle the profiler
+      Snacks.toggle.profiler():map("<leader>pp")
+      -- Toggle the profiler highlights
+      Snacks.toggle.profiler_highlights():map("<leader>ph")
     end,
     keys = {
-      {
-        "<F1>",
-        function()
-          local prof = require("profile")
-          if prof.is_recording() then
-            prof.stop()
-            vim.ui.input({ prompt = "Save profile to:", completion = "file", default = "profile.json" }, function(filename)
-              if filename then
-                prof.export(filename)
-                vim.notify(string.format("Wrote %s", filename))
-              end
-            end)
-          else
-            vim.notify("Start profiling...")
-            prof.start("*")
-          end
-        end,
-        desc = "Start/Stop Profiling"
-      }
-    },
-  }
+      { "<leader>ps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
+    }
+  },
+  -- optional lualine component to show captured events
+  -- when the profiler is running
+  {
+    "nvim-lualine/lualine.nvim",
+    opts = function(_, opts)
+      table.insert(opts.sections.lualine_x, Snacks.profiler.status())
+    end,
+  },
 }
