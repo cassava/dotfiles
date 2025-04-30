@@ -51,15 +51,14 @@ return {
       Fancy bottom statusline with information from various sources.
     ]],
     event = "VeryLazy",
-    config = function()
-      require("lualine").setup({
+    opts = {
         sections = {
           lualine_c = {
             { 'filename', path=1 }
-          }
+          },
+          lualine_x = {}
         }
-      })
-    end,
+    },
   },
 
   { "b0o/incline.nvim",
