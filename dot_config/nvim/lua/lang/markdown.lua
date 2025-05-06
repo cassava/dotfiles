@@ -1,6 +1,15 @@
 return {
   { "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
+      -- TODO: Remove this work-around when the underlying issue is fixed.
+      --       Fixes syntax-highlighting flickering when inserting text.
+      --       See: https://github.com/neovim/neovim/issues/32660
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = { "markdown" },
+        callback = function()
+          vim.g._ts_force_sync_parsing = true
+        end
+      })
       if type(opts.ensure_installed) == "table" then
         vim.list_extend(opts.ensure_installed, { "markdown" })
       end
