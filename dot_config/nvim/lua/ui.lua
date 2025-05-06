@@ -137,15 +137,27 @@ return {
   },
 
   { "folke/flash.nvim",
-    about = "Navigate with search labels, enhanced character motions, and Treesitter integration",
-    replaces = { "leap.nvim", "hop.nvim" },
+    about = [[
+      Navigate with search labels, enhanced character motions, and Treesitter integration
+
+      If you are running into problems with <C-;> being weird, see:
+      https://unix.stackexchange.com/questions/746574/how-to-disable-the-mapping-of-ctrl-to-underscore-e-in-ubuntu
+    ]],
     event = "VeryLazy",
+    opts = {
+      modes = {
+        search = {
+          enabled = true
+        }
+      }
+    },
+    -- See: 
     keys = {
-      { "<cr>", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-      { "<s-cr>", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-      -- { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-      -- { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      -- { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+      { ";", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "<C-;>", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+      { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+      { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
     },
   },
 
@@ -194,15 +206,6 @@ return {
       ]])
     end,
     opts = {},
-  },
-
-  { "kevinhwang91/nvim-hlslens",
-    event = "VeryLazy",
-    -- config = function()
-    --   require("scrollbar.handlers.search").setup({
-    --     -- hlslens config overrides
-    --   })
-    -- end
   },
 
   { "edeneast/nightfox.nvim",
