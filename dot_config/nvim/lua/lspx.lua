@@ -56,14 +56,13 @@ return {
     dependencies = {
       "mason.nvim"
     },
-    config = function(_, opts)
-      require("mason-lspconfig").setup(opts)
-      require("mason-lspconfig").setup_handlers {
+    opts = {
+      handlers = {
         function(server_name) -- default handler
           vim.lsp.enable(server_name)
         end
       }
-    end
+    },
   },
 
   { "whoissethdaniel/mason-tool-installer.nvim",
