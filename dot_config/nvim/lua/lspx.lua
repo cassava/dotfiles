@@ -104,12 +104,7 @@ return {
   { "neovim/nvim-lspconfig",
     about = "Built-in LSP configuration mechanism.",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = {
-      { "mason.nvim" },
-      { "williamboman/mason-lspconfig.nvim" },
-      { "hrsh7th/cmp-nvim-lsp" },
-    },
-    opts = function()
+    config = function()
       -- @since neovim 0.11
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(ev)
