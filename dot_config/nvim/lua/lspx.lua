@@ -558,6 +558,7 @@ return {
   { "HiPhish/rainbow-delimiters.nvim",
     about = "Highlight parenthesis to matching pairs.",
     event = "VeryLazy",
+    submodules = false,
     init = function()
       local Snacks = require("snacks")
       Snacks.toggle.new({
