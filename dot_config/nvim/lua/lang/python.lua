@@ -7,23 +7,13 @@ return {
     end
   },
 
-  -- { "nvimtools/none-ls.nvim",
-  --   opts = function(_, opts)
-  --     local nls = require("null-ls")
-  --     vim.list_extend(opts.sources, {
-  --       nls.builtins.diagnostics.pylint,
-  --       nls.builtins.diagnostics.mypy,
-  --       nls.builtins.formatting.black,
-  --     })
-  --   end
-  -- },
-
   { "whoissethdaniel/mason-tool-installer.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         "mypy",
         "pylint",
         "black",
+        "ruff",
       })
     end
   },
