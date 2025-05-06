@@ -95,13 +95,6 @@ key.add({
 })
 
 -- Options [o] ---------------------------------------------------------------
-local function notify_option(str, value)
-  local state = "disabled"
-  if value then
-    state = "enabled"
-  end
-  vim.notify(str .. " " .. state .. ".")
-end
 
 key.add({
   { "<leader>o", group = "editor" },
