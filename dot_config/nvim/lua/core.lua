@@ -38,6 +38,8 @@ return {
       If you want to profile:
         https://github.com/folke/snacks.nvim/blob/main/docs/profiler.md
     ]],
+    priority = 1000,
+    lazy = false,
     opts = {
       bigfile = {},
       input = {},
