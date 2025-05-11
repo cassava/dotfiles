@@ -16,7 +16,16 @@ return {
 
   { "echasnovski/mini.surround",
     opts = {},
-    keys = { "sa", "sd", "sf" , "sF", "sh", "sr", "sn" },
+    keys = {
+      { "s", function() require("which-key").show({ keys = "s" }) end },
+      "sa",
+      "sd",
+      "sf",
+      "sF",
+      "sh",
+      "sr",
+      "sn",
+    },
   },
 
   { "echasnovski/mini.move",

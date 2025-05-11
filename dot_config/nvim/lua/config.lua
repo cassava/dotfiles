@@ -7,36 +7,16 @@ vim.keymap.set("v", ">", ">gv", { silent = true})
 -- Vim [v] -------------------------------------------------------------------
 key.add({
   { "<leader>v", group = "vim" },
-  { "<leader>vc", "<cmd>source $MYVIMRC<cr><cmd>Lazy sync<cr>", desc = "Source config and sync" },
-  { "<leader>ve", "<cmd>vsplit $MYVIMRC<cr>", desc = "Edit config" },
-  { "<leader>vf", "<cmd>Telescope find_files cwd=~/.config/nvim<cr>", desc = "Find files in config" },
+  { "<leader>va", "<cmd>Telescope autocommands<cr>", desc = "Search autocommands" },
+  { "<leader>vc", "<cmd>Telescope commands<cr>", desc = "Search commands" },
+  { "<leader>vk", "<cmd>Telescope keymaps<cr>", desc = "Search keymaps" },
+  { "<leader>vo", "<cmd>Telescope vim_options<cr>", desc = "Search options" },
   { "<leader>vh", "<cmd>Telescope help_tags<cr>", desc = "Search help tags" },
-  { "<leader>vs", "<cmd>source $MYVIMRC<cr>", desc = "Source Vim configuration" },
-  { "<leader>vx", "<cmd>w<cr><cmd>source %<cr>", desc = "Write and source this file" },
 })
 
 -- Vim Windows [c-w] ---------------------------------------------------------
 key.add({
   { "<c-w>*", "<c-w>_<c-w>|", desc = "Max out width & height" },
-})
-
-key.add({
-  mode = { "i", "n", "t" },
-
-  -- Focus windows:
-  -- { "<a-h>", "<c-\\><c-n><c-w>h", desc = "Focus left window" },
-  -- { "<a-j>", "<c-\\><c-n><c-w>j", desc = "Focus below window" },
-  -- { "<a-k>", "<c-\\><c-n><c-w>k", desc = "Focus right window" },
-  -- { "<a-l>", "<c-\\><c-n><c-w>l", desc = "Focus above window" },
-  -- { "<a-o>", "<c-\\><c-n>gt", desc = "Focus next tab" },
-
-  { "<a-w>", "<c-\\><c-n><c-w>c", desc = "Close focused window" },
-  { "<a-W>", "<cmd>tabclose<cr>", desc = "Close current tab" },
-  { "<a-T>", "<c-\\><c-n><c-w>T", desc = "Make window a tab" },
-
-  { "<a-[>", "<cmd>botright split term://zsh<cr>", desc = "Open new term below" },
-  { "<a-]>", "<cmd>botright vsplit term://zsh<cr>", desc = "Open new term right" },
-  { "<a-return>", "<cmd>tabe term://zsh<cr>", desc = "Open new term tab" },
 })
 
 -- Search [/] ----------------------------------------------------------------
@@ -121,13 +101,22 @@ key.add({
 -- Miscellaneous -------------------------------------------------------------
 key.add({
   silent = false,
-  { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>", desc = "Close quicklist" },
+  { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>",      desc = "Close quicklist" },
   { "<leader>m", function() require("util").make() end, desc = "Make" },
-  { ",z", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", desc = "Cd to file directory" },
+  { ",z",        "<cmd>lcd %:p:h<cr><cmd>pwd<cr>",      desc = "Cd to file directory" },
+  { ",",         "<nop>" },
+})
+
+-- System clipboard
+key.add({
+  { "<C-c>", "\"+y", desc = "Copy to system clipboard",    mode = { "x" } },
+  { "<C-c>", "\"+Y", desc = "Copy to system clipboard",    mode = { "n" } },
+  { "<C-v>", "+",  desc = "Paste from system clipboard", mode = { "i" } },      -- Use Ctrl-Q as alternative to Ctrl-v
+  { "<C-S-v>", "\"+p", desc = "Paste from system clipboard", mode = { "x", "n" } },
 })
 
 -- Load exrc files from parent directories
---
+-- 
 -- Make sure that each of these scripts ensures that it is resistant to
 -- being run multiple times.
 vim.api.nvim_create_autocmd({ "VimEnter", "DirChanged" }, {
@@ -151,9 +140,9 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     group = vim.api.nvim_create_augroup("help_window_right", {}),
     pattern = { "*.txt" },
     callback = function()
-        if vim.o.filetype == 'help' then
+        if vim.o.filetype == "help" then
           vim.cmd.wincmd("L")
-          vim.api.nvim_win_set_width(0, 80)
+          vim.api.nvim_win_set_width(0, 86)
         end
     end
 })

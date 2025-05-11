@@ -90,11 +90,14 @@ return {
 
   { "stevearc/conform.nvim",
     about = "Format code and text using formatters.",
-    config = true,
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
     keys = {
-      { "<leader>f", "gqip", desc = "Format paragraph" },
-      { ",f", function() require("conform").format() end, desc = "Format selection" },
-    }
+      { "<leader>f", function() require("conform").format({ async = true }) end, desc = "Format selection", mode = { "n", "x" } },
+    },
+    opts = function()
+      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+    end,
   },
 
   { "mfussenegger/nvim-lint",

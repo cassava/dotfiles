@@ -94,6 +94,9 @@ return {
       preset = "helix",
       delay = function(ctx) return ctx.plugin and 0 or 500 end,
     },
+    keys = {
+      { "<leader>?", function() require("which-key").show({ global = false }) end, desc = "Show buffer-local keymaps" },
+    },
   },
 
   { "stevearc/quicker.nvim",
@@ -120,20 +123,6 @@ return {
       { ",o", "<cmd>AerialToggle!<cr>", desc = "Toggle outline" },
     },
     opts = {},
-  },
-
-  { "sindrets/winshift.nvim",
-    about = "Allow full window moving capabilities.",
-    event = "VeryLazy",
-    config = true,
-    keys = {
-      { "<c-w>m", "<cmd>WinShift<cr>", desc = "Shift window" },
-      { "<c-w>X", "<cmd>WinShift swap<cr>", desc = "Swap window" },
-      { "<a-H>", "<cmd>WinShift left<cr>", desc = "Move window left" },
-      { "<a-J>", "<cmd>WinShift down<cr>", desc = "Move window down" },
-      { "<a-K>", "<cmd>WinShift up<cr>", desc = "Move window up" },
-      { "<a-L>", "<cmd>WinShift right<cr>", desc = "Move window right" },
-    }
   },
 
   { "folke/flash.nvim",
@@ -164,25 +153,42 @@ return {
   { "mrjones2014/smart-splits.nvim",
     about = "Seamless navigation between nvim and terminal multiplexers.",
     lazy = false,
-    config = true,
+    opts = {},
     keys = {
+      mode = { "i", "n", "x", "t" },
       { "<A-h>", function() require("smart-splits").move_cursor_left() end, desc = "Goto pane left" },
       { "<A-j>", function() require("smart-splits").move_cursor_down() end, desc = "Goto pane below" },
       { "<A-k>", function() require("smart-splits").move_cursor_up() end, desc = "Goto pane above" },
       { "<A-l>", function() require("smart-splits").move_cursor_right() end, desc = "Goto pane right" },
-      { "<A-S-h>", function() require("smart-splits").swap_buf_left() end, desc = "Goto pane left" },
-      { "<A-S-j>", function() require("smart-splits").swap_buf_down() end, desc = "Goto pane below" },
-      { "<A-S-k>", function() require("smart-splits").swap_buf_up() end, desc = "Goto pane above" },
-      { "<A-S-l>", function() require("smart-splits").swap_buf_right() end, desc = "Goto pane right" },
+      { "<A-S-h>", function() require("smart-splits").swap_buf_left() end, desc = "Move pane left" },
+      { "<A-S-j>", function() require("smart-splits").swap_buf_down() end, desc = "Move pane below" },
+      { "<A-S-k>", function() require("smart-splits").swap_buf_up() end, desc = "Move pane above" },
+      { "<A-S-l>", function() require("smart-splits").swap_buf_right() end, desc = "Move pane right" },
+      { "<A-o>", "<c-\\><c-n>gt", desc = "Focus next tab" },
+      { "<A-w>", "<c-\\><c-n><c-w>c", desc = "Close focused window" },
+      { "<A-W>", "<cmd>tabclose<cr>", desc = "Close current tab" },
+      { "<A-T>", "<c-\\><c-n><c-w>T", desc = "Make window a tab" },
+      { "<A-S-Return>", "<cmd>botright split term://zsh<cr>", desc = "Open new term below" },
+      { "<A-Return>", "<cmd>tabe term://zsh<cr>", desc = "Open new term tab" },
+    }
+  },
+
+  { "sindrets/winshift.nvim",
+    about = "Allow full window moving capabilities.",
+    event = "VeryLazy",
+    opts = {},
+    keys = {
+      { "<c-w>m", "<cmd>WinShift<cr>", desc = "Shift window" },
+      { "<c-w>X", "<cmd>WinShift swap<cr>", desc = "Swap window" },
     }
   },
 
   -- FIXME: Fix re-folding on changing contents
   { "csams/pretty-fold.nvim",
     enabled = true,
-    about = "Improve folding appearnce.",
+    about = "Improve folding appearance.",
     event = "VeryLazy",
-    config = true,
+    opts = {},
     dependencies = {
       "anuvyklack/keymap-amend.nvim",
     }

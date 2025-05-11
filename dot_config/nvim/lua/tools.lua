@@ -33,9 +33,9 @@ return {
     cmd = { "GrugFar" },
   },
 
-  -- { "RaafatTurki/hex.nvim",
-  --   config = true,
-  -- },
+  { "RaafatTurki/hex.nvim",
+    opts = {},
+  },
 
   { "axieax/urlview.nvim",
     about = [[
@@ -58,24 +58,20 @@ return {
     opts = {},
   },
 
-  {
-    "folke/snacks.nvim",
+  { "folke/snacks.nvim",
     opts = function()
-      -- Toggle the profiler
-      Snacks.toggle.profiler():map("<leader>pp")
-      -- Toggle the profiler highlights
-      Snacks.toggle.profiler_highlights():map("<leader>ph")
+      local Snacks = require("snacks")
+      Snacks.toggle.profiler():map("<leader>vpp")
+      Snacks.toggle.profiler_highlights():map("<leader>vph")
     end,
     keys = {
-      { "<leader>ps", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
+      { "<leader>vp", group = "Profiler" },
+      { "<leader>vps", function() require("snacks").profiler.scratch() end, desc = "Profiler Scratch Buffer" },
     }
   },
-  -- optional lualine component to show captured events
-  -- when the profiler is running
-  {
-    "nvim-lualine/lualine.nvim",
+  { "nvim-lualine/lualine.nvim",
     opts = function(_, opts)
-      table.insert(opts.sections.lualine_x, Snacks.profiler.status())
+      table.insert(opts.sections.lualine_x, require("snacks").profiler.status())
     end,
   },
 }

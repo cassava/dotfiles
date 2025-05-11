@@ -38,6 +38,7 @@ declare -a packages=(
     tree
     unzip
     universal-ctags
+    xxd
     zsh
 
 # {{ if not .is_headless }}

@@ -114,7 +114,6 @@ return {
     end
   },
 
-
 --- FILE MANAGEMENT -----------------------------------------------------------
 
   { "echasnovski/mini.starter",
