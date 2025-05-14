@@ -32,7 +32,7 @@ vim.diagnostic.config {
 }
 
 return {
-  { "williamboman/mason.nvim",
+  { "mason-org/mason.nvim",
     about = "Manage external editor tooling such as for LSP and DAP.",
     version = "*",
     cmd = "Mason",
@@ -44,7 +44,7 @@ return {
     },
   },
 
-  { "williamboman/mason-lspconfig.nvim",
+  { "mason-org/mason-lspconfig.nvim",
     about = [[
       Bridges mason.nvim with the nvim-lspconfig plugin.
 
@@ -56,13 +56,7 @@ return {
     dependencies = {
       "mason.nvim"
     },
-    opts = {
-      handlers = {
-        function(server_name) -- default handler
-          vim.lsp.enable(server_name)
-        end
-      }
-    },
+    opts = {},
   },
 
   { "whoissethdaniel/mason-tool-installer.nvim",
