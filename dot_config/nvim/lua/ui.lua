@@ -37,6 +37,11 @@ return {
         lsp_doc_border = false, -- add a border to hover docs and signature help
       },
       views = {
+        cmdline = {
+          win_options = {
+            winblend = 0
+          }
+        }
       },
     },
     keys = {
@@ -56,7 +61,13 @@ return {
           lualine_c = {
             { 'filename', path=1 }
           },
-          lualine_x = {}
+          lualine_x = {
+            {
+              require("noice").api.statusline.mode.get,
+              cond = require("noice").api.statusline.mode.has,
+              color = { fg = "#ff9e64" },
+            }
+          }
         }
     },
   },
