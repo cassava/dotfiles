@@ -43,11 +43,10 @@ return {
         }
       },
     },
-    keys = {
-      { "<leader>nn", function() require("noice").cmd("history") end, desc = "Noice History" },
-      { "<leader>na", function() require("noice").cmd("all") end, desc = "Noice All" },
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
     },
-    dependencies = { "MunifTanjim/nui.nvim" },
   },
 
   { "nvim-lualine/lualine.nvim",
@@ -130,7 +129,7 @@ return {
       "AerialToggle",
     },
     keys = {
-      { ",o", "<cmd>AerialToggle!<cr>", desc = "Toggle outline" },
+      { ",o", "<cmd>AerialToggle!<cr>", desc = "Toggle outline" }, -- TODO: Update keybinding
     },
     opts = {},
   },
@@ -150,7 +149,6 @@ return {
         }
       }
     },
-    -- See: 
     keys = {
       { ";", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
       { "<C-;>", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
@@ -262,60 +260,6 @@ return {
     end
   },
 
-  { "nvim-telescope/telescope.nvim",
-    about = "Universal fuzzy finder.",
-    version = "*",
-    cmd = "Telescope",
-    opts = {
-      defaults = {
-        preview = {
-          filesize_limit = 1
-        }
-      }
-    },
-    keys = {
-      {"<leader>b", "<cmd>Telescope buffers<cr>", desc = "Search buffers" },
-      {"<leader>h", "<cmd>Telescope help_tags<cr>", desc = "Search help tags"},
-    },
-    dependencies = {
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        build = "make",
-        config = function()
-          require("telescope").load_extension("fzf")
-        end
-      },
-      { "debugloop/telescope-undo.nvim",
-        keys = {
-          {"<leader>u", "<cmd>Telescope undo<cr>", desc = "Search undo history" },
-        },
-        config = function()
-          require("telescope").load_extension("undo")
-        end
-      },
-      { "nvim-telescope/telescope-dap.nvim",
-        config = function()
-          require("telescope").load_extension("dap")
-        end
-      },
-      { "nvim-telescope/telescope-project.nvim",
-        config = function()
-          require("telescope").load_extension("project")
-        end
-      },
-      { "nvim-telescope/telescope-live-grep-args.nvim",
-        config = function()
-          require("telescope").load_extension("live_grep_args")
-        end
-      },
-      { "fdschmidt93/telescope-egrepify.nvim",
-        config = function()
-          require("telescope").load_extension("egrepify")
-        end
-      },
-    }
-  },
-
   { "folke/trouble.nvim",
     about = [[
       A pretty list for showing diagnostics, references, telescope results,
@@ -345,7 +289,6 @@ return {
     event = "VeryLazy",
     opts = {},
     cmd = {
-      "TodoTelescope", -- cwd=PATH keywords=TODO,FIX
       "TodoQuickFix",
       "TodoLocList",
       "TodoFzfLua",

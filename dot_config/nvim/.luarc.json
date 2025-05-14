@@ -10,6 +10,7 @@
     ],
     "hint.enable": true,
     "diagnostics.globals": [
-        "vim"
+        "vim",
+        "Snacks",
     ]
 }

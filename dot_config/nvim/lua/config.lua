@@ -4,57 +4,9 @@ local key = require("util").keymapper()
 vim.keymap.set("v", "<", "<gv", { silent = true})
 vim.keymap.set("v", ">", ">gv", { silent = true})
 
--- Vim [v] -------------------------------------------------------------------
-key.add({
-  { "<leader>v", group = "vim" },
-  { "<leader>va", "<cmd>Telescope autocommands<cr>", desc = "Search autocommands" },
-  { "<leader>vc", "<cmd>Telescope commands<cr>", desc = "Search commands" },
-  { "<leader>vk", "<cmd>Telescope keymaps<cr>", desc = "Search keymaps" },
-  { "<leader>vo", "<cmd>Telescope vim_options<cr>", desc = "Search options" },
-  { "<leader>vh", "<cmd>Telescope help_tags<cr>", desc = "Search help tags" },
-})
-
 -- Vim Windows [c-w] ---------------------------------------------------------
 key.add({
   { "<c-w>*", "<c-w>_<c-w>|", desc = "Max out width & height" },
-})
-
--- Search [/] ----------------------------------------------------------------
-key.add({
-  { "<leader>/", group = "Search" },
-  { "<leader>//", "<cmd>Telescope<cr>", desc = "Telescope" },
-  { "<leader>/g", "<cmd>Telescope git_files<cr>", desc = "Git files" },
-  {
-    "<leader>*",
-    function()
-      require("telescope.builtin").grep_string({
-        cwd = require("util").project_dir()
-      })
-    end,
-    desc = "Search project for <CWORD>"
-  },
-  {
-    "<leader>a",
-    function()
-      require("telescope.builtin").live_grep({
-        cwd = require("util").project_dir()
-      })
-    end,
-    desc = "Search project"
-  },
-  {
-    mode = { "v" },
-    {
-      "<leader>*",
-      function()
-        require("telescope.builtin").grep_string({
-          search = require("util").get_visual_selection(),
-          cwd = require("util").project_dir(),
-        })
-      end,
-      desc = "Search project for selection"
-    },
-  },
 })
 
 -- Git [g] -------------------------------------------------------------------

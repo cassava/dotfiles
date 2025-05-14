@@ -23,6 +23,7 @@ declare -a packages=(
     git
     git
     htop
+    imagemagick
     inetutils-ping
     inetutils-telnet
     inetutils-tools
@@ -66,6 +67,7 @@ declare -A assets=(
     ["ripgrep"]={{ gitHubLatestReleaseAssetURL "burntsushi/ripgrep" (printf "ripgrep_*_%s.deb" .chezmoi.arch) }}
     ["sd"]={{ gitHubLatestReleaseAssetURL "chmln/sd" (printf "sd-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}
     ["serie"]={{ gitHubLatestReleaseAssetURL "lusingander/serie" (printf "serie-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}
+    ["tectonic"]={{ gitHubLatestReleaseAssetURL "tectonic-typesetting/tectonic" (printf "tectonic-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}
     ["unused_deps"]={{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "unused_deps-linux-%s" .chezmoi.arch) }}
     ["uv"]={{ gitHubLatestReleaseAssetURL "astral-sh/uv" (printf "uv-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}
     ["watchexec"]={{ gitHubLatestReleaseAssetURL "watchexec/watchexec" (printf "watchexec-*-%s-unknown-linux-musl.deb" .sys.uname_arch) }}
@@ -84,6 +86,7 @@ install_nvim() { sudo_untar_tree1 "$1"; }
 install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
 install_serie() { sudo_untar_bin0 "$1" serie; }
+install_tectonic() { sudo_untar_bin0 "$1" tectonic; }
 install_sd() { sudo_untar_bin1 "$1" sd; }
 install_uv() { sudo_untar_bin1 "$1" uv uvx; }
 install_buildifier() { sudo_copy_bin "$1" buildifier; }

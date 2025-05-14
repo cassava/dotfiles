@@ -7,31 +7,17 @@ return {
     end
   },
 
-  { "nvim-telescope/telescope.nvim",
+  {
+    "theprimeagen/git-worktree.nvim",
     keys = {
-      { "<leader>gc", "<cmd>Telescope git_bcommits<cr>", desc = "Search buffer commits" },
-      { "<leader>gl", "<cmd>Telescope git_commits<cr>", desc = "Search commits" },
-      { "<leader>gf", "<cmd>Telescope git_files<cr>", desc = "Search files" },
-      { "<leader>gs", "<cmd>Telescope git_status<cr>", desc = "Search status" },
-      { "<leader>gt", "<cmd>Telescope git_stash<cr>", desc = "Search stash" },
-      { "<leader>gw", "<cmd>Telescope git_branches<cr>", desc = "Search branches" },
+      { "<leader>gw", "<cmd>Telescope git_worktree<cr>", desc = "Search worktrees" },
+      { "<leader>gW", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Create worktree" },
     },
-    dependencies = {
-      {
-        "theprimeagen/git-worktree.nvim",
-        keys = {
-          { "<leader>gw", "<cmd>Telescope git_worktree<cr>", desc = "Search worktrees" },
-          { "<leader>gW", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Create worktree" },
-        },
-        config = function()
-          require("telescope").load_extension("git_worktree")
-        end
-      }
-    }
   },
 
   { "lewis6991/gitsigns.nvim",
     about = "Git signs for the gutter and LSP code actions.",
+    enabled = false,
     event = "BufReadPre",
     opts = {
       signs = {
