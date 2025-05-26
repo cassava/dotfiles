@@ -53,6 +53,7 @@ declare -ax packages=(
 declare -Ax assets=(
     ["ast-grep"]='{{ gitHubLatestReleaseAssetURL "ast-grep/ast-grep" (printf "app-%s-unknown-linux-gnu.zip" .sys.uname_arch) }}'
     ["bat"]='{{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) }}'
+    ["bazel"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/bazel" (printf "bazel_*-linux-%s.deb" .sys.uname_arch) }}'
     ["binocle"]='{{ gitHubLatestReleaseAssetURL "sharkdp/binocle" (printf "binocle-musl_*_%s.deb" .chezmoi.arch) }}'
     ["bottom"]='{{ gitHubLatestReleaseAssetURL "clementtsang/bottom" (printf "bottom-musl_*_%s.deb" .chezmoi.arch) }}'
     ["buildifier"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildifier-linux-%s" .chezmoi.arch) }}'
