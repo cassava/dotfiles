@@ -13,10 +13,6 @@ return {
     opts = {},
   },
 
-  { "qpkorr/vim-renamer",
-    about = "Rename files in the system with: nvim +Renamer",
-    cmd = "Renamer",
-  },
   { "subnut/nvim-ghost.nvim",
     about = "Bi-directionally edit text content in the browser.",
     cmd = {
@@ -69,6 +65,7 @@ return {
       { "<leader>vps", function() require("snacks").profiler.scratch() end, desc = "Profiler Scratch Buffer" },
     }
   },
+
   { "nvim-lualine/lualine.nvim",
     opts = function(_, opts)
       table.insert(opts.sections.lualine_x, require("snacks").profiler.status())
