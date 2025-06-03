@@ -4,14 +4,6 @@ local is_unsupported = function(_, bufnr)
   return vim.fn.getfsize(vim.fn.getbufinfo(bufnr)[1]["name"]) > max_filesize
 end
 
-local function notify_option(str, value)
-  local state = "disabled"
-  if value then
-    state = "enabled"
-  end
-  vim.notify(str .. " " .. state .. ".")
-end
-
 vim.api.nvim_create_autocmd({ "BufReadPre" }, {
   pattern = "*",
   callback = function(info)
@@ -19,7 +11,6 @@ vim.api.nvim_create_autocmd({ "BufReadPre" }, {
       vim.notify("Large file detected, disabling treesitter.")
       vim.wo.foldmethod = "manual"
       vim.cmd [[ syntax off ]]
-      require("gitsigns").detach(info.buf)
     end
   end
 })
@@ -115,7 +106,7 @@ return {
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
-      { "<leader>f", function() require("conform").format({ async = true }) end, desc = "Format selection", mode = { "n", "x" } },
+      { "<leader>q", function() require("conform").format({ async = true }) end, desc = "Format selection", mode = { "n", "x" } },
     },
     opts = function()
       vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
@@ -193,7 +184,6 @@ return {
     website = "https://cmp.saghen.dev/",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      "Kaiser-Yang/blink-cmp-git",
     },
     event = "VeryLazy",
     version = "1.*",
@@ -212,17 +202,8 @@ return {
       -- Default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, due to `opts_extend`
       sources = {
-        default = { "lazydev", "git", "lsp", "path", "snippets", "buffer" },
+        default = { "lazydev", "lsp", "path", "snippets", "buffer" },
         providers = {
-          git = {
-            name = "Git",
-            module = "blink-cmp-git",
-            opts = {
-              commit = {
-                triggers = { "git:" },
-              }
-            }
-          },
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",

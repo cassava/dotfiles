@@ -6,6 +6,8 @@
 --
 
 -- Set cursorline in insert mode and unset it when leaving.
+-- TODO: Turn this into something that can be toggled on-and-off.
+--  Should have: never, always, and insert
 vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     callback = function() vim.wo.cursorline = false end,
 })
@@ -160,13 +162,7 @@ return {
       https://unix.stackexchange.com/questions/746574/how-to-disable-the-mapping-of-ctrl-to-underscore-e-in-ubuntu
     ]],
     event = "VeryLazy",
-    opts = {
-      modes = {
-        search = {
-          enabled = true
-        }
-      }
-    },
+    opts = {},
     keys = {
       { ";", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
       { "<C-;>", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },

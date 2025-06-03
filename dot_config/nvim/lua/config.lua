@@ -53,8 +53,8 @@ key.add({
 -- Miscellaneous -------------------------------------------------------------
 key.add({
   silent = false,
-  { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>",      desc = "Close quicklist" },
-  { "<leader>m", function() require("util").make() end, desc = "Make" },
+  -- { "<leader>c", "<cmd>cclose<cr><cmd>lclose<cr>",      desc = "Close quicklist" },
+  -- { "<leader>m", function() require("util").make() end, desc = "Make" },
   { ",z",        "<cmd>lcd %:p:h<cr><cmd>pwd<cr>",      desc = "Cd to file directory" },
   { ",",         "<nop>" },
 })

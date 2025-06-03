@@ -64,7 +64,7 @@ return {
         }
       },
       statuscolumn = {
-        enabled = true,
+        enabled = false,
       },
     },
     keys = {

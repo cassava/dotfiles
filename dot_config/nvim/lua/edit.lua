@@ -44,7 +44,6 @@ return {
         line_up = "<c-s-k>",
       }
     },
-    config = function(_, opts) require("mini.move").setup(opts) end,
   },
 
   { "echasnovski/mini.pairs", -- DISABLED
