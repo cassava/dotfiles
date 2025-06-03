@@ -9,12 +9,18 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 return {
-  { "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "cpp", "c", "cmake", "make", "ninja" })
-      end
-    end
+  lazy_treesitter_ensure_installed {
+    "asm",
+    "c",
+    "cpp",
+    "nasm",
+    "objdump",
+  },
+
+  lazy_mason_ensure_installed {
+    "clangd",
+    "clang-format",
+    "codelldb",
   },
 
   { "ludovicchabant/vim-gutentags",
@@ -27,20 +33,11 @@ return {
     end,
   },
 
-  { "whoissethdaniel/mason-tool-installer.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "clangd",
-        "codelldb",
-      })
-    end,
-  },
-
-  { "jay-babu/mason-nvim-dap.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "codelldb"
-      })
-    end
+  { "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        cpp = { "clang-format" },
+      }
+    }
   },
 }

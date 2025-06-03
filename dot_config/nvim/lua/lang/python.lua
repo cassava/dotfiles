@@ -1,20 +1,14 @@
 return {
-  { "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "python" })
-      end
-    end
+  lazy_treesitter_ensure_installed {
+    "jinja",
+    "jinja_inline",
+    "python",
   },
 
-  { "whoissethdaniel/mason-tool-installer.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "mypy",
-        "pylint",
-        "black",
-        "ruff",
-      })
-    end
+  lazy_mason_ensure_installed {
+    "mypy",
+    "pylint",
+    "black",
+    "ruff",
   },
 }

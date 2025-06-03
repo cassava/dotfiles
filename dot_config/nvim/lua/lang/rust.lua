@@ -1,12 +1,5 @@
 return {
-  { "nvim-treesitter/nvim-treesitter",
-    -- Add Rust to treesitter.
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_ensure_installed({ "rust" })
-      end
-    end
-  },
+  lazy_treesitter_ensure_installed { "rust" },
 
   { "rust-lang/rust.vim",
     enabled = false,

@@ -1,20 +1,6 @@
 return {
-  { "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_extend(opts.ensure_installed, { "lua" })
-      end
-    end
-  },
-
-  { "whoissethdaniel/mason-tool-installer.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.ensure_installed, {
-        "lua_ls",
-        "stylua",
-      })
-    end
-  },
+  lazy_treesitter_ensure_installed { "lua", "luadoc" },
+  lazy_mason_ensure_installed { "lua_ls", "stylua" },
 
   { "stevearc/conform.nvim",
     opts = {

@@ -31,6 +31,30 @@ vim.diagnostic.config {
   }
 }
 
+_G.lazy_treesitter_ensure_installed = function(list)
+  return {
+    "nvim-treesitter/nvim-treesitter",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) ~= "table" then
+        opts.ensure_installed = {}
+      end
+      vim.list_extend(opts.ensure_installed, list)
+    end
+  }
+end
+
+_G.lazy_mason_ensure_installed = function(list)
+  return {
+    "whoissethdaniel/mason-tool-installer.nvim",
+    opts = function(_, opts)
+      if type(opts.ensure_installed) ~= "table" then
+        opts.ensure_installed = {}
+      end
+      vim.list_extend(opts.ensure_installed, list)
+    end
+  }
+end
+
 return {
   { "mason-org/mason.nvim",
     about = "Manage external editor tooling such as for LSP and DAP.",
@@ -54,9 +78,13 @@ return {
       For automatic source installation, see mason-tool-installer.
     ]],
     dependencies = {
-      "mason.nvim"
+      "mason.nvim",
+      "nvim-lspconfig",
     },
-    opts = {},
+    opts = {
+      automatic_enable = true,
+      ensure_installed = {}
+    },
   },
 
   { "whoissethdaniel/mason-tool-installer.nvim",
@@ -253,15 +281,6 @@ return {
     }
   },
 
-  { "jay-babu/mason-nvim-dap.nvim",
-    about = "Install tools for nvim-dap via Mason.",
-    event = "VeryLazy",
-    opts = {
-      ensure_installed = {},
-      handlers = {}
-    },
-  },
-
   { "rcarriga/nvim-dap-ui",
     keys = {
       { "<leader>dd", function() require("dapui").toggle() end, desc = "Open UI" },
@@ -288,7 +307,24 @@ return {
     build = ":TSUpdate",
     event = { "BufReadPre", "BufNewFile" },
     opts = {
-      ensure_installed = "all",
+      ensure_installed = {
+        "comment",
+        "commonlisp",
+        "haskell",
+        "java",
+        "javadoc",
+        "julia",
+        "matlab",
+        "pod",
+        "query",
+        "r",
+        "regex",
+        "rst",
+        "ruby",
+        "sql",
+        "starlark",
+        "zig",
+      },
       sync_install = false,
       ignore_install = { "comment" },
       highlight = {

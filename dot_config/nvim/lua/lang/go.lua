@@ -13,12 +13,12 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 return {
-  { "nvim-treesitter/nvim-treesitter",
-    opts = function(_, opts)
-      if type(opts.ensure_installed) == "table" then
-        vim.list_ensure_installed({ "go", "gomod", "gosum", "gowork" })
-      end
-    end
+  lazy_treesitter_ensure_installed {
+    "go",
+    "gomod",
+    "gosum",
+    "gotmpl",
+    "gowork",
   },
 
   { "fatih/vim-go",
