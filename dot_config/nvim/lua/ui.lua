@@ -40,6 +40,11 @@ return {
           win_options = {
             winblend = 0
           }
+        },
+        cmdline_popup = {
+          win_options = {
+            winblend = 0
+          }
         }
       },
     },
@@ -54,7 +59,8 @@ return {
       Fancy bottom statusline with information from various sources.
     ]],
     event = "VeryLazy",
-    opts = {
+    opts = function(_, opts)
+      opts = {
         sections = {
           lualine_c = {
             { 'filename', path=1 }
@@ -64,10 +70,22 @@ return {
               require("noice").api.statusline.mode.get,
               cond = require("noice").api.statusline.mode.has,
               color = { fg = "#ff9e64" },
-            }
-          }
+            },
+          },
+          lualine_y = {
+            'encoding',
+            'fileformat',
+            'filetype'
+          },
+          lualine_z = {
+            'selectioncount',
+            'progress',
+            'location',
+          },
         }
-    },
+      }
+      return opts
+    end,
   },
 
   { "b0o/incline.nvim",
