@@ -151,7 +151,6 @@ return {
       { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
       { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
       { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
-      { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
       { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
       { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
@@ -173,7 +172,7 @@ return {
           Snacks.toggle.indent():map("<leader>og")
 
           -- Toggle options:
-          Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }):map("<leader>oc")
+          Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2, name = "Conceal Level" }):map("<leader>ox")
           Snacks.toggle.option("number", { name = "Number" }):map("<leader>on")
           Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>oN")
           Snacks.toggle.option("showtabline", { off = 0, on = vim.o.showtabline > 0 and vim.o.showtabline or 2, name = "Tabline" }):map("<leader>oA")

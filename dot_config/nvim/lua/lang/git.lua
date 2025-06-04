@@ -80,10 +80,10 @@ return {
         map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
 
         -- Buffer mappings:
-        map("n", "<leader>gb", gs.toggle_current_line_blame, "Toggle blame")
-        map("n", "<leader>gS", gs.stage_buffer, "Stage buffer")
-        map("n", "<leader>gR", gs.reset_buffer, "Reset buffer")
-        map("n", "<leader>gU", gs.reset_buffer_index, "Reset buffer index")
+        map("n", "<leader>gm", gs.toggle_current_line_blame, "Toggle blame")
+        map("n", "<leader>guS", gs.stage_buffer, "Stage buffer")
+        map("n", "<leader>guR", gs.reset_buffer, "Reset buffer")
+        map("n", "<leader>guU", gs.reset_buffer_index, "Reset buffer index")
       end,
     },
   },
@@ -101,8 +101,8 @@ return {
       "GBrowse",
     },
     keys = {
-      { "<leader>gg", "<cmd>vert Git<cr>", desc = "View status" },
-      { "<leader>gd", "<cmd>Gdiffsplit<cr>", desc = "Diff buffer" },
+      { "<leader>gS", "<cmd>vert Git<cr>", desc = "View status" },
+      { "<leader>gD", "<cmd>Gdiffsplit<cr>", desc = "Diff buffer" },
       { "<leader>gC", "<cmd>Git commit | startinsert<cr>", desc = "Create commit" },
       { "<leader>gA", "<cmd>Git commit --amend | startinsert<cr>", desc = "Amend commit" },
       -- { "<leader>gF", "<cmd>Git commit | startinsert<cr>", desc = "Amend commit" },
