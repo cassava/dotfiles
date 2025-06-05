@@ -53,7 +53,8 @@ declare -ax packages=(
 declare -Ax assets=(
     ["ast-grep"]='{{ gitHubLatestReleaseAssetURL "ast-grep/ast-grep" (printf "app-%s-unknown-linux-gnu.zip" .sys.uname_arch) }}'
     ["bat"]='{{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) }}'
-    ["bazel"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/bazel" (printf "bazel_*-linux-%s.deb" .sys.uname_arch) }}'
+    ["bazelisk"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/bazelisk" (printf "bazelisk-%s.deb" .chezmoi.arch) }}'
+    ["bazelisk_zsh"]='https://raw.githubusercontent.com/bazelbuild/bazel/refs/heads/{{ (gitHubLatestTag "bazelbuild/bazel").Name }}/scripts/zsh_completion/_bazel'
     ["binocle"]='{{ gitHubLatestReleaseAssetURL "sharkdp/binocle" (printf "binocle-musl_*_%s.deb" .chezmoi.arch) }}'
     ["bottom"]='{{ gitHubLatestReleaseAssetURL "clementtsang/bottom" (printf "bottom-musl_*_%s.deb" .chezmoi.arch) }}'
     ["buildifier"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildifier-linux-%s" .chezmoi.arch) }}'
@@ -86,6 +87,7 @@ declare -Ax assets=(
 )
 
 install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
+install_bazelisk_zsh() { sudo_copy_file "$1" "share/zsh/site-functions/_bazel"; }
 install_nvim() { sudo_untar_tree1 "$1"; }
 install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
