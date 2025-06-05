@@ -20,7 +20,7 @@ sudo_untar_bin1() {
 }
 
 sudo_unzip_bin() {
-    sudo unzip -q -j -d "/usr/local/bin" "$1" "${@:2}"
+    sudo unzip -q -o -j -d "/usr/local/bin" "$1" "${@:2}"
     for file in "${@:2}"; do
         sudo chmod +x "/usr/local/bin/$file"
     done
