@@ -61,16 +61,18 @@ asset_set_mark() {
 }
 
 asset_filename() {
-    local url="$1"
-    local sum="$(echo "$url" | md5sum - | cut -f1 -d' ')"
+    local key="$1"
+    local url="$2"
+    local sum="$(echo "$url" | sha1sum - | cut -b -8)"
     local base="$(basename "$url")"
-    echo "$base" | sed -r "s/.*/${sum}_\\0/"
+    printf "%s_%s_%s" "$key" "$sum" "$base"
 }
 
 asset_download() {
-    local url="$1"
+    local key="$1"
+    local url="$2"
     local basename="$(basename "$url")"
-    local filename="$(asset_filename "$url")"
+    local filename="$(asset_filename "$key" "$url")"
     local dest="$cache_dir/$filename"
 
     if [[ -f "$dest" ]]; then
@@ -122,7 +124,7 @@ install_assets() {
             continue
         fi
 
-        file="$(asset_download "$url")"
+        file="$(asset_download "$key" "$url")"
         if [[ "$(type -t install_$key)" == "function" ]]; then
             echo "installing: $key" >&2
             install_$key "$file" || continue
