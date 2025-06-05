@@ -37,7 +37,6 @@ declare -ax packages=(
     pass
     python3-xdg
     silversearcher-ag
-    tmate
     tmux
     tmuxinator
     tree
