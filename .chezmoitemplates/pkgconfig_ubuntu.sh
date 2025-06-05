@@ -7,6 +7,7 @@
 #     sudo_untar_bin1 FILE [NAMES...]
 #     sudo_unzip_bin FILE [NAMES...]
 #     sudo_copy_bin FILE [NAME]
+#     sudo_copy_file FILE DEST
 #     sudo_innstall_deb FILE
 #     sudo_untar_fonts FILE
 #

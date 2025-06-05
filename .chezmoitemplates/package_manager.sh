@@ -27,7 +27,11 @@ sudo_unzip_bin() {
 }
 
 sudo_copy_bin() {
-    sudo install -m755 "$1" "/usr/local/bin/$2"
+    sudo install -m755 "$1" "/usr/local/bin/${2-$1}"
+}
+
+sudo_copy_file() {
+    sudo install -m644 "$1" "/usr/local/$2"
 }
 
 sudo_install_deb() {
