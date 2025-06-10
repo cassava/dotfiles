@@ -17,9 +17,13 @@ export LESS="-AFIRs"
 export PATH="$HOME/.local/bin:$HOME/.local/sbin:$PATH"
 
 # Source user profile files
-[[ -n "$(echo "$ZSH_VERSION")" ]] && setopt nullglob || shopt -s nullglob
+if [[ -n "$ZSH_VERSION" ]]; then
+    setopt nullglob
+else
+    shopt -s nullglob
+fi
 if [[ -d ${profile_dir} ]]; then
-    for file in ${profile_dir}/*.{zsh,sh}; do
+    for file in "${profile_dir}"/*.{zsh,sh}; do
         source "$file"
     done
 fi
