@@ -134,6 +134,10 @@ return {
 
   { "sindrets/diffview.nvim" },
 
+  { "neogitorg/neogit",
+    opts = {}
+  },
+
   { "andrewradev/linediff.vim",
     about = [[
       Diff multiple blocks (lines) of text, instead of files.
