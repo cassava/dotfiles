@@ -1,3 +1,9 @@
+vim.filetype.add({
+  extension = {
+    sh = "bash",
+  }
+})
+
 return {
   lazy_treesitter_ensure_installed {
     "bash",

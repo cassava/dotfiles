@@ -12,6 +12,39 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
+vim.treesitter.query.add_directive("inject-go-tmpl!", function(_, _, source, _, metadata)
+  local fname
+  if type(source) == "number" then
+    fname = vim.api.nvim_buf_get_name(source)
+  else
+    fname = source
+  end
+  fname = vim.fn.fnamemodify(fname, ":t:r")
+  local ft = vim.filetype.match({ filename = fname })
+  if not ft then
+    return
+  end
+  metadata["injection.language"] = ft
+end, {})
+
+-- Make sure vim recognizes .tmpl files as gotmpl ft
+vim.filetype.add({
+  extension = {
+    tmpl = "gotmpl",
+  },
+})
+
+-- Moved query inline
+vim.treesitter.query.set(
+  "gotmpl",
+  "injections",
+  [[
+    ((text) @injection.content
+      (#inject-go-tmpl!)
+      (#set! injection.combined))
+  ]]
+)
+
 return {
   lazy_treesitter_ensure_installed {
     "go",
@@ -21,17 +54,21 @@ return {
     "gowork",
   },
 
-  { "fatih/vim-go",
-    ft = "go",
-    init = function()
-      vim.g.go_highlight_trailing_whitespace_error = 0
-      vim.g.go_auto_type_info = 1
-      vim.g.go_fmt_command = "goimports"
-      vim.g.go_fmt_experimental = 1
-    end
-  },
+  -- NOTE: Disabled because:
+  --   vim-go now sets the filetype for .tmpl files to gohtmltmpl even if it's already been set.
+  --   See relevant Github PR: https://github.com/fatih/vim-go/pull/3146
+  --  
+  -- { "fatih/vim-go",
+  --   ft = "go",
+  --   init = function()
+  --     vim.g.go_highlight_trailing_whitespace_error = 0
+  --     vim.g.go_auto_type_info = 1
+  --     vim.g.go_fmt_command = "goimports"
+  --     vim.g.go_fmt_experimental = 1
+  --   end
+  -- },
 
-  { "ngynkvn/gotmpl.nvim",
-    opts = {}
-  },
+  -- { "eggplannt/gotmpl.nvim",
+  --   opts = {}
+  -- },
 }
