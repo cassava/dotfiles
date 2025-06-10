@@ -58,9 +58,6 @@ config.keys = {
     { key = 'Pause',      mods = 'ALT',            action = act.DetachDomain 'CurrentPaneDomain' },
     { key = 'Pause',      mods = 'SHIFT|ALT',      action = act.AttachDomain 'localhost' },
 
-    -- Window management:
-    { key = '=',          mods = 'SHIFT|ALT',      action = act.SpawnWindow },
-
     -- Tab navigation & management:
     { key = '=',          mods = 'ALT',            action = act.SpawnTab 'CurrentPaneDomain' },
     { key = '1',          mods = 'ALT',            action = act.ActivateTab(0) },
@@ -251,5 +248,17 @@ splits.apply_to_config(config, {
         resize = "ALT|CTRL|SHIFT",
     }
 })
+
+-- Load host-specific lua files, if available:
+local plugins = {
+    "host." .. wezterm.hostname(),
+    "user." .. (os.getenv("USER") or os.getenv("USERNAME")),
+}
+for _, p in ipairs(plugins) do
+    local ok, plugin = pcall(require, p)
+    if ok then
+        plugin.apply_to_config(config)
+    end
+end
 
 return config
