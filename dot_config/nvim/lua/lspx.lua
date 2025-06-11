@@ -285,7 +285,10 @@ return {
 
   { "nvim-treesitter/nvim-treesitter",
     about = "Provide fast and accurate language parsing.",
-    build = ":TSUpdate",
+    lazy = false,
+    build = function()
+      require("nvim-treesitter.install").update({ with_sync = true})()
+    end,
     event = { "BufReadPre", "BufNewFile" },
     opts = {
       ensure_installed = {
