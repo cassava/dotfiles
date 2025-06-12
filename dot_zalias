@@ -15,6 +15,7 @@ alias du='du -h'
 alias df='df -h'
 alias lsblk='lsblk -o NAME,RM,SIZE,RO,TYPE,MOUNTPOINT,UUID'
 alias rg='rg --max-columns=192 --max-columns-preview'
+alias cat='bat --style=changes,header,numbers,snip'
 
 # Other than ls...
 alias ll='ls -lbhCF --color=auto'
