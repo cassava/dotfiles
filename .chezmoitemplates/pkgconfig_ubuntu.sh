@@ -88,7 +88,10 @@ declare -Ax assets=(
 
 install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
 install_bazelisk_zsh() { sudo_copy_file "$1" "share/zsh/site-functions/_bazel"; }
-install_nvim() { sudo_untar_tree1 "$1"; }
+install_nvim() {
+    sudo_untar_tree1 "$1"
+    sudo update-alternatives --install /usr/bin/vim vim /usr/local/bin/nvim 100
+}
 install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
 install_serie() { sudo_untar_bin0 "$1" serie; }
