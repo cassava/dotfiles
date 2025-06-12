@@ -309,4 +309,8 @@ return {
       "TodoTrouble",
     }
   },
+
+  { "norcalli/nvim-colorizer.lua",
+    opts = {}
+  }
 }
