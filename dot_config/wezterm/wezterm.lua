@@ -5,6 +5,8 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 local act = wezterm.action
 
+local usercfg = {}
+
 config.adjust_window_size_when_changing_font_size = false
 config.tab_max_width = 24
 config.window_decorations = "RESIZE"
@@ -211,9 +213,48 @@ end)
 
 -- Plugin tabline: provide configurable wezterm topbar in style of lualine.nvim
 local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-tabline.setup({
+usercfg.domain_colors = {
+    -- Prefer these colors for styling:
+    --
+    --  *background: #2e3440
+    --  *foreground: #cdcecf
+    --  *color0:  #3b4252
+    --  *color1:  #bf616a
+    --  *color2:  #a3be8c
+    --  *color3:  #ebcb8b
+    --  *color4:  #81a1c1
+    --  *color5:  #b48ead
+    --  *color6:  #88c0d0
+    --  *color7:  #e5e9f0
+    --  *color8:  #465780
+    --  *color9:  #d06f79
+    --  *color10: #b1d196
+    --  *color11: #f0d399
+    --  *color12: #8cafd2
+    --  *color13: #c895bf
+    --  *color14: #93ccdc
+    --  *color15: #e7ecf4
+    ["local"] = {
+        inactive = '#cdcecf',
+        active = '#81a1c1',
+    },
+}
+usercfg.format_tab = function(text, info)
+    local domain = info.active_pane.domain_name
+    local style
+    if info.is_active then
+        style = usercfg.domain_colors[domain]["active"]
+    else
+        style = usercfg.domain_colors[domain]["inactive"]
+    end
+    return wezterm.format({
+        { Foreground = { Color = style } },
+        { Text = string.format("%s", text) },
+    })
+end
+usercfg.tabline_opts = {
   options = {
-    icons_enabled = true,
+    icons_enabled = false,
     theme = "Catppuccin Mocha",
     tabs_enabled = true,
     theme_overrides = {},
@@ -228,8 +269,15 @@ tabline.setup({
     tabline_a = { "workspace" },
     tabline_b = { "" },
     tabline_c = { " " },
-    tab_active = { "index", { "process", padding = { left = 0, right = 1 } }, { "zoomed", padding = 0 } },
-    tab_inactive = { "index", { "process", padding = { left = 0, right = 1 } } },
+    tab_active = {
+      { "index", fmt = usercfg.format_tab},
+      { "process", padding = { left = 0, right = 1 }, fmt = usercfg.format_tab },
+      { "zoomed", padding = 0 },
+    },
+    tab_inactive = {
+      { "index", fmt = usercfg.format_tab },
+      { "process", padding = { left = 0, right = 1 }, fmt = usercfg.format_tab }
+    },
     tabline_x = {},
     tabline_y = {
         { "datetime", style = "%d.%m.%Y %H:%M:%S" }
@@ -237,17 +285,16 @@ tabline.setup({
     tabline_z = { "domain" },
   },
   extensions = {},
-})
-tabline.apply_to_config(config)
+}
 
 -- Plugin smart-splits: Provide seamless ALT+HJKL movement between panes of wezterm and nvim
 local splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
-splits.apply_to_config(config, {
+usercfg.splits_opts = {
     modifiers = {
         move = "ALT",
         resize = "ALT|CTRL|SHIFT",
     }
-})
+}
 
 -- Load host-specific lua files, if available:
 local plugins = {
@@ -257,8 +304,13 @@ local plugins = {
 for _, p in ipairs(plugins) do
     local ok, plugin = pcall(require, p)
     if ok then
-        plugin.apply_to_config(config)
+        plugin.apply_to_config(config, usercfg)
     end
 end
+
+-- Apply plugin configuration:
+tabline.setup(usercfg.tabline_opts)
+tabline.apply_to_config(config)
+splits.apply_to_config(config, usercfg.splits_opts)
 
 return config
