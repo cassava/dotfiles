@@ -77,6 +77,18 @@ config.keys = {
     { key = ']',          mods = 'ALT',            action = act.ActivateTabRelative(1) },
     { key = '[',          mods = 'SHIFT|ALT',      action = act.MoveTabRelative(-1) },
     { key = ']',          mods = 'SHIFT|ALT',      action = act.MoveTabRelative(1) },
+    {
+        key = "'",
+        mods = 'ALT',
+        action = act.PromptInputLine {
+            description = 'Enter new name for tab',
+            action = wezterm.action_callback(function(window, pane, line)
+                if line then
+                    window:active_tab():set_title(line)
+                end
+            end),
+        },
+    },
 
     -- Pane navigation:
     -- Movement is provided by smart-splits.nvim plugin
@@ -91,7 +103,7 @@ config.keys = {
     { key = "Enter",      mods = "ALT",            action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
     { key = "Enter",      mods = "ALT|SHIFT",      action = act.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = '\\',         mods = 'ALT',            action = act.TogglePaneZoomState },
-    { key = '|',          mods = 'ALT|SHIFT',      action = act.EmitEvent 'toggle-tabbar' },
+    { key = '|',          mods = 'ALT|SHIFT',      action = act.EmitEvent 'ToggleTabline' },
     { key = 'w',          mods = 'ALT|SHIFT',      action = act.CloseCurrentPane { confirm = true } },
     { key = 'Backspace',  mods = 'ALT',            action = act.CloseCurrentPane { confirm = true } },
     { key = 'DownArrow',  mods = 'SHIFT|ALT|CTRL', action = act.AdjustPaneSize { 'Down', 1 } },
@@ -190,102 +202,17 @@ wezterm.on("gui-startup", function(cmd)
     local _, pane, window = wezterm.mux.spawn_window(cmd or {})
     window:gui_window():maximize()
 end)
-
--- Tab-bar visibility with toggle event
-config.enable_tab_bar = true
-config.hide_tab_bar_if_only_one_tab = true
-wezterm.on("toggle-tabbar", function(window, _)
-    local overrides = window:get_config_overrides() or {}
-    if not (overrides.hide_tab_bar_if_only_one_tab == false) then
-        wezterm.log_info("override config: show tabline always")
-        overrides.hide_tab_bar_if_only_one_tab = false
-        overrides.enable_tab_bar = true
-    elseif overrides.enable_tab_bar == false then
-        wezterm.log_info("override config: show tabline with multiple tabs")
-        overrides.enable_tab_bar = true
-        overrides.hide_tab_bar_if_only_one_tab = true
-    else
-        wezterm.log_info("override config: hide tabline")
-        overrides.enable_tab_bar = false
-    end
-    window:set_config_overrides(overrides)
+wezterm.on('update-status', function(window, pane)
+  local meta = pane:get_metadata() or {}
+  if meta.is_tardy then
+    local secs = meta.since_last_response_ms / 1000.0
+    window:set_right_status(string.format('tardy: %5.1fs⏳', secs))
+  end
 end)
 
 -- Plugin tabline: provide configurable wezterm topbar in style of lualine.nvim
 local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-usercfg.domain_colors = {
-    -- Prefer these colors for styling:
-    --
-    --  *background: #2e3440
-    --  *foreground: #cdcecf
-    --  *color0:  #3b4252
-    --  *color1:  #bf616a
-    --  *color2:  #a3be8c
-    --  *color3:  #ebcb8b
-    --  *color4:  #81a1c1
-    --  *color5:  #b48ead
-    --  *color6:  #88c0d0
-    --  *color7:  #e5e9f0
-    --  *color8:  #465780
-    --  *color9:  #d06f79
-    --  *color10: #b1d196
-    --  *color11: #f0d399
-    --  *color12: #8cafd2
-    --  *color13: #c895bf
-    --  *color14: #93ccdc
-    --  *color15: #e7ecf4
-    ["local"] = {
-        inactive = '#cdcecf',
-        active = '#81a1c1',
-    },
-}
-usercfg.format_tab = function(text, info)
-    local domain = info.active_pane.domain_name
-    local style
-    if info.is_active then
-        style = usercfg.domain_colors[domain]["active"]
-    else
-        style = usercfg.domain_colors[domain]["inactive"]
-    end
-    return wezterm.format({
-        { Foreground = { Color = style } },
-        { Text = string.format("%s", text) },
-    })
-end
-usercfg.tabline_opts = {
-  options = {
-    icons_enabled = false,
-    theme = "Catppuccin Mocha",
-    tabs_enabled = true,
-    theme_overrides = {},
-    section_separators = "",
-    component_separators = "",
-    tab_separators = {
-      left = wezterm.nerdfonts.ple_lower_left_triangle,
-      right = wezterm.nerdfonts.ple_lower_right_triangle,
-    },
-  },
-  sections = {
-    tabline_a = { "workspace" },
-    tabline_b = { "" },
-    tabline_c = { " " },
-    tab_active = {
-      { "index", fmt = usercfg.format_tab},
-      { "process", padding = { left = 0, right = 1 }, fmt = usercfg.format_tab },
-      { "zoomed", padding = 0 },
-    },
-    tab_inactive = {
-      { "index", fmt = usercfg.format_tab },
-      { "process", padding = { left = 0, right = 1 }, fmt = usercfg.format_tab }
-    },
-    tabline_x = {},
-    tabline_y = {
-        { "datetime", style = "%d.%m.%Y %H:%M:%S" }
-    },
-    tabline_z = { "domain" },
-  },
-  extensions = {},
-}
+local superline = require("tabline")
 
 -- Plugin smart-splits: Provide seamless ALT+HJKL movement between panes of wezterm and nvim
 local splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
@@ -309,8 +236,8 @@ for _, p in ipairs(plugins) do
 end
 
 -- Apply plugin configuration:
-tabline.setup(usercfg.tabline_opts)
-tabline.apply_to_config(config)
+superline.setup(tabline)
+superline.apply_to_config(config)
 splits.apply_to_config(config, usercfg.splits_opts)
 
 return config
