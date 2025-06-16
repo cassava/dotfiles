@@ -41,6 +41,7 @@ config.font_rules = {
   },
 }
 config.pane_focus_follows_mouse = true
+config.term = "wezterm"
 
 -- Use a domain by default to allow multiplexing
 config.unix_domains = {

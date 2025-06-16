@@ -76,9 +76,10 @@ declare -Ax assets=(
     ["unused_deps"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "unused_deps-linux-%s" .chezmoi.arch) }}'
     ["uv"]='{{ gitHubLatestReleaseAssetURL "astral-sh/uv" (printf "uv-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["watchexec"]='{{ gitHubLatestReleaseAssetURL "watchexec/watchexec" (printf "watchexec-*-%s-unknown-linux-musl.deb" .sys.uname_arch) }}'
+    ["wezterm"]='{{ gitHubLatestReleaseAssetURL "wezterm/wezterm" (printf "wezterm-*.%s%s.deb" .chezmoi.osRelease.name .chezmoi.osRelease.versionID) }}'
+    ["wezterm_terminfo"]='https://raw.githubusercontent.com/wezterm/wezterm/refs/heads/{{ (gitHubLatestTag "wezterm/wezterm").Name }}/termwiz/data/wezterm.terminfo'
 
 # {{ if not .is_headless }}
-    ["wezterm"]='{{ gitHubLatestReleaseAssetURL "wezterm/wezterm" (printf "wezterm-*.%s%s.deb" .chezmoi.osRelease.name .chezmoi.osRelease.versionID) }}'
     ["firacode"]='{{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "FiraCode.tar.xz" }}'
     ["firamono"]='{{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "FiraMono.tar.xz" }}'
     ["inconsolata"]='{{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "Inconsolata.tar.xz" }}'
@@ -105,3 +106,4 @@ install_firacode() { sudo_untar_fonts "$1"; }
 install_firamono() { sudo_untar_fonts "$1"; }
 install_inconsolata() { sudo_untar_fonts "$1"; }
 install_victormono() { sudo_untar_fonts "$1"; }
+install_wezterm_terminfo() { sudo tic -x "$1"; }
