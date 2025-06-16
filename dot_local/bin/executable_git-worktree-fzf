@@ -1,0 +1,120 @@
+#!/bin/bash
+set -eo pipefail
+
+if ! git rev-parse HEAD >/dev/null 2>&1; then
+    echo "."
+    exit 1
+fi
+
+git_root_dir="$(dirname "$(realpath "$(git rev-parse --git-common-dir)")")"
+
+fzf_prompt() {
+        fzf --height 50% \
+            --tmux 90%,70% \
+            --min-height 20+ \
+            --border \
+            --no-separator \
+            --header-border horizontal \
+            --border-label-pos 2 \
+            --color 'label:blue' \
+            --preview-window 'right,50%' \
+            --preview-border line \
+            --bind 'ctrl-/:change-preview-window(down,50%|hidden|)' \
+            "$@"
+}
+
+common_prefix() {
+  awk '
+  NR == 1 { prefix = $0; next }
+  {
+    for (i = 1; i <= length(prefix); i++) {
+      if (substr($0, i, 1) != substr(prefix, i, 1)) {
+        prefix = substr(prefix, 1, i - 1)
+        break
+      }
+    }
+  }
+  END { print prefix }
+  '
+}
+
+strip_common_prefix() {
+  prefix=$(common_prefix)
+  sed "s|^$prefix||"
+}
+
+git_worktree_select() {
+    git worktree list |
+        sed -r '/\(bare\)$/d' |
+        sed -r "s#^${git_root_dir}/##" |
+        fzf_prompt --border-label "Worktrees" --print-query --preview 'git ls --color=always {2}' | cut -d' ' -f1
+}
+
+git_branch_select() {
+    git branch --list -a | fzf_prompt \
+        --print-query \
+        --border-label "Branches" \
+        --tiebreak begin \
+        --preview-window down,border-top,40% \
+        --color hl:underline,hl+:underline \
+        --no-hscroll \
+        --preview "git ls --color=always {1}" "$@" |
+    sed 's/^\* //' | awk '{print $1}' # Slightly modified to work with hashes as well
+}
+
+git_worktree_create() {
+    local worktree="$(printf "%s/%s" "$git_root_dir" "$1")"
+
+    local worktree_branch
+    readarray -t branch < <(git_branch_select)
+    local input="${branch[0]}"
+    local match="${branch[1]}"
+    if [[ "${input}" =~ ^: ]]; then
+        # This is helpful when you need to create a new branch
+        worktree_branch="${input/:/}"
+    elif [[ -z "$match" ]]; then
+        # There is no match, so take the input as is.
+        worktree_branch="$input"
+    else
+        worktree_branch="$match"
+        echo git worktree add "$worktree" "$worktree_branch"
+        return
+    fi
+
+    local source_branch
+    readarray -t source < <(git_branch_select --query main)
+    input="${source[0]}"
+    match="${source[1]}"
+    if [[ -z "${match}" ]]; then
+        exit 1
+    else
+        source_branch="$match"
+    fi
+
+    echo git worktree add "$worktree" -b "$worktree_branch" "$source_branch"
+}
+
+main() {
+    local worktree_dir
+    readarray -t worktree < <(git_worktree_select)
+    local input="${worktree[0]}"
+    local match="${worktree[1]}"
+    if [[ "${input}" =~ ^: ]]; then
+        # This is helpful when you need to create a worktree with a name
+        worktree_dir="${input/:/}"
+    elif [[ -z "$match" ]]; then
+        # There is no match, so take the input as is.
+        worktree_dir="$input"
+    else
+        # morph input into the fzf match
+        worktree_dir="$match"
+    fi
+
+    if ! [[ -d "$worktree_dir" ]]; then
+        git_worktree_create "$worktree_dir"
+    fi
+
+    printf "%s/%s" "$git_root_dir" "$worktree_dir"
+}
+
+main
