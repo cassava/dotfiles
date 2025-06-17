@@ -212,8 +212,10 @@ wezterm.on('update-status', function(window, pane)
 end)
 
 -- Plugin tabline: provide configurable wezterm topbar in style of lualine.nvim
-local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
-local superline = require("tabline")
+local superline = require("superline")
+usercfg.superline_opts = {
+    tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+}
 
 -- Plugin smart-splits: Provide seamless ALT+HJKL movement between panes of wezterm and nvim
 local splits = wezterm.plugin.require("https://github.com/mrjones2014/smart-splits.nvim")
@@ -237,7 +239,7 @@ for _, p in ipairs(plugins) do
 end
 
 -- Apply plugin configuration:
-superline.setup(tabline)
+superline.setup(usercfg.superline_opts)
 superline.apply_to_config(config)
 splits.apply_to_config(config, usercfg.splits_opts)
 

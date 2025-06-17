@@ -44,12 +44,11 @@ M._tab_title = function(tab)
       txt = tab.active_pane.domain_name ~= 'local' and tab.active_pane.domain_name or 'wezterm'
     end
 
-    local numbers = { "➀ ", "➁ ", "➂ ", "➃ ", "➄ ", "➅ ", "➆ ", "➇ ", "➈ " }
-
+    local glyph = M.opts.index_glyphs[tab.tab_index+1]
     if txt == '_' then
-        txt = numbers[tab.tab_index+1]
+        txt = glyph
     else
-        txt = string.format(" %s %-8s ", numbers[tab.tab_index+1], txt)
+        txt = string.format(" %s %-8s ", glyph, txt)
     end
     return M._format_tab(txt, tab)
 end
@@ -110,11 +109,28 @@ local default_opts = {
         ["minimized"] = "#3b4252",
     },
 
+    --- A table mapping from number to glyph shown for each tab.
     ---@type table|fun(number):string
-    index_glyphs = { "➀ ", "➁ ", "➂ ", "➃ ", "➄ ", "➅ ", "➆ ", "➇ ", "➈ " },
+    index_glyphs = {
+        "\u{f03a4}", -- 1
+        "\u{f03a7}", -- 2
+        "\u{f03aa}", -- 3
+        "\u{f03ad}", -- 4
+        "\u{f03b1}", -- 5
+        "\u{f03b3}", -- 6
+        "\u{f03b6}", -- 7
+        "\u{f03b9}", -- 8
+        "\u{f03bc}", -- 9
+        "\u{f037d}", -- 10
+    },
 
+    --- Rename a tab to this marker to cause it to be minimized.
     ---@type string
     minimize_marker = '_',
+
+    --- Plugin tabline.
+    ---@type table|nil
+    tabline = nil,
 
     ---@type table
     tabline_options = {
@@ -144,7 +160,10 @@ local default_opts = {
         tab_inactive = {
             M._tab_title,
         },
-        tabline_x = { },
+        tabline_x = {
+            { Background = { Color = '#24273a' } },
+            require("cpu_graph").format_graph,
+        },
         tabline_y = {
             { "datetime", style = "%d.%m.%Y %H:%M:%S" }
         },
@@ -155,7 +174,7 @@ local default_opts = {
     tabline_extensions = {},
 }
 
-M.setup = function(tabline)
+M.setup = function(opts)
     -- TODO: Fix this
     M.opts = default_opts
     M.tabline_opts = {
@@ -163,8 +182,9 @@ M.setup = function(tabline)
         sections = M.opts.tabline_sections,
         extensions = M.opts.tabline_extensions,
     }
-    M.tabline = tabline
+    M.tabline = opts.tabline or wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
     M.tabline.setup(M.tabline_opts)
+    require("cpu_graph").setup()
 end
 
 M.apply_to_config = function(config)
