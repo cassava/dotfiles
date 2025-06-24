@@ -103,6 +103,10 @@ vim.opt.suffixes = {
     ".pyc",
 }
 
+-- Disable OSC52 clipboard use until wezterm supports it
+vim.g.termfeatures = vim.g.termfeatures or {}
+vim.g.termfeatures.osc52 = false
+
 -- Neovide configuration
 --
 -- See https://neovide.dev/configuration.html for a discussion of available
