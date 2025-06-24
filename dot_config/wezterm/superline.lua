@@ -46,7 +46,7 @@ M._tab_title = function(tab)
 
     local glyph = M.opts.index_glyphs[tab.tab_index+1]
     if txt == '_' then
-        txt = glyph
+        txt = string.format(" %s ", glyph)
     else
         txt = string.format(" %s %-8s ", glyph, txt)
     end
