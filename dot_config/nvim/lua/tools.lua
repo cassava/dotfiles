@@ -1,4 +1,63 @@
 return {
+  { "obsidian-nvim/obsidian.nvim",
+    version = "*",
+    lazy = true,
+    event = {
+      "BufReadPre " .. vim.fn.expand("~/notes/*.md"),
+      "BufNewFile " .. vim.fn.expand("~/notes/*.md"),
+    },
+    cmd = {
+      "Obsidian"
+    },
+    keys = {
+      { "<leader>kd", "<cmd>Obsidian dailies<cr>" },
+      { "<leader>kk", "<cmd>Obsidian quick_switch<cr>" },
+      { "<leader>kn", "<cmd>Obsidian new<cr>" },
+      { "<leader>kN", "<cmd>Obsidian new_from_template<cr>" },
+      { "<leader>ks", "<cmd>Obsidian search<cr>" },
+      { "<leader>kt", "<cmd>Obsidian tags<cr>" },
+      { "<leader>k.", "<cmd>Obsidian today<cr>" },
+      { "<leader>k<", "<cmd>Obsidian yesterday<cr>" },
+      { "<leader>k>", "<cmd>Obsidian tomorrow<cr>" },
+      { "<leader>kw", "<cmd>Obsidian workspace<cr>" },
+      -- { "<leader>kb", "<cmd>Obsidian backlinks<cr>" }, -- file local
+      -- { "<leader>kf", "<cmd>Obsidian follow_link vsplit<cr>" },
+      -- { "<leader>kl", "<cmd>Obsidian link<cr>", mode = { "x" } },
+      -- { "<leader>kL", "<cmd>Obsidian link_new<cr>", mode = { "x" } },
+      -- { "<leader>kH", "<cmd>Obsidian links<cr>"  },
+      -- { "<leader>ko", "<cmd>Obsidian open<cr>"  },
+    },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    ---@module 'obsidian'
+    ---@type obsidian.config.ClientOpts
+    opts = {
+      workspaces = {
+        {
+          name = "default",
+          path = "~/notes",
+        },
+      },
+      completion = {
+        nvim_cmp = false,
+        blink = true,
+      },
+      picker = {
+        name = "snacks.pick"
+      },
+      mappings = {
+      },
+      daily_notes = {
+        folder = "dailies",
+        default_tags = { "daily" },
+      },
+      templates = {
+        folder = "templates",
+      },
+    },
+  },
+
   { "chrisgrieser/nvim-rulebook",
     about = [[
       Add inline comments to ignore rules, or lookup rule documentation online.
