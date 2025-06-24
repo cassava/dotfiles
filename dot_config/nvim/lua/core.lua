@@ -66,13 +66,21 @@ return {
       statuscolumn = {
         enabled = false,
       },
+      zen = {
+        win = {
+          wo = {
+            winblend = 0,
+            wrap = true
+          }
+        }
+      }
     },
     keys = {
       -- Top Pickers & Explorer
       { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+      { "<leader>a", function() Snacks.picker.pick("grep", { dirs = { vim.fs.root(0, ".git") } }) end, desc = "Find project files" },
       { "<leader>.", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
-      { "<leader>a", function() Snacks.picker.pick("grep", { dirs = { vim.fs.root(0, ".git") } }) end, desc = "Find project files" },
       { "<leader>*", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
       { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
       { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
