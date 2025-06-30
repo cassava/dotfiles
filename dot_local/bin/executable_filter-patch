@@ -12,5 +12,5 @@ tmpdir="$(mktemp -d)"
 trap 'rm -rf -- "$tmpdir"' EXIT
 trap 'exit 1' HUP INT TERM
 cat >"$tmpdir/original"
-patch "$@" -o "$tmpdir/patched" "$tmpdir/original"
+patch "$@" -o "$tmpdir/patched" "$tmpdir/original" >&2
 cat "$tmpdir/patched"
