@@ -1,7 +1,10 @@
 ---
-".zdir/20-fzf-git.sh":
+".zdir/20-fzf-git.sh":  # Updated: 08 May 2025
   type: file
-  url: "https://raw.githubusercontent.com/junegunn/fzf-git.sh/main/fzf-git.sh"
+  url: "https://raw.githubusercontent.com/junegunn/fzf-git.sh/3ec3e97d1cc75ec97c0ab923ed5aa567aee01a5e/fzf-git.sh"
+  filter:
+    command: "{{ .chezmoi.homeDir }}/.local/bin/filter-patch"
+    args: [ "-i", "{{ .chezmoi.sourceDir }}/.chezmoipatches/fzf-git.sh.patch" ]
 
 {{ if .is_private -}}
 ".local/bin/git-credential-pass":
