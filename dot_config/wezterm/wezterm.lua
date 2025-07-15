@@ -101,10 +101,10 @@ config.keys = {
     { key = "l",          mods = "CTRL|ALT",       action = act.RotatePanes 'Clockwise' },
 
     -- Pane management:
-    { key = "Enter",      mods = "ALT",            action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
-    { key = "Enter",      mods = "ALT|SHIFT",      action = act.SplitVertical { domain = "CurrentPaneDomain" } },
+    { key = "|",          mods = "ALT|SHIFT",      action = act.SplitHorizontal { domain = "CurrentPaneDomain" } },
+    { key = "_",          mods = "ALT|SHIFT",      action = act.SplitVertical { domain = "CurrentPaneDomain" } },
     { key = '\\',         mods = 'ALT',            action = act.TogglePaneZoomState },
-    { key = '|',          mods = 'ALT|SHIFT',      action = act.EmitEvent 'ToggleTabline' },
+    { key = '?',          mods = 'ALT',            action = act.EmitEvent 'ToggleTabline' },
     { key = 'w',          mods = 'ALT|SHIFT',      action = act.CloseCurrentPane { confirm = true } },
     { key = 'Backspace',  mods = 'ALT',            action = act.CloseCurrentPane { confirm = true } },
     { key = 'DownArrow',  mods = 'SHIFT|ALT|CTRL', action = act.AdjustPaneSize { 'Down', 1 } },
@@ -118,6 +118,7 @@ config.keys = {
     { key = 'Insert',     mods = 'SHIFT',          action = act.PasteFrom 'PrimarySelection' },
     { key = 'Insert',     mods = 'CTRL',           action = act.CopyTo 'PrimarySelection' },
     { key = 'Insert',     mods = 'ALT',            action = act.ActivateCopyMode },
+    { key = 'phys:Space', mods = 'ALT|SHIFT',            action = act.ActivateCopyMode },
     { key = 'phys:Space', mods = 'ALT',            action = act.QuickSelect },
 
     -- Scrollback:
