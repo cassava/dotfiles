@@ -46,6 +46,7 @@ function vimz() { vim "$(which "$1")" }
 alias vimi="chezmoi edit ~/.config/nvim"
 alias vimr="nvim +Renamer"
 alias vi="nvim --clean"
+alias vimo="nvim +'Obsidian today'"
 
 function pass() {
     EDITOR="nvim -u NONE -n" /usr/bin/pass "$@"

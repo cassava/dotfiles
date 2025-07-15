@@ -10,6 +10,7 @@ return {
       "Obsidian"
     },
     keys = {
+      { "<leader>k", "<nop>", desc = "Obsidian" },
       { "<leader>kd", "<cmd>Obsidian dailies<cr>" },
       { "<leader>kk", "<cmd>Obsidian quick_switch<cr>" },
       { "<leader>kn", "<cmd>Obsidian new<cr>" },
@@ -20,6 +21,7 @@ return {
       { "<leader>k<", "<cmd>Obsidian yesterday<cr>" },
       { "<leader>k>", "<cmd>Obsidian tomorrow<cr>" },
       { "<leader>kw", "<cmd>Obsidian workspace<cr>" },
+      { "<leader>kx", "<cmd>Obsidian toggle_checkbox<cr>" },
       -- { "<leader>kb", "<cmd>Obsidian backlinks<cr>" }, -- file local
       -- { "<leader>kf", "<cmd>Obsidian follow_link vsplit<cr>" },
       -- { "<leader>kl", "<cmd>Obsidian link<cr>", mode = { "x" } },
@@ -31,13 +33,21 @@ return {
       "nvim-lua/plenary.nvim",
     },
     ---@module 'obsidian'
-    ---@type obsidian.config.ClientOpts
+    --@type obsidian.config.ClientOpts
     opts = {
       workspaces = {
         {
           name = "default",
           path = "~/notes",
         },
+      },
+      callbacks = {
+        enter_note = function(_, note)
+          require("which-key").add({
+            { "<c-k>", "<cmd>Obsidian toggle_checkbox<cr>", desc = "Toggle checkbox", mode = {"n", "x"} },
+            buffer = note.bufnr
+          })
+        end
       },
       completion = {
         nvim_cmp = false,
@@ -51,10 +61,29 @@ return {
       daily_notes = {
         folder = "dailies",
         default_tags = { "daily" },
+        template = "daily.md",
       },
       templates = {
         folder = "templates",
+        substitutions = {
+          boot_times = function()
+            return vim.fn.system([[
+              journalctl --list-boots 2>&/dev/null | \
+              awk -v yest=$(date -d "yesterday" +"%Y-%m-%d") '$4 ~ yest { print }' | \
+              sed -r 's/^.* ([0-9]{2}:[0-9]{2}):[0-9]{2} .* ([0-9]{2}:[0-9]{2}):[0-9]{2}.*$/\1-\2/'
+            ]])
+          end
+        }
       },
+      ui = {
+        checkboxes = {
+          [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
+          ["x"] = { char = "", hl_group = "ObsidianDone" },
+          [">"] = { char = "", hl_group = "ObsidianRightArrow" },
+          ["~"] = { char = "", hl_group = "ObsidianTilde" },
+          ["!"] = { char = "", hl_group = "ObsidianImportant" },
+        }
+      }
     },
   },
 
