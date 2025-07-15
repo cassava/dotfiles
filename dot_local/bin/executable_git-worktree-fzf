@@ -59,7 +59,15 @@ git_branch_select() {
         --color hl:underline,hl+:underline \
         --no-hscroll \
         --preview "git ls --color=always {1}" "$@" |
-    sed 's/^\* //' | awk '{print $1}' # Slightly modified to work with hashes as well
+    sed 's/^[*] //' | awk '{print $1}'
+
+    # Git adds certain prefixes to the branch:
+    #
+    #     * commit (ok)
+    #     + already checked out (not ok)
+    #
+    # Unfortunately, it is not possible to check out a branch
+    # in more than one worktree at a time.
 }
 
 git_worktree_create() {
@@ -77,6 +85,10 @@ git_worktree_create() {
         worktree_branch="$input"
     else
         worktree_branch="$match"
+        if [[ "$worktree_branch" = "+" ]]; then
+            echo "error: branch already checked out" >&2
+            exit 1
+        fi
         echo git worktree add "$worktree" "$worktree_branch"
         return
     fi
