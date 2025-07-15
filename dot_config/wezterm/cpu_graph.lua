@@ -4,7 +4,16 @@ local M = {}
 
 -- Visuals
 M.opts = {
-    bars = { "⣀", "⣤", "⣶", "⣿" },
+    bars = {
+        wide = { "_", "⣀", "⣤", "⣶", "⣿" },
+        compact = {
+            { "_", "⢀", "⢠", "⢰", "⢸" },
+            { "⡀", "⣀", "⣠", "⣰", "⣸" },
+            { "⡄", "⣄", "⣤", "⣴", "⣼" },
+            { "⡆", "⣆", "⣦", "⣶", "⣾" },
+            { "⡇", "⣇", "⣧", "⣷", "⣿" },
+        },
+    },
     colors = {
         "#cdd6f4",
         "#a6e3a1",
@@ -13,10 +22,14 @@ M.opts = {
         "#eba0ac",
         "#f38ba8",
     },
-    offset = 10,
+    offset = 15,
     prefix = " \u{f4bc} ",
     suffix = " ",
     polling_interval = 0.5,
+    style = {
+        bars = "compact",
+        color = true
+    }
 }
 
 local bar_factor
@@ -25,20 +38,45 @@ local color_factor
 local color_offset
 
 local function precompute_offsets()
-    bar_factor = (#M.opts.bars - 1) / 100
+    bar_factor = (#M.opts.bars[M.opts.style.bars] - 1) / 100
     bar_offset = (M.opts.offset * bar_factor)
     color_factor = (#M.opts.colors - 1) / 100
     color_offset = (M.opts.offset * color_factor)
 end
 
 ---@param usage number Number between 0 and 100
-function M.format_bar(usage)
-    local bar = M.opts.bars[math.floor(usage * bar_factor + bar_offset) + 1]
-    local color = M.opts.colors[math.floor(usage * color_factor + color_offset) + 1]
-    return wezterm.format({
-        { Foreground = { Color = color } },
-        { Text = bar },
-    })
+function M.format_wide_bar(usage)
+    local bar = M.opts.bars.wide[math.floor(usage * bar_factor + bar_offset) + 1]
+    if M.opts.style.color then
+        local color = M.opts.colors[math.floor(usage * color_factor + color_offset) + 1]
+        return wezterm.format({
+            { Foreground = { Color = color } },
+            { Text = bar },
+        })
+    else
+        return wezterm.format({
+            { Text = bar },
+        })
+    end
+end
+
+---@param core1 number Number between 0 and 100
+---@param core2 number Number between 0 and 100
+function M.format_compact_bar(core1, core2)
+    local bar = M.opts.bars.compact
+        [math.floor(core1 * bar_factor + bar_offset) + 1]
+        [math.floor(core2 * bar_factor + bar_offset) + 1]
+    if M.opts.style.color then
+        local color = M.opts.colors[math.floor((core1 + core2)/2.0 * color_factor + color_offset) + 1]
+        return wezterm.format({
+            { Foreground = { Color = color } },
+            { Text = bar },
+        })
+    else
+        return wezterm.format({
+            { Text = bar },
+        })
+    end
 end
 
 -- Data storage
@@ -109,8 +147,20 @@ function M.format_graph()
     local parts = {}
 
     table.insert(parts, M.opts.prefix)
-    for _, usage in ipairs(latest_core_usages) do
-        table.insert(parts, M.format_bar(usage))
+    if M.opts.style.bars == "wide" then
+        for _, usage in ipairs(latest_core_usages) do
+            table.insert(parts, M.format_wide_bar(usage))
+        end
+    else
+        local left = nil
+        for _, usage in ipairs(latest_core_usages) do
+            if left then
+                table.insert(parts, M.format_compact_bar(left, usage))
+                left = nil
+            else
+                left = usage
+            end
+        end
     end
     table.insert(parts, M.opts.suffix)
 
