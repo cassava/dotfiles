@@ -8,6 +8,24 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    if client.name ~= "clangd" then return end
+
+    vim.api.nvim_create_autocmd("InsertEnter", {
+      callback = function()
+        vim.lsp.semantic_tokens.stop(0, client.id)
+      end
+    })
+    vim.api.nvim_create_autocmd("InsertLeave", {
+      callback = function()
+        vim.lsp.semantic_tokens.start(0, client.id)
+      end
+    })
+  end
+})
+
 return {
   lazy_treesitter_ensure_installed {
     "asm",
