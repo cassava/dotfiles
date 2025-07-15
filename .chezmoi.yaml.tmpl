@@ -3,10 +3,9 @@
 # {{- $name := promptStringOnce . "name" "Name" "Benjamin Morgan" -}}
 # {{- $email := promptStringOnce . "email" "Email address" "cassava@iexu.de" -}}
 # {{- $githubUser := promptStringOnce . "github_user" "Github user" "cassava" -}}
-# {{- $isHeadless := promptBoolOnce . "is_headless"  "Is headless" true -}}
-# {{- $isPrivate := promptBoolOnce . "is_private"  "Is private" false -}}
-# {{- $isWork := promptBoolOnce . "is_work"  "Is work" false -}}
-# {{- $doInstall := promptBoolOnce . "do_install"  "Install packages" false -}}
+# {{- $isHeadless := promptBoolOnce . "is_headless" "Is headless" true -}}
+# {{- $isPrivate := promptBoolOnce . "is_private" "Is private" (stat (joinPath .chezmoi.homeDir ".password-store")).isDir -}}
+# {{- $doInstall := promptBoolOnce . "do_install" "Install packages" false -}}
 
 ---
 encryption: gpg
@@ -27,7 +26,6 @@ data:
   github_user: {{ $githubUser | quote }}
   is_headless: {{ $isHeadless }}
   is_private: {{ $isPrivate }}
-  is_work: {{ $isWork }}
   do_install: {{ $doInstall }}
   sys:
     uname_arch: {{ output "uname" "-m" | trim }}

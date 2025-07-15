@@ -7,7 +7,3 @@ README.md
 .config/wezterm
 .xkb
 {{ end -}}
-
-{{ if not .is_private -}}
-.config/pass-git-helper
-{{ end -}}
