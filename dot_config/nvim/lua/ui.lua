@@ -311,6 +311,9 @@ return {
   },
 
   { "norcalli/nvim-colorizer.lua",
-    opts = {}
+    opts = {},
+    cmd = {
+      "ColorizerAttachToBuffer",
+    }
   }
 }
