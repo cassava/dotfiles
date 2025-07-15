@@ -10,14 +10,6 @@ return {
     "ini",
   },
 
-  {
-    "theprimeagen/git-worktree.nvim",
-    keys = {
-      { "<leader>gw", "<cmd>Telescope git_worktree<cr>", desc = "Search worktrees" },
-      { "<leader>gW", function() require("telescope").extensions.git_worktree.create_git_worktree() end, desc = "Create worktree" },
-    },
-  },
-
   { "lewis6991/gitsigns.nvim",
     about = "Git signs for the gutter and LSP code actions.",
     enabled = false,
@@ -135,7 +127,18 @@ return {
   { "sindrets/diffview.nvim" },
 
   { "neogitorg/neogit",
-    opts = {}
+    opts = {
+      graph_style = "unicode",
+      status = {
+        -- This is the key setting to add:
+        auto_refresh = true,
+        display_untracked_files = "all",
+        unfold_all_files = true,
+      }
+    },
+    keys = {
+      { "<leader>gg", "<cmd>Neogit<cr>", desc = "Open Neogit" },
+    }
   },
 
   { "andrewradev/linediff.vim",
