@@ -9,6 +9,29 @@ return {
     "yaml",
   },
 
+  lazy_mason_ensure_installed {
+    "mdformat",
+  },
+
+  { "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        markdown = { "mdformat" },
+      }
+    },
+    init = function()
+      require("conform").formatters.mdformat = function(bufnr)
+        local width = string.format("%d", vim.bo.textwidth)
+        if width == "0" then
+          width = "keep"
+        end
+        return {
+          prepend_args = { "--number", "--wrap", width }
+        }
+      end
+    end
+  },
+
   { "iamcco/markdown-preview.nvim",
     build = function() vim.fn["mkdp#util#install"]() end,
     init = function()
@@ -38,18 +61,4 @@ return {
   },
 
   { "jghauser/follow-md-links.nvim" },
-
-  { "neovim/nvim-lspconfig",
-    init = function()
-        vim.lsp.config("markdown_oxide", {
-          capabilities = {
-            workspace = {
-              didChangeWatchedFiles = {
-                dynamicRegistration = true
-              }
-            }
-          }
-        })
-    end,
-  },
 }
