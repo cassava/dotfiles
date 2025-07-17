@@ -106,10 +106,71 @@ return {
     event = { "BufWritePre" },
     cmd = { "ConformInfo" },
     keys = {
-      { "<leader>q", function() require("conform").format({ async = true }) end, desc = "Format selection", mode = { "n", "x" } },
+      { "<leader>q",
+        function() require("conform").format({ async = true }) end,
+        desc = "Conform selection",
+        mode = { "n", "x" }
+      },
+      -- { "<leader>q",
+      --   function()
+      --     local set_opfunc = vim.fn[vim.api.nvim_exec([[
+      --       func s:set_opfunc(val)
+      --         let &opfunc = a:val
+      --       endfunc
+      --       echon get(function('s:set_opfunc'), 'name')
+      --     ]], true)]
+      --     set_opfunc(function(motion)
+      --       local save_formatexpr = vim.opt_local.formatexpr
+      --       vim.opt_local.formatexpr = ""
+      --
+      --       if motion == "line" then
+      --         vim.cmd("normal! '[V']gq")
+      --       elseif motion == "char" or motion == "block" then
+      --         vim.cmd("normal! `[v`]gq")
+      --       end
+      --
+      --       vim.opt_local.formatexpr = save_formatexpr
+      --     end)
+      --     vim.api.nvim_feedkeys("g@", "n", false)
+      --   end,
+      --   desc = "Format +motion",
+      --   mode = { "n" },
+      -- },
+      -- { "<leader>qq",
+      --   function()
+      --     local save_formatexpr = vim.opt_local.formatexpr
+      --     vim.opt_local.formatexpr = ""
+      --     vim.cmd "norm! gqq"
+      --     vim.opt_local.formatexpr = save_formatexpr
+      --   end,
+      --   desc = "Format selection",
+      --   mode = { "n" },
+      -- },
+      -- { "<leader>q",
+      --   function()
+      --     local save_formatexpr = vim.opt_local.formatexpr
+      --     vim.opt_local.formatexpr = ""
+      --     vim.cmd "norm! gq"
+      --     vim.opt_local.formatexpr = save_formatexpr
+      --   end,
+      --   desc = "Format selection",
+      --   mode = { "x" },
+      -- },
     },
     opts = function()
-      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      -- vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      vim.notify("hello")
+      vim.api.nvim_create_user_command("Format", function(args)
+        local range = nil
+        if args.count ~= -1 then
+          local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+          range = {
+            start = { args.line1, 0 },
+            ["end"] = { args.line2, end_line:len() },
+          }
+        end
+        require("conform").format({ async = true, lsp_format = "fallback", range = range })
+      end, { range = true })
     end,
   },
 
