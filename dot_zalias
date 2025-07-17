@@ -46,7 +46,13 @@ function vimz() { vim "$(which "$1")" }
 alias vimi="chezmoi edit ~/.config/nvim"
 alias vimr="nvim +Renamer"
 alias vi="nvim --clean"
-alias vimo="nvim +'Obsidian today'"
+
+function vimo() {
+    # Open notes from last recorded day and today side-by-side.
+    # Can't use +Obsidian yesterday because of mini.starter hijacking.
+    local yesterday="$(find ~/notes/dailies | sort | grep -v $(date +"%Y-%m-%d.md") | tail -1)"
+    nvim "$yesterday" +"wincmd v" +"Obsidian today"
+}
 
 function pass() {
     EDITOR="nvim -u NONE -n" /usr/bin/pass "$@"
