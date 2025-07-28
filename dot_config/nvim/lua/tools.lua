@@ -22,12 +22,6 @@ return {
       { "<leader>k>", "<cmd>Obsidian tomorrow<cr>" },
       { "<leader>kw", "<cmd>Obsidian workspace<cr>" },
       { "<leader>kx", "<cmd>Obsidian toggle_checkbox<cr>" },
-      -- { "<leader>kb", "<cmd>Obsidian backlinks<cr>" }, -- file local
-      -- { "<leader>kf", "<cmd>Obsidian follow_link vsplit<cr>" },
-      -- { "<leader>kl", "<cmd>Obsidian link<cr>", mode = { "x" } },
-      -- { "<leader>kL", "<cmd>Obsidian link_new<cr>", mode = { "x" } },
-      -- { "<leader>kH", "<cmd>Obsidian links<cr>"  },
-      -- { "<leader>ko", "<cmd>Obsidian open<cr>"  },
     },
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -44,7 +38,14 @@ return {
       callbacks = {
         enter_note = function(_, note)
           require("which-key").add({
-            { "<c-k>", "<cmd>Obsidian toggle_checkbox<cr>", desc = "Toggle checkbox", mode = {"n", "x"} },
+            { "<c-k>", "<cmd>Obsidian toggle_checkbox<cr>", mode = {"n", "x"} },
+            { "<leader>km", "<cmd>Obsidian template<cr>" },
+            { "<leader>kb", "<cmd>Obsidian backlinks<cr>" },
+            { "<leader>kf", "<cmd>Obsidian follow_link vsplit<cr>" },
+            { "<leader>kl", "<cmd>Obsidian link<cr>", mode = { "x" } },
+            { "<leader>kL", "<cmd>Obsidian link_new<cr>", mode = { "x" } },
+            { "<leader>kH", "<cmd>Obsidian links<cr>"  },
+            { "<leader>ko", "<cmd>Obsidian open<cr>"  },
             buffer = note.bufnr
           })
         end
