@@ -12,7 +12,7 @@ return {
 
   { "lewis6991/gitsigns.nvim",
     about = "Git signs for the gutter and LSP code actions.",
-    enabled = false,
+    enabled = true,
     event = "BufReadPre",
     opts = {
       signs = {
@@ -23,7 +23,7 @@ return {
         changedelete = { text = '~' },
         untracked    = { text = '┆' },
       },
-      signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+      signcolumn = false,  -- Toggle with `:Gitsigns toggle_signs`
       numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
       linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
       word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
@@ -72,7 +72,7 @@ return {
         map({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk")
 
         -- Buffer mappings:
-        map("n", "<leader>gm", gs.toggle_current_line_blame, "Toggle blame")
+        map("n", "<leader>gB", gs.toggle_current_line_blame, "Toggle blame")
         map("n", "<leader>guS", gs.stage_buffer, "Stage buffer")
         map("n", "<leader>guR", gs.reset_buffer, "Reset buffer")
         map("n", "<leader>guU", gs.reset_buffer_index, "Reset buffer index")
@@ -97,7 +97,6 @@ return {
       { "<leader>gD", "<cmd>Gdiffsplit<cr>", desc = "Diff buffer" },
       { "<leader>gC", "<cmd>Git commit | startinsert<cr>", desc = "Create commit" },
       { "<leader>gA", "<cmd>Git commit --amend | startinsert<cr>", desc = "Amend commit" },
-      -- { "<leader>gF", "<cmd>Git commit | startinsert<cr>", desc = "Amend commit" },
     },
   },
 

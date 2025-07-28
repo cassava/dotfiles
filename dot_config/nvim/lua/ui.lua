@@ -112,7 +112,13 @@ return {
       Simpler alternative: petertriho/nvim-scrollbar
     ]],
     event = "VeryLazy",
-    opts = {},
+    opts = {
+      handlers = {
+        gitsigns = {
+          enable = false
+        }
+      }
+    },
   },
 
   { "folke/which-key.nvim",
