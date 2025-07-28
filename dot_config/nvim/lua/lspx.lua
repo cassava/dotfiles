@@ -372,7 +372,10 @@ return {
 
   { "nvim-treesitter/nvim-treesitter-textobjects",
     -- Manipulate text objects
-    keys = { "g>", "g<" },
+    keys = {
+      { "g>", desc = "Swap with next" },
+      { "g<", desc = "Swap with previous" },
+    },
     config = function()
       require("nvim-treesitter.configs").setup {
         textobjects = {

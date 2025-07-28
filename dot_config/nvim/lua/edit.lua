@@ -97,7 +97,10 @@ return {
   },
 
   { "echasnovski/mini.align",
-    keys = { "ga", "gA" },
+    keys = {
+      { "ga", desc = "Align" },
+      { "gA", desc = "Align with Preview" },
+    },
     opts = {},
   },
 

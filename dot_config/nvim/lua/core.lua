@@ -141,8 +141,8 @@ return {
       { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages" },
       { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
       { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
-      { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
-      { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+      { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume Picking" },
+      { "<leader>oC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" }, -- FIXME
       -- LSP
       { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
       { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
@@ -158,8 +158,8 @@ return {
       { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
       { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
       { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
-      { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
       { "<leader>gw", function() Snacks.gitbrowse() end, desc = "Open in Browser", mode = { "n", "v" } },
+      -- { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" }, -- FIXME
       { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
       { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
       { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
