@@ -32,6 +32,32 @@ return {
     end
   },
 
+  { "MeanderingProgrammer/render-markdown.nvim",
+    opts = {
+      render_modes = true,
+      bullet = {
+        icons = { "•" },
+      },
+      dash = {
+        width = 80
+      },
+      checkbox = {
+        right_pad = 0,
+        unchecked = { icon = "󰄱 " },
+        checked = { icon = " " },
+        custom = {
+          collect = { raw = "[_]", rendered = "󰄷 ", highlight = "RenderMarkdownUnchecked" },
+          alldone = { raw = "[/]", rendered = "󰄸 ", highlight = "RenderMarkdownChecked" },
+          ongoing = { raw = "[-]", rendered = "󰏭 ", highlight = "RenderMarkdownTodo" },
+          postpone = { raw = "[>]", rendered = "󰐋 ", highlight = "RenderMarkdownTodo" },
+          cancelled = { raw = "[~]", rendered = " ", highlight = "RenderMarkdownError" },
+          important = { raw = "[!]", rendered = " ", highlight = "RenderMarkdownWarn" },
+          finished = { raw = "[=]", rendered = " ", highlight = "RenderMarkdownSuccess" },
+        }
+      }
+    }
+  },
+
   { "iamcco/markdown-preview.nvim",
     build = function() vim.fn["mkdp#util#install"]() end,
     init = function()

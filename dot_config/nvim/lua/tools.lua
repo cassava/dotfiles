@@ -57,8 +57,6 @@ return {
       picker = {
         name = "snacks.pick"
       },
-      mappings = {
-      },
       daily_notes = {
         folder = "dailies",
         default_tags = { "daily" },
@@ -76,15 +74,9 @@ return {
           end
         }
       },
-      ui = {
-        checkboxes = {
-          [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-          ["x"] = { char = "", hl_group = "ObsidianDone" },
-          [">"] = { char = "", hl_group = "ObsidianRightArrow" },
-          ["~"] = { char = "", hl_group = "ObsidianTilde" },
-          ["!"] = { char = "", hl_group = "ObsidianImportant" },
-        }
-      }
+      checkbox = {
+        order = { " ", "x", ">", "~", "!" }
+      },
     },
   },
 
