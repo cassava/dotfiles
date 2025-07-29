@@ -12,7 +12,8 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
-vim.treesitter.query.add_directive("inject-go-tmpl!", function(_, _, source, _, metadata)
+-- TODO: Make this into a plugin
+vim.treesitter.query.add_directive("inject-go-tmpl-v2!", function(_, _, source, _, metadata)
   local fname
   if type(source) == "number" then
     fname = vim.api.nvim_buf_get_name(source)
@@ -40,7 +41,7 @@ vim.treesitter.query.set(
   "injections",
   [[
     ((text) @injection.content
-      (#inject-go-tmpl!)
+      (#inject-go-tmpl-v2!)
       (#set! injection.combined))
   ]]
 )
@@ -66,9 +67,5 @@ return {
   --     vim.g.go_fmt_command = "goimports"
   --     vim.g.go_fmt_experimental = 1
   --   end
-  -- },
-
-  -- { "eggplannt/gotmpl.nvim",
-  --   opts = {}
   -- },
 }
