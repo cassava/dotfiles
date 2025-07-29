@@ -224,7 +224,11 @@ return {
             module = "lazydev.integrations.blink",
             score_offset = 100,
           },
+        },
+        per_filetype = {
+          codecompanion = { "codecompanion" }
         }
+
       },
     },
     opts_extend = { "sources.default" },

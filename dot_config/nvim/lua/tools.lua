@@ -218,4 +218,18 @@ return {
       table.insert(opts.sections.lualine_x, require("snacks").profiler.status())
     end,
   },
+
+  { "olimorris/codecompanion.nvim",
+    opts = {
+      strategies = {
+        chat = {
+          adapter = "copilot",
+          model = "claude-sonnet-4",
+        },
+        inline = {
+          adapter = "copilot"
+        }
+      }
+    }
+  }
 }
