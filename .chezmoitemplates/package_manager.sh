@@ -8,38 +8,46 @@ mark_file="$state_dir/installed_packages.txt"
 
 # Helper functions for installing assets:
 sudo_untar_tree1() {
-    sudo tar -C "/usr/local" --strip-components=1 -xf "$1" "${@:2}"
+    sudo tar -C "/usr/local" --strip-components=1 -xf "${1:?FILE unset}" "${@:2}"
 }
 
 sudo_untar_bin0() {
-    sudo tar -C "/usr/local/bin" -xf "$1" --no-anchored "${@:2}"
+    sudo tar -C "/usr/local/bin" -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_untar_bin1() {
-    sudo tar -C "/usr/local/bin" --strip-components=1 -xf "$1" --no-anchored "${@:2}"
+    sudo tar -C "/usr/local/bin" --strip-components=1 -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_unzip_bin() {
-    sudo unzip -q -o -j -d "/usr/local/bin" "$1" "${@:2}"
+    sudo unzip -q -o -j -d "/usr/local/bin" "${1:?FILE unset}" "${@:2}"
     for file in "${@:2}"; do
         sudo chmod +x "/usr/local/bin/$file"
     done
 }
 
+sudo_gunzip_bin() {
+    local archive="${1:?FILE unset}"
+    local dest="/usr/local/bin/${2:?DEST unset}"
+    sudo -v
+    gunzip -c "${archive}" | sudo tee "${dest}" >/dev/null
+    sudo chmod +x "${dest}"
+}
+
 sudo_copy_bin() {
-    sudo install -m755 "$1" "/usr/local/bin/${2-$1}"
+    sudo install -m755 "${1:?FILE unset}" "/usr/local/bin/${2:-$1}"
 }
 
 sudo_copy_file() {
-    sudo install -m644 "$1" "/usr/local/$2"
+    sudo install -m644 "${1:?FILE unset}" "/usr/local/${2:?DEST unset}"
 }
 
 sudo_install_deb() {
-    sudo dpkg -i "$1" >/dev/null
+    sudo dpkg -i "${1:?FILE unset}" >/dev/null
 }
 
 sudo_untar_fonts() {
-    local file="$1"
+    local file="${1:?FILE unset}"
     local font_dir=/usr/local/share/fonts
 
     sudo mkdir -p "$font_dir"

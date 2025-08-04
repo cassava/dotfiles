@@ -48,6 +48,7 @@ declare -a packages=(
     tmate
     tmux
     tree
+    tree-sitter
     uv
     watchexec
     yq

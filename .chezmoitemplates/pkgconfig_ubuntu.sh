@@ -7,6 +7,7 @@
 #     sudo_untar_bin1 FILE [NAMES...]
 #     sudo_unzip_bin FILE [NAMES...]
 #     sudo_copy_bin FILE [NAME]
+#     sudo_gunzip_bin FILE DEST
 #     sudo_copy_file FILE DEST
 #     sudo_innstall_deb FILE
 #     sudo_untar_fonts FILE
@@ -73,6 +74,7 @@ declare -Ax assets=(
     ["sd"]='{{ gitHubLatestReleaseAssetURL "chmln/sd" (printf "sd-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["serie"]='{{ gitHubLatestReleaseAssetURL "lusingander/serie" (printf "serie-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["tectonic"]='{{ gitHubLatestReleaseAssetURL "tectonic-typesetting/tectonic" (printf "tectonic-*-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
+    ["tree-sitter"]='{{ gitHubLatestReleaseAssetURL "tree-sitter/tree-sitter" "tree-sitter-linux-x64.gz" }}'
     ["unused_deps"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "unused_deps-linux-%s" .chezmoi.arch) }}'
     ["uv"]='{{ gitHubLatestReleaseAssetURL "astral-sh/uv" (printf "uv-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["watchexec"]='{{ gitHubLatestReleaseAssetURL "watchexec/watchexec" (printf "watchexec-*-%s-unknown-linux-musl.deb" .sys.uname_arch) }}'
@@ -97,6 +99,7 @@ install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
 install_serie() { sudo_untar_bin0 "$1" serie; }
 install_tectonic() { sudo_untar_bin0 "$1" tectonic; }
+install_tree-sitter() { sudo_gunzip_bin "$1" tree-sitter; }
 install_sd() { sudo_untar_bin1 "$1" sd; }
 install_uv() { sudo_untar_bin1 "$1" uv uvx; }
 install_buildifier() { sudo_copy_bin "$1" buildifier; }
