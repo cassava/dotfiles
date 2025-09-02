@@ -6,7 +6,7 @@ M.opts = {}
 
 M.tabline_opts = {}
 
-M._format_tab = function(text, tab)
+M._format_tab = function(text, tab, color)
     local domain = tab.active_pane.domain_name
     if tab.tab_title == '_' then
         domain = "minimized"
@@ -19,9 +19,14 @@ M._format_tab = function(text, tab)
     end
 
     --- @type string|table
-    local color = M.opts.domain_colors[domain]
+    color = color or M.opts.domain_colors[domain]
     if type(color) == "table" then
         color = color[tab.is_active and "active" or "inactive"]
+    end
+
+    -- Use color definition from colorscheme if defined
+    if M.opts.colorscheme[color] then
+        color = M.opts.colorscheme[color]
     end
 
     return wezterm.format({
@@ -45,12 +50,19 @@ M._tab_title = function(tab)
     end
 
     local glyph = M.opts.index_glyphs[tab.tab_index+1]
+    local color = nil
     if txt == '_' then
         txt = string.format(" %s ", glyph)
     else
+        -- Override color with title|color
+        local idx = txt:find("|")
+        if idx then
+            color = txt:sub(idx+1)
+            txt = txt:sub(0, idx-1)
+        end
         txt = string.format(" %s %-8s ", glyph, txt)
     end
-    return M._format_tab(txt, tab)
+    return M._format_tab(txt, tab, color)
 end
 
 M._register_toggle_event = function()
@@ -74,27 +86,36 @@ end
 
 local default_opts = {
     ---@type table
+    colorscheme = {
+        background = "#2e3440",
+        foreground = "#cdcecf",
+        color0 = " #3b4252",
+        color1 = " #bf616a",
+        color2 = " #a3be8c",
+        color3 = " #ebcb8b",
+        color4 = " #81a1c1",
+        color5 = " #b48ead",
+        color6 = " #88c0d0",
+        color7 = " #e5e9f0",
+        color8 = " #465780",
+        color9 = " #d06f79",
+        color10 = "#b1d196",
+        color11 = "#f0d399",
+        color12 = "#8cafd2",
+        color13 = "#c895bf",
+        color14 = "#93ccdc",
+        color15 = "#e7ecf4",
+
+        -- Alias
+        red = " #d06f79",
+        green = "#b1d196",
+        yellow = "#f0d399",
+        blue = "#8cafd2",
+        purple = "#c895bf",
+        skyblue = "#93ccdc",
+        white = "#e7ecf4",
+    },
     domain_colors = {
-        -- Prefer these colors for styling:
-        --
-        --  *background: #2e3440
-        --  *foreground: #cdcecf
-        --  *color0:  #3b4252
-        --  *color1:  #bf616a
-        --  *color2:  #a3be8c
-        --  *color3:  #ebcb8b
-        --  *color4:  #81a1c1
-        --  *color5:  #b48ead
-        --  *color6:  #88c0d0
-        --  *color7:  #e5e9f0
-        --  *color8:  #465780
-        --  *color9:  #d06f79
-        --  *color10: #b1d196
-        --  *color11: #f0d399
-        --  *color12: #8cafd2
-        --  *color13: #c895bf
-        --  *color14: #93ccdc
-        --  *color15: #e7ecf4
         ["local"] = {
             inactive = "#cdcecf",
             active = "#81a1c1",
