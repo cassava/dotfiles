@@ -4,7 +4,7 @@
 # {{- $email := promptStringOnce . "email" "Email address" "cassava@iexu.de" -}}
 # {{- $githubUser := promptStringOnce . "github_user" "Github user" "cassava" -}}
 # {{- $isHeadless := promptBoolOnce . "is_headless" "Is headless" true -}}
-# {{- $isPrivate := promptBoolOnce . "is_private" "Is private" (stat (joinPath .chezmoi.homeDir ".password-store")).isDir -}}
+# {{- $isPrivate := promptBoolOnce . "is_private" "Is private" (ne (stat (joinPath .chezmoi.homeDir ".password-store")) nil) -}}
 # {{- $doInstall := promptBoolOnce . "do_install" "Install packages" false -}}
 
 ---
