@@ -15,6 +15,9 @@ vim.api.nvim_create_autocmd({ "InsertEnter" }, {
     callback = function() vim.wo.cursorline = true end,
 })
 
+-- Disable blending because it ruins terminal copying
+vim.opt.winblend = 0
+
 return {
   { "nvim-tree/nvim-web-devicons" },
 
@@ -36,18 +39,6 @@ return {
         long_message_to_split = true, -- long messages will be sent to a split
         inc_rename = false, -- enables an input dialog for inc-rename.nvim
         lsp_doc_border = false, -- add a border to hover docs and signature help
-      },
-      views = {
-        cmdline = {
-          win_options = {
-            winblend = 0
-          }
-        },
-        cmdline_popup = {
-          win_options = {
-            winblend = 0
-          }
-        }
       },
     },
     dependencies = {

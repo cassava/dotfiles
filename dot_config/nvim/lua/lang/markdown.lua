@@ -35,11 +35,21 @@ return {
   { "MeanderingProgrammer/render-markdown.nvim",
     opts = {
       render_modes = true,
+      debounce = 100,
+      file_types = { "markdown", "codecompanion" },
       bullet = {
         icons = { "•" },
       },
       dash = {
         width = 80
+      },
+      heading = {
+        width = "block",
+        min_width = 80,
+      },
+      code = {
+        width = "block",
+        min_width = 80,
       },
       checkbox = {
         right_pad = 0,

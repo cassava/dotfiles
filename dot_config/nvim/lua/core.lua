@@ -45,7 +45,7 @@ return {
         -- Deal with big files.
         enabled = true
       },
-      image = { enabled = true },
+      image = { enabled = false },
       input = { enabled = true },
       notifier = { enabled = true },
       picker = { enabled = true },
@@ -69,11 +69,10 @@ return {
       zen = {
         win = {
           wo = {
-            winblend = 0,
             wrap = true
           }
         }
-      }
+      },
     },
     keys = {
       -- Top Pickers & Explorer
