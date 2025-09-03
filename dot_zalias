@@ -39,7 +39,7 @@ function cdz() { cd $(git rev-parse --show-toplevel) }
 
 # Chezmoi aliases
 alias ched="chezmoi edit"
-alias chezvous="chezmoi -S ~/.local/share/chezvous"
+alias chezvous="chezmoi -c ~/.config/chezvous/chezvous.yaml -S ~/.local/share/chezvous"
 
 # Neovim aliases
 function vimz() { vim "$(which "$1")" }
