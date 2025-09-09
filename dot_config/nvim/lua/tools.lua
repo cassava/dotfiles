@@ -77,6 +77,8 @@ return {
       checkbox = {
         order = { " ", "x", ">", "~", "!" }
       },
+      statusline = { enabled = false },
+      footer = { enabled = false },
     },
   },
 
