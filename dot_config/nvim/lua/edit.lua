@@ -8,13 +8,13 @@ return {
     end,
   },
 
-  { "echasnovski/mini.comment",
+  { "nvim-mini/mini.comment",
     about = "Provide gc keybindings for commenting code.",
     event = "VeryLazy",
     opts = {},
   },
 
-  { "echasnovski/mini.surround",
+  { "nvim-mini/mini.surround",
     opts = {},
     keys = {
       { "s", function() require("which-key").show({ keys = "s" }) end },
@@ -28,7 +28,7 @@ return {
     },
   },
 
-  { "echasnovski/mini.move",
+  { "nvim-mini/mini.move",
     event = "VeryLazy",
     opts = {
       mappings = {
@@ -46,7 +46,7 @@ return {
     },
   },
 
-  { "echasnovski/mini.pairs", -- DISABLED
+  { "nvim-mini/mini.pairs", -- DISABLED
     event = "VeryLazy",
     enabled = false,
     opts = {
@@ -91,12 +91,12 @@ return {
     end,
   },
 
-  { "echasnovski/mini.ai",
+  { "nvim-mini/mini.ai",
     event = "VeryLazy",
     opts = {},
   },
 
-  { "echasnovski/mini.align",
+  { "nvim-mini/mini.align",
     keys = {
       { "ga", desc = "Align" },
       { "gA", desc = "Align with Preview" },
@@ -104,12 +104,12 @@ return {
     opts = {},
   },
 
-  { "echasnovski/mini.bracketed",
+  { "nvim-mini/mini.bracketed",
     event = "VeryLazy",
     opts = {},
   },
 
-  { "echasnovski/mini.diff",
+  { "nvim-mini/mini.diff",
     event = "VeryLazy",
     opts = {},
   },

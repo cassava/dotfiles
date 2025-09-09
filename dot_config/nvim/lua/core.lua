@@ -211,7 +211,7 @@ return {
     end
   },
 
-  { "echasnovski/mini.basics",
+  { "nvim-mini/mini.basics",
     about = [[
     ]],
     opts = {
@@ -234,7 +234,7 @@ return {
     end
   },
 
-  { "echasnovski/mini.misc",
+  { "nvim-mini/mini.misc",
     config = function()
       require("mini.misc").setup_restore_cursor()
     end
@@ -242,11 +242,11 @@ return {
 
 --- FILE MANAGEMENT -----------------------------------------------------------
 
-  { "echasnovski/mini.starter",
+  { "nvim-mini/mini.starter",
     opts = {},
   },
 
-  { "echasnovski/mini.sessions",
+  { "nvim-mini/mini.sessions",
     opts = {},
   },
 
@@ -287,7 +287,7 @@ return {
     end
   },
 
-  { "echasnovski/mini.files",
+  { "nvim-mini/mini.files",
     opts = {},
     keys = {
       { "_", function() require("mini.files").open() end, desc = "Open file browser" },
