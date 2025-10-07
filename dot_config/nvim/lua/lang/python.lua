@@ -9,6 +9,16 @@ return {
     "mypy",
     "pylint",
     "black",
+    "pyright",
     "ruff",
+    "isort",
+  },
+
+  { "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        python = { "isort", "black" },
+      }
+    }
   },
 }
