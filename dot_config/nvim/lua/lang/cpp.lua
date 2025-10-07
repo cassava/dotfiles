@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    if client.name ~= "clangd" then return end
+    if not client or client.name ~= "clangd" then return end
 
     vim.api.nvim_create_autocmd("InsertEnter", {
       callback = function()
