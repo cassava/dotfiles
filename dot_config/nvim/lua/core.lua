@@ -156,7 +156,7 @@ return {
       { "<leader>,",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
       { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
       { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
-      { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
+      { "<leader>-R", function() Snacks.rename.rename_file() end, desc = "Rename File" },
       { "<leader>gw", function() Snacks.gitbrowse() end, desc = "Open in Browser", mode = { "n", "v" } },
       -- { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" }, -- FIXME
       { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },

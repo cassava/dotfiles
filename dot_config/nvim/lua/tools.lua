@@ -232,6 +232,14 @@ return {
           adapter = "copilot"
         }
       }
-    }
+    },
+    keys = {
+      { "<leader>c", "<nop>", desc = "+ai" },
+      { "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Toggle Chat" },
+      { "<leader>cn", "<cmd>CodeCompanionChat<cr>", desc = "Open Chat" },
+      { "<leader>ca", "<cmd>CodeCompanionActions<cr>", desc = "Open Actions" },
+      { "<leader>ck", "<cmd>CodeCompanion /explain<cr>", desc = "Explain", mode = {"x", "n"} },
+      { "<leader>ci", "<cmd>CodeCompanion ", desc = "Perform ...", mode = {"x", "n"} },
+    },
   }
 }
