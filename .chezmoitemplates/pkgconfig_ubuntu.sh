@@ -80,6 +80,7 @@ declare -Ax assets=(
     ["watchexec"]='{{ gitHubLatestReleaseAssetURL "watchexec/watchexec" (printf "watchexec-*-%s-unknown-linux-musl.deb" .sys.uname_arch) }}'
     ["wezterm"]='{{ gitHubLatestReleaseAssetURL "wezterm/wezterm" (printf "wezterm-*.%s%s.deb" .chezmoi.osRelease.name .chezmoi.osRelease.versionID) }}'
     ["wezterm_terminfo"]='https://raw.githubusercontent.com/wezterm/wezterm/refs/heads/{{ (gitHubLatestTag "wezterm/wezterm").Name }}/termwiz/data/wezterm.terminfo'
+    ["zellij"]='{{ gitHubLatestReleaseAssetURL "zellij-org/zellij" (printf "zellij-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
 
 # {{ if not .is_headless }}
     ["firacode"]='{{ gitHubLatestReleaseAssetURL "ryanoasis/nerd-fonts" "FiraCode.tar.xz" }}'
@@ -110,3 +111,4 @@ install_firamono() { sudo_untar_fonts "$1"; }
 install_inconsolata() { sudo_untar_fonts "$1"; }
 install_victormono() { sudo_untar_fonts "$1"; }
 install_wezterm_terminfo() { sudo tic -x "$1"; }
+install_zellij() { sudo_untar_bin0 "$1" zellij; }

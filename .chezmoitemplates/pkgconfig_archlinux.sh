@@ -52,6 +52,7 @@ declare -a packages=(
     uv
     watchexec
     yq
+    zellij
     zsh
 
 # {{ if not .is_headless }}
