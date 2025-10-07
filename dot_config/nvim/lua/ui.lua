@@ -54,6 +54,11 @@ return {
     event = "VeryLazy",
     opts = function(_, opts)
       opts = {
+        options = {
+          refresh = {
+            statusline = 250,
+          },
+        },
         sections = {
           lualine_c = {
             { 'filename', path=1 }
