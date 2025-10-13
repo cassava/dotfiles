@@ -13,8 +13,6 @@ zmodule fzf
 # Sets up the direnv integration.
 zmodule direnv
 
-# Shown when the start of a command-line is emtpy and you press Enter.
-zmodule magic-enter
 # Useful alternative to 'ls -l' for directory listings
 zmodule supercrabtree/k
 
