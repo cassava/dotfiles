@@ -10,7 +10,7 @@ return {
       "Obsidian"
     },
     keys = {
-      { "<leader>k", "<nop>", desc = "Obsidian" },
+      { "<leader>k", "<nop>", desc = "obsidian" },
       { "<leader>kd", "<cmd>Obsidian dailies<cr>" },
       { "<leader>kk", "<cmd>Obsidian quick_switch<cr>" },
       { "<leader>kn", "<cmd>Obsidian new<cr>" },
@@ -67,11 +67,14 @@ return {
         substitutions = {
           boot_times = function()
             return vim.fn.system([[
-              journalctl --list-boots 2>&/dev/null | \
-              awk -v yest=$(date -d "yesterday" +"%Y-%m-%d") '$4 ~ yest { print }' | \
+              journalctl -q --list-boots | \
+              awk -v today=$(date -d "today" +"%Y-%m-%d") '$4 ~ today { print }' | \
               sed -r 's/^.* ([0-9]{2}:[0-9]{2}):[0-9]{2} .* ([0-9]{2}:[0-9]{2}):[0-9]{2}.*$/\1-\2/'
             ]])
-          end
+          end,
+          date_human = function()
+            return vim.fn.system([[date +"%A, %-d$(date +%d | awk '{print substr("thstndrdthththththth", int(substr($0,length($0)))*2+1,2)}') of %B, %Y"]])
+          end,
         }
       },
       checkbox = {
