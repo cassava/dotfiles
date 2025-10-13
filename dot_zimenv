@@ -11,10 +11,6 @@ if [[ "$TERM" == "xterm-256color" ]]; then
     PURE_PROMPT_VICMD_SYMBOL=''  # U+F104
 fi
 
-# zmodule mafredri/zsh-autoenv {{{1
-AUTOENV_FILE_ENTER=.autoenv.zsh
-AUTOENV_FILE_LEAVE=.autoenv.zsh
-AUTOENV_HANDLE_LEAVE=1
 
 # zmodule completion {{{1
 zstyle ':completion::complete:*' cache-path ~/.cache/zsh/zcompcache

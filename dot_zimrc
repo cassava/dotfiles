@@ -4,9 +4,10 @@
 #
 
 zmodule jeffreytse/zsh-vi-mode
+# Sets up the direnv integration.
+zmodule direnv
 zmodule mafredri/zsh-async
 zmodule sindresorhus/pure --source async.zsh --source pure.zsh
-zmodule tarrasch/zsh-autoenv
 zmodule djui/alias-tips
 zmodule supercrabtree/k
 zmodule zsh-users/zsh-completions

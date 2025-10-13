@@ -22,6 +22,7 @@ declare -ax packages=(
     calc
     cmake
     curl
+    direnv
     fasd
     g++
     gettext

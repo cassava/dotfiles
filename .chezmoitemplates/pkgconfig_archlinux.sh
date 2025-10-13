@@ -18,6 +18,7 @@ declare -a packages=(
     bottom
     calc
     cmake
+    direnv
     diskus
     duf
     exa
