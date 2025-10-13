@@ -8,12 +8,12 @@
 profile_dir="$HOME/.profile.d"
 
 # Set reasonable defaults
-export DE="xfce"
 export BROWSER="microsoft-edge"
+export DE="xfce"
 export EDITOR="nvim"
-export PAGER="less"
-export TERMINAL="alacritty"
 export LESS="-AFIRs"
+export PAGER="less"
+
 export PATH="$HOME/.local/bin:$HOME/.local/sbin:$PATH"
 
 # Source user profile files

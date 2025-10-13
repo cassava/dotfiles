@@ -1,8 +1,9 @@
-# ~/.zimenv is loaded before zim plugins are initialized.
 # vim: set ft=zsh fdm=marker:
 #
+# ~/.zimenv is loaded before zim plugins are initialized.
+#
 
-# zmodule sindresorhus/pure {{{1
+# zmodule sindresorhus/pure
 zstyle :prompt:pure:git:stash show yes
 PURE_PROMPT_SYMBOL='$'
 PURE_PROMPT_VICMD_SYMBOL='<'
@@ -11,6 +12,8 @@ if [[ "$TERM" == "xterm-256color" ]]; then
     PURE_PROMPT_VICMD_SYMBOL=''  # U+F104
 fi
 
+# zmodule input
+zstyle ':zim:input' double-dot-expand yes
 
-# zmodule completion {{{1
+# zmodule completion
 zstyle ':completion::complete:*' cache-path ~/.cache/zsh/zcompcache

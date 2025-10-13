@@ -5,47 +5,98 @@
 # and can be sourced by .zshrc
 #
 
-# Aliases redefining commands
+#
+# READABILITY
+#
+if [[ -f ~/.dircolors ]]; then
+    eval "$(dircolors -b ~/.dircolors)"
+else
+    eval "$(dircolors -b)"
+fi
+
 alias ls='ls -bhCF --color=auto'
-alias lsd='lsd --icon=never -F'
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias pacman='pacman --color=auto'
-alias du='du -h'
-alias df='df -h'
+alias ll='ls -l'
+alias la='ls -a'
+alias lm="la | ${PAGER}"
+alias lal='ls -al'
+if whence tree >/dev/null; then
+    alias lr='tree'
+fi
+if whence lsd >/dev/null; then
+    alias lsd='lsd --classify --group-directories-first'
+    alias ls='lsd'
+    alias lr='lsd --tree'
+    alias lx='lsd -X'
+fi
+
 alias lsblk='lsblk -o NAME,RM,SIZE,RO,TYPE,MOUNTPOINT,UUID'
 alias rg='rg --max-columns=192 --max-columns-preview'
-alias cat='bat --style=changes,header,numbers,snip'
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
 
-# Other than ls...
-alias ll='ls -lbhCF --color=auto'
-alias la='ls -abhCF --color=auto'
-alias lal='ls -ablhCF --color=auto'
+if whence bat >/dev/null; then
+    alias cat='bat --style=changes,header,numbers,snip'
+fi
 
-# no spelling correction for important commands
+alias df='df -h'
+alias du='du -h'
+
+#
+# SAFETY
+#
 alias cp='nocorrect cp'
 alias mkdir='nocorrect mkdir -p'
 alias mv='nocorrect mv'
 alias rm='nocorrect rm'
 
-# Additional aliases
-alias mux="tmuxinator"
+#
+# SYSTEM
+#
+if whence pacman >/dev/null; then
+    alias pacman='pacman --color=auto'
+fi
 alias sys="sudo systemctl"
 alias sysu="systemctl --user"
 alias sue="sudoedit"
-alias dotnow="dotbot -c install.conf.yaml"
-
-function cdz() { cd $(git rev-parse --show-toplevel) }
 
 # Chezmoi aliases
 alias ched="chezmoi edit"
 alias chezvous="chezmoi -c ~/.config/chezvous/chezvous.yaml -S ~/.local/share/chezvous"
 
-# Neovim aliases
-function vimz() { vim "$(which "$1")" }
+#
+# EDITOR
+#
+alias vim="nvim"
 alias vimi="chezmoi edit ~/.config/nvim"
-alias vimr="nvim +Renamer"
 alias vi="nvim --clean"
+
+#
+# FUNCTIONS
+#
+function cdz() {
+    builtin cd $(git rev-parse --show-toplevel)
+}
+
+function mkcd() {
+    [[ -n ${1} ]] && mkdir -p ${1} && builtin cd ${1}
+}
+
+function pass() {
+    # Protect passwords from plugins and other Neovim persistent features
+    EDITOR="nvim --clean -u NONE -i NONE -n" /usr/bin/pass "$@"
+}
+
+function pwgen() {
+    if whence pwgen-passphrase >/dev/null; then
+        pwgen-passphrase -w aspell-en -s. -n10
+    else
+        LC_CTYPE=C command tr -dc ${2:-'[:alnum:]'} < /dev/urandom | command head -c ${1:-32} && print
+    fi
+}
+
+function vimz() {
+    nvim "$(which "$1")"
+}
 
 function vimo() {
     # Open notes from last recorded day and today side-by-side.
@@ -54,6 +105,3 @@ function vimo() {
     nvim "$yesterday" +"wincmd v" +"Obsidian today"
 }
 
-function pass() {
-    EDITOR="nvim -u NONE -n" /usr/bin/pass "$@"
-}

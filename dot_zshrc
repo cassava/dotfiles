@@ -1,5 +1,17 @@
-# ~/.zshrc is loaded after ~/.zshenv and /etc/zshrc
 # vim: set ft=zsh fdm=marker:
+#
+# ~/.zshrc is loaded after ~/.zshenv and /etc/zshrc
+#
+# This file will, in the following order:
+#
+# - Set Zsh options
+# - Install zim:fw if necessary
+# - Source ~/.zimenv
+# - Source zim:fw init script
+# - Load modules from .zimrc
+# - Source ~/.zalias
+# - Source all .zsh files in ~/.zdir and ~/.zdir/+$(hostname) directories
+# - Source all .sh files in ~/.zdir and ~/.zdir/+$(hostname) directories
 #
 # Add this line to enable profiling:
 #
@@ -9,8 +21,10 @@
 ZSH_USER_ZALIAS=~/.zalias
 ZSH_USER_ZDIR=~/.zdir
 ZSH_HOST_ZDIR=~/.zdir/+$(hostname)
+ZIM_HOME=~/.local/opt/zim
+ZIM_ENV=~/.zimenv
 
-# Functions {{{1
+# FUNCTIONS
 function source_zdir_files() {
     local glob="$1"
 
@@ -29,33 +43,33 @@ function source_zdir_files() {
     fi
 }
 
-# Environment {{{1
+# ENVIRONMENT
 typeset -U PATH path        # Remove duplicates from array.
 typeset -U CDPATH cdpath
 typeset -U FPATH fpath
 typeset -U MANPATH manpath
 
-# Options {{{1
+# OPTIONS
 #
 # For help on these options, see: man zshoptions
 # The options are arranged in the order of the man page.
 #
 
-# :Changing Directories: {{{2
+# :Changing Directories:
 setopt AUTO_PUSHD           # Automatically call pushd when using cd.
 setopt PUSHD_IGNORE_DUPS    # Don't push multiple copies of the same directory.
 export DIRSTACKSIZE=20
 export DIRSTACKFILE=$HOME/.zdirstack
 
-# :Completion: {{{2
+# :Completion:
 setopt COMPLETE_IN_WORD     # Complete inside words instead of jumping to the end.
 
-# :Expansion and Globbing: {{{2
+# :Expansion and Globbing:
 setopt NO_EXTENDED_GLOB     # Do not treat the `#`, `~` and `^` as patterns for globbing.
 setopt NO_GLOB_DOTS         # Require a leading `.` in a filename to match hidden files.
 setopt MARK_DIRS            # Append a trailing `/` to all directories from globs.
 
-# :History: {{{2
+# :History:
 setopt APPEND_HISTORY       # Append history to the history file. [default]
 setopt EXTENDED_HISTORY     # Save `: timestamp:duration;` for each history item.
 setopt HIST_FCNTL_LOCK      # Use more efficient locking available on modern systems.
@@ -63,12 +77,13 @@ setopt HIST_IGNORE_ALL_DUPS # Remove older duplicate entries when appending an e
 setopt HIST_IGNORE_SPACE    # Don't append to history if command starts with a space.
 setopt HIST_NO_STORE        # Don't append `history` command to history.
 setopt HIST_REDUCE_BLANKS   # Remove superfluous blanks from commands added to history.
+setopt HIST_VERIFY          # Don't execute command immediately after expansion.
 setopt SHARE_HISTORY        # Import new commands from the history file.
 export HISTFILE="$HOME/.zhistory"
 export HISTSIZE=10000
 export SAVEHIST=10000
 
-# :Input / Output: {{{2
+# :Input / Output:
 setopt NO_CORRECT           # Don't ever correct what I write. [default]
 setopt NO_FLOW_CONTROL      # Disable ^S/^Q output flow control keybindings.
 setopt INTERACTIVE_COMMENTS # Allow comments even in interactive shells.
@@ -76,29 +91,27 @@ setopt HASH_CMDS            # Remember location of command after first-use. [def
 setopt COMBINING_CHARS      # Combine character sequences correctly
 umask 022                   # Ensure default permissions are 755 and 644 respectively.
 
-# :Job Control: {{{2
+# :Job Control:
 setopt NO_BG_NICE           # Do not run background jobs at lower priority.
 setopt LONG_LIST_JOBS       # Print job notifications in the long format.
 
-# :Prompting: {{{2
+# :Prompting:
 setopt PROMPT_SUBST         # Allow param, command and arithmetic expansion in prompts.
 export REPORTTIME=10        # Seconds after which to print running time of commands.
 watch=(notme root)          # Watch for everyone but me and root.
 
-# :Zle: {{{2
+# :Zle:
 setopt NO_BEEP              # Do not beep on error in ZLE.
 export KEYTIMEOUT=1         # Hundredths of a second to wait for keys.
 
-# :Keybindings: {{{2
+# :Keybindings:
 bindkey -e                  # Use emacs keybindings by default.
 
-# Plugins {{{1
+# PLUGINS
 #
 # Plugins are defined in ~/.zimrc and options in ~/.zimenv
 # See: https://github.com/zimfw/zimfw
 #
-ZIM_HOME=~/.local/opt/zim
-ZIM_ENV=~/.zimenv
 
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -115,31 +128,33 @@ fi
 
 source ${ZIM_ENV}
 source ${ZIM_HOME}/init.zsh
+source ${ZSH_USER_ZALIAS}
 
-# Source External {{{1
+# SOURCE EXTERNAL
 #
-# This needs to happen after zsh-vi-mode plugin is loaded.
-# That's why it's wrapped in here.
+# Anything that changes keybindings needs to be loaded after the zsh-vi-mode
+# plugin is loaded. That's why it's wrapped in here.
 #
 function zvm_after_init() {
+    # Bind [Alt+.] to insert last word from history
     bindkey '^[.' insert-last-word
 
-    # Up and Down navigate the global history
+    # Bind [Up] and [Down] navigate the global history
     bindkey '^[[A' history-substring-search-up
     bindkey '^[[B' history-substring-search-down
 
+    # Bind [^X] to edit the current command-line in the editor
     autoload -z edit-command-line
     zle -N edit-command-line
     bindkey "^X" edit-command-line
 
-    # Unbind ^G so that I can use fzf-git.sh keybindings
+    # Unbind [^G] so that I can use fzf-git.sh keybindings
     bindkey -r "^G"
 
-    [[ -f "$ZSH_USER_ZALIAS" ]] && source "$ZSH_USER_ZALIAS"
-    [[ -f ~/.dircolors ]] && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    # Source the rest of the files
     source_zdir_files "*.zsh"
     source_zdir_files "*.sh"
 }
 
-# Clean Up {{{1
+# CLEAN UP
 unset source_zdir_files

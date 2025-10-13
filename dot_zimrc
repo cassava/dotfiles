@@ -1,17 +1,40 @@
-# ~/.zimrc is only loaded when using zim commands such as
-# zim install, zim update, etc.
 # vim: set ft=zsh:
 #
+# ~/.zimrc is loaded when using zim commands such as
+# zim install, zim update, etc.
+#
 
+# Applies correct bindkeys for input events.
+zmodule input
+# Enables vi keybindings for the command-line.
 zmodule jeffreytse/zsh-vi-mode
+# Sets up the fzf integration with better defaults.
+zmodule fzf
 # Sets up the direnv integration.
 zmodule direnv
-zmodule mafredri/zsh-async
-zmodule sindresorhus/pure --source async.zsh --source pure.zsh
-zmodule djui/alias-tips
+
+# Shown when the start of a command-line is emtpy and you press Enter.
+zmodule magic-enter
+# Useful alternative to 'ls -l' for directory listings
 zmodule supercrabtree/k
-zmodule zsh-users/zsh-completions
-zmodule zsh-users/zsh-autosuggestions
-zmodule completion
-zmodule zsh-users/zsh-syntax-highlighting
+
+# Provides async job control for Zsh plugins
+zmodule mafredri/zsh-async
+# Minimalist, fast Zsh prompt
+zmodule sindresorhus/pure --source async.zsh --source pure.zsh
+# Suggests existing aliases when you type commands
+zmodule djui/alias-tips
+# Automatically adds quotes to arguments with spaces
+zmodule ianthehenry/zsh-autoquoter
+# Search history by substring in Zsh
 zmodule zsh-users/zsh-history-substring-search
+
+# Additional completion definitions for Zsh
+zmodule zsh-users/zsh-completions --fpath src
+# Enables and configures smart and extensive tab completion.
+zmodule completion
+
+# Syntax highlighting for Zsh commands (replaces zsh-syntax-highlighting)
+zmodule zdharma-continuum/fast-syntax-highlighting
+# Suggests commands as you type based on history
+zmodule zsh-users/zsh-autosuggestions
