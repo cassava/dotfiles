@@ -22,8 +22,6 @@ zmodule mafredri/zsh-async
 zmodule sindresorhus/pure --source async.zsh --source pure.zsh
 # Suggests existing aliases when you type commands
 zmodule djui/alias-tips
-# Automatically adds quotes to arguments with spaces
-zmodule ianthehenry/zsh-autoquoter
 # Search history by substring in Zsh
 zmodule zsh-users/zsh-history-substring-search
 
