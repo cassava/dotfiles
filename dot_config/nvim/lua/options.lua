@@ -104,8 +104,9 @@ vim.opt.suffixes = {
 }
 
 -- Disable OSC52 clipboard use until wezterm supports it
-vim.g.termfeatures = vim.g.termfeatures or {}
-vim.g.termfeatures.osc52 = false
+local termfeatures = vim.g.termfeatures or {}
+termfeatures.osc52 = false
+vim.g.termfeatures = termfeatures
 
 -- Neovide configuration
 --
