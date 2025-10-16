@@ -9,6 +9,7 @@
 # - Source ~/.zimenv
 # - Source zim:fw init script
 # - Load modules from .zimrc
+# - Set additional keybinds
 # - Source ~/.zalias
 # - Source all .zsh files in ~/.zdir and ~/.zdir/+$(hostname) directories
 # - Source all .sh files in ~/.zdir and ~/.zdir/+$(hostname) directories
@@ -18,13 +19,11 @@
 #   zmodload zsh/zprof
 #
 
-ZSH_USER_ZALIAS=~/.zalias
+#
+# FUNCTIONS
+#
 ZSH_USER_ZDIR=~/.zdir
 ZSH_HOST_ZDIR=~/.zdir/+$(hostname)
-ZIM_HOME=~/.local/opt/zim
-ZIM_ENV=~/.zimenv
-
-# FUNCTIONS
 function source_zdir_files() {
     local glob="$1"
 
@@ -43,12 +42,15 @@ function source_zdir_files() {
     fi
 }
 
+#
 # ENVIRONMENT
+#
 typeset -U PATH path        # Remove duplicates from array.
 typeset -U CDPATH cdpath
 typeset -U FPATH fpath
 typeset -U MANPATH manpath
 
+#
 # OPTIONS
 #
 # For help on these options, see: man zshoptions
@@ -107,11 +109,14 @@ export KEYTIMEOUT=1         # Hundredths of a second to wait for keys.
 # :Keybindings:
 bindkey -e                  # Use emacs keybindings by default.
 
+#
 # PLUGINS
 #
 # Plugins are defined in ~/.zimrc and options in ~/.zimenv
 # See: https://github.com/zimfw/zimfw
 #
+ZIM_HOME=~/.local/opt/zim
+ZIM_ENV=~/.zimenv
 
 # Download zimfw plugin manager if missing.
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -128,33 +133,34 @@ fi
 
 source ${ZIM_ENV}
 source ${ZIM_HOME}/init.zsh
-source ${ZSH_USER_ZALIAS}
 
+#
+# KEYBINDINGS
+#
+
+# Bind [Alt+.] to insert last word from history
+bindkey '^[.' insert-last-word
+
+# Bind [Up] and [Down] navigate the global history
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# Bind [^X] to edit the current command-line in the editor
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X" edit-command-line
+
+# Unbind [^G] so that I can use fzf-git.sh keybindings
+bindkey -r "^G"
+
+#
 # SOURCE EXTERNAL
 #
-# Anything that changes keybindings needs to be loaded after the zsh-vi-mode
-# plugin is loaded. That's why it's wrapped in here.
+source ~/.zalias
+source_zdir_files "*.zsh"
+source_zdir_files "*.sh"
+
 #
-function zvm_after_init() {
-    # Bind [Alt+.] to insert last word from history
-    bindkey '^[.' insert-last-word
-
-    # Bind [Up] and [Down] navigate the global history
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
-
-    # Bind [^X] to edit the current command-line in the editor
-    autoload -z edit-command-line
-    zle -N edit-command-line
-    bindkey "^X" edit-command-line
-
-    # Unbind [^G] so that I can use fzf-git.sh keybindings
-    bindkey -r "^G"
-
-    # Source the rest of the files
-    source_zdir_files "*.zsh"
-    source_zdir_files "*.sh"
-}
-
 # CLEAN UP
+#
 unset source_zdir_files

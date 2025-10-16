@@ -12,6 +12,9 @@ if [[ "$TERM" == "xterm-256color" ]]; then
     PURE_PROMPT_VICMD_SYMBOL=''  # U+F104
 fi
 
+# zmodule jeffreytse/zsh-vi-mode
+ZVM_INIT_MODE="sourcing"
+
 # zmodule input
 zstyle ':zim:input' double-dot-expand yes
 
