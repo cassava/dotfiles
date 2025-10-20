@@ -1,3 +1,7 @@
+local function trim(str)
+  return str:gsub("^%s*(.-)%s*$", "%1")
+end
+
 return {
   { "obsidian-nvim/obsidian.nvim",
     version = "*",
@@ -66,19 +70,21 @@ return {
         folder = "templates",
         substitutions = {
           boot_times = function()
-            return vim.fn.system([[
+            local result = vim.fn.system([[
               journalctl -q --list-boots | \
               awk -v today=$(date -d "today" +"%Y-%m-%d") '$4 ~ today { print }' | \
               sed -r 's/^.* ([0-9]{2}:[0-9]{2}):[0-9]{2} .* ([0-9]{2}:[0-9]{2}):[0-9]{2}.*$/\1-\2/'
             ]])
+            return trim(result)
           end,
           date_human = function()
-            return vim.fn.system([[date +"%A, %-d$(date +%d | awk '{print substr("thstndrdthththththth", int(substr($0,length($0)))*2+1,2)}') of %B, %Y"]])
+            local result = vim.fn.system([[date +"%A, %-d$(date +%d | awk '{print substr("thstndrdthththththth", int(substr($0,length($0)))*2+1,2)}') of %B, %Y"]])
+            return trim(result)
           end,
         }
       },
       checkbox = {
-        order = { " ", "x", ">", "~", "!" }
+        order = { " ", "x", "~", ">", "!" }
       },
       statusline = { enabled = false },
       footer = { enabled = false },
