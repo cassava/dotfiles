@@ -64,13 +64,6 @@ alias ched="chezmoi edit"
 alias chezvous="chezmoi -c ~/.config/chezvous/chezvous.yaml -S ~/.local/share/chezvous"
 
 #
-# EDITOR
-#
-alias vim="nvim"
-alias vimi="chezmoi edit ~/.config/nvim"
-alias vi="nvim --clean"
-
-#
 # FUNCTIONS
 #
 function cdz() {
@@ -94,6 +87,17 @@ function pwgen() {
     fi
 }
 
+#
+# EDITOR
+#
+alias vim="nvim"
+alias vi="nvim --clean"
+alias vip="nvim --clean -u NONE -i NONE -n"
+
+function vimi() {
+    chezmoi edit ~/.config/nvim
+}
+
 function vimz() {
     nvim "$(which "$1")"
 }
@@ -105,3 +109,35 @@ function vimo() {
     nvim "$yesterday" +"wincmd v" +"Obsidian today"
 }
 
+function vimc() {
+    nvim +'lua require("codecompanion").chat({ window_opts = { layout = "fullscreen" } })'
+}
+
+function vimd() {
+    nvim +'lua
+    Snacks.picker.files({
+        search="'"$@"'",
+        preview=function(ctx)
+            return Snacks.picker.preview.cmd(
+                string.format([[lsd --tree "$(dirname %s)"]], ctx.item._path), ctx
+            )
+        end,
+        layout = { fullscreen = true },
+    })'
+}
+
+function vimf() {
+    nvim +'lua
+    Snacks.picker.files({
+        search="'"$@"'",
+        layout = { fullscreen = true },
+    })'
+}
+
+function vimg() {
+    nvim +'lua
+    Snacks.picker.git_files({
+        search="'"$@"'",
+        layout = { fullscreen = true },
+    })'
+}
