@@ -20,14 +20,24 @@ alias la='ls -a'
 alias lm="la | ${PAGER}"
 alias lal='ls -al'
 if whence tree >/dev/null; then
-    alias lr='tree'
+    alias lr='tree -L2'
+    alias lrd='tree -d'
+    alias lra='tree -a'
+    alias lrn='tree -L'
 fi
 if whence lsd >/dev/null; then
-    alias lsd='lsd --classify --group-directories-first'
+    alias lsd='lsd -hF --group-directories-first'
     alias ls='lsd'
-    alias lr='lsd --tree'
-    alias lx='lsd -X'
+    alias lx='lsd -X'       # sort by extension
+    alias ll='lsd -lg'      # long-form with git status
+
+    # Better tree
+    alias lr='lsd --tree --depth=2'
+    alias lrd='lsd --tree -d'
+    alias lra='lsd --tree -a'
+    alias lrn='lsd --tree --depth'
 fi
+alias k='k -h'
 
 alias lsblk='lsblk -o NAME,RM,SIZE,RO,TYPE,MOUNTPOINT,UUID'
 alias rg='rg --max-columns=192 --max-columns-preview'
