@@ -120,7 +120,11 @@ function vimo() {
 }
 
 function vimc() {
-    nvim +'lua require("codecompanion").chat({ window_opts = { layout = "fullscreen" } })'
+    nvim +'lua require("codecompanion").chat({window_opts={layout="fullscreen"}})'
+}
+
+function vima() {
+    nvim +'lua Snacks.picker.grep({search="'"$@"'",layout={fullscreen=true}})'
 }
 
 function vimd() {
@@ -132,22 +136,14 @@ function vimd() {
                 string.format([[lsd --tree "$(dirname %s)"]], ctx.item._path), ctx
             )
         end,
-        layout = { fullscreen = true },
+        layout={ fullscreen=true },
     })'
 }
 
 function vimf() {
-    nvim +'lua
-    Snacks.picker.files({
-        search="'"$@"'",
-        layout = { fullscreen = true },
-    })'
+    nvim +'lua Snacks.picker.files({search="'"$@"'",layout={fullscreen=true}})'
 }
 
 function vimg() {
-    nvim +'lua
-    Snacks.picker.git_files({
-        search="'"$@"'",
-        layout = { fullscreen = true },
-    })'
+    nvim +'lua Snacks.picker.git_files({search="'"$@"'",layout={fullscreen=true}})'
 }
