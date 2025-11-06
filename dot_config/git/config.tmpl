@@ -81,6 +81,7 @@
 
     # Show a compact log.
     ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%an]" --decorate
+    lsm = ls main..
 
     # Show the commit graph.
     graph = log --decorate=short --simplify-merges --oneline --graph
