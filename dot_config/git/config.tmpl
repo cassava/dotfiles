@@ -44,7 +44,7 @@
     navigate = true
 [diff]
     colorMoved = default
-    tool = nvimdiff
+    external = difft
 [difftool]
     prompt = false
 [difftool "nvimdiff"]
@@ -52,6 +52,9 @@
 [merge]
     conflictstyle = diff3
     tool = nvimdiff
+[merge "mergiraf"]
+    name = mergiraf
+    driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 [mergetool]
     prompt = false
     keepBackup = false
@@ -82,6 +85,11 @@
     # Show the commit graph.
     graph = log --decorate=short --simplify-merges --oneline --graph
     glog = log --color --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    # Use difftastic
+    dl = -c diff.external=difft log -p --ext-diff
+    ds = -c diff.external=difft show --ext-diff
+    dft = -c diff.external=difft diff
 
     # Open status within Vim using the fugitive plugin.
     # - Make the status window the only one.

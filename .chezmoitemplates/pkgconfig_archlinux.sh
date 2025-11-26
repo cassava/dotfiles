@@ -13,7 +13,8 @@
 #     sudo_extract_deb FILE
 #     sudo_untar_fonts FILE
 
-declare -a packages=(
+declare -ax packages=(
+    ast-grep
     base-devel
     bat
     bat-extras
@@ -22,6 +23,7 @@ declare -a packages=(
     calc
     cmake
     direnv
+    difftastic
     diskus
     duf
     exa
@@ -38,6 +40,7 @@ declare -a packages=(
     lsd
     lsof
     mc
+    mergiraf
     mlocate
     neovim
     npm
@@ -68,8 +71,4 @@ declare -a packages=(
 # {{ end }}
 )
 
-declare -A assets=(
-    ["ast-grep"]={{ gitHubLatestReleaseAssetURL "ast-grep/ast-grep" (printf "app-%s-unknown-linux-gnu.zip" .sys.uname_arch) }}
-)
-
-install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
+declare -Ax assets=()

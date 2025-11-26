@@ -65,6 +65,7 @@ declare -Ax assets=(
     ["buildifier"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildifier-linux-%s" .chezmoi.arch) }}'
     ["buildozer"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/buildtools" (printf "buildozer-linux-%s" .chezmoi.arch) }}'
     ["delta"]='{{ gitHubLatestReleaseAssetURL "dandavison/delta" (printf "git-delta-musl_*_%s.deb" .chezmoi.arch) }}'
+    ["difftastic"]='{{ gitHubLatestReleaseAssetURL "wilfred/difftastic" (printf "difft-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["diskus"]='{{ gitHubLatestReleaseAssetURL "sharkdp/diskus" (printf "diskus-musl_*_%s.deb" .chezmoi.arch) }}'
     ["fd"]='{{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd-musl_*_%s.deb" .chezmoi.arch) }}'
     ["fzf"]='{{ gitHubLatestReleaseAssetURL "junegunn/fzf" (printf "fzf-*-linux_%s.tar.gz" .chezmoi.arch) }}'
@@ -72,6 +73,7 @@ declare -Ax assets=(
     ["hexyl"]='{{ gitHubLatestReleaseAssetURL "sharkdp/hexyl" (printf "hexyl-musl_*_%s.deb" .chezmoi.arch) }}'
     ["hyperfine"]='{{ gitHubLatestReleaseAssetURL "sharkdp/hyperfine" (printf "hyperfine-musl_*_%s.deb" .chezmoi.arch) }}'
     ["lsd"]='{{ gitHubLatestReleaseAssetURL "lsd-rs/lsd" (printf "lsd-musl_*_%s.deb" .chezmoi.arch) }}'
+    ["mergiraf"]='{{ printf "https://codeberg.org/mergiraf/mergiraf/releases/download/%s/mergiraf_%s-unknown-linux-musl.tar.gz" "v0.16.1" .sys.uname_arch }}'
     ["numbat"]='{{ gitHubLatestReleaseAssetURL "sharkdp/numbat" (printf "numbat-musl_*_%s.deb" .chezmoi.arch) }}'
     ["nvim"]='{{ gitHubLatestReleaseAssetURL "neovim/neovim" (printf "nvim-linux-%s.tar.gz" .sys.uname_arch) }}'
     ["ripgrep"]='{{ gitHubLatestReleaseAssetURL "burntsushi/ripgrep" (printf "ripgrep_*_%s.deb" .chezmoi.arch) }}'
@@ -96,26 +98,31 @@ declare -Ax assets=(
 
 install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
 install_bazelisk_zsh() { sudo_copy_file "$1" "share/zsh/site-functions/_bazel"; }
-install_nvim() {
-    sudo_untar_tree1 "$1"
-    sudo update-alternatives --install /usr/bin/vim vim /usr/local/bin/nvim 100
-}
+install_buildifier() { sudo_copy_bin "$1" buildifier; }
+install_buildozer() { sudo_copy_bin "$1" buildozer; }
+install_difftastic() { sudo_untar_bin0 "$1" difft; }
 install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
+install_mergiraf() { sudo_untar_bin0 "$1" mergiraf; }
+install_nvim() {
+    sudo_untar_tree1 "$1"
+    if [[ "$dest_dir" = "/usr/local" ]]; then
+        sudo update-alternatives --install /usr/bin/vim vim /usr/local/bin/nvim 100
+    fi
+}
+install_sd() { sudo_untar_bin1 "$1" sd; }
 install_serie() { sudo_untar_bin0 "$1" serie; }
 install_tectonic() { sudo_untar_bin0 "$1" tectonic; }
 install_tree-sitter() { sudo_gunzip_bin "$1" tree-sitter; }
-install_sd() { sudo_untar_bin1 "$1" sd; }
-install_uv() { sudo_untar_bin1 "$1" uv uvx; }
-install_buildifier() { sudo_copy_bin "$1" buildifier; }
-install_buildozer() { sudo_copy_bin "$1" buildozer; }
 install_unused_deps() { sudo_copy_bin "$1" unused_deps; }
+install_uv() { sudo_untar_bin1 "$1" uv uvx; }
+install_wezterm_terminfo() { sudo tic -x "$1"; }
+install_zellij() { sudo_untar_bin0 "$1" zellij; }
+
 install_firacode() { sudo_untar_fonts "$1"; }
 install_firamono() { sudo_untar_fonts "$1"; }
 install_inconsolata() { sudo_untar_fonts "$1"; }
 install_victormono() { sudo_untar_fonts "$1"; }
-install_wezterm_terminfo() { sudo tic -x "$1"; }
-install_zellij() { sudo_untar_bin0 "$1" zellij; }
 
 # {{ if .extract_deb }}
 alias sudo_install_deb=sudo_extract_deb
