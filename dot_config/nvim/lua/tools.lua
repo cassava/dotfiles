@@ -33,6 +33,7 @@ return {
     ---@module 'obsidian'
     --@type obsidian.config.ClientOpts
     opts = {
+      legacy_commands = false,
       workspaces = {
         {
           name = "default",
@@ -40,7 +41,7 @@ return {
         },
       },
       callbacks = {
-        enter_note = function(_, note)
+        enter_note = function(note)
           require("which-key").add({
             { "<c-k>", "<cmd>Obsidian toggle_checkbox<cr>", mode = {"n", "x"} },
             { "<leader>km", "<cmd>Obsidian template<cr>" },
@@ -78,7 +79,18 @@ return {
             return trim(result)
           end,
           date_human = function()
-            local result = vim.fn.system([[date +"%A, %-d$(date +%d | awk '{print substr("thstndrdthththththth", int(substr($0,length($0)))*2+1,2)}') of %B, %Y"]])
+            local result = vim.fn.system([[
+              date +"%A %d %B %Y" | awk '{
+                split($0, a, " ");
+                day=a[2]+0;
+                # Determine suffix
+                if (day % 10 == 1 && day != 11) s="st";
+                else if (day % 10 == 2 && day != 12) s="nd";
+                else if (day % 10 == 3 && day != 13) s="rd";
+                else s="th";
+                printf "%s, %d%s of %s, %s\n", a[1], day, s, a[3], a[4];
+              }'
+            ]])
             return trim(result)
           end,
         }
