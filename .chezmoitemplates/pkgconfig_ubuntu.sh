@@ -9,7 +9,8 @@
 #     sudo_copy_bin FILE [NAME]
 #     sudo_gunzip_bin FILE DEST
 #     sudo_copy_file FILE DEST
-#     sudo_innstall_deb FILE
+#     sudo_install_deb FILE
+#     sudo_extract_deb FILE
 #     sudo_untar_fonts FILE
 #
 # Notes:
@@ -19,6 +20,7 @@ declare -ax packages=(
     age
     autoconf
     automake
+    bsdextrautils
     calc
     cmake
     curl
@@ -52,6 +54,7 @@ declare -ax packages=(
 # {{ end }}
 )
 
+# Use .chezmoi.arch for amd64 and .sys.uname_arch for x86_64
 declare -Ax assets=(
     ["ast-grep"]='{{ gitHubLatestReleaseAssetURL "ast-grep/ast-grep" (printf "app-%s-unknown-linux-gnu.zip" .sys.uname_arch) }}'
     ["bat"]='{{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) }}'
@@ -113,3 +116,7 @@ install_inconsolata() { sudo_untar_fonts "$1"; }
 install_victormono() { sudo_untar_fonts "$1"; }
 install_wezterm_terminfo() { sudo tic -x "$1"; }
 install_zellij() { sudo_untar_bin0 "$1" zellij; }
+
+# {{ if .extract_deb }}
+alias sudo_install_deb=sudo_extract_deb
+# {{ end }}

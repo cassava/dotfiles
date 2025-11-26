@@ -1,65 +1,159 @@
-#!/bin/bash
-set -e
-
+# Option variables:
 verbose=false
-cache_dir="{{ .chezmoi.cacheDir }}/packages"
-state_dir="{{ .chezmoi.homeDir }}/.local/state/chezmoi"
+cache_dir="$HOME/.cache/chezmoi/packages"
+state_dir="$HOME/.local/state/chezmoi"
+dest_dir="/usr/local" # or $HOME/.local
 mark_file="$state_dir/installed_packages.txt"
+manifest_dir="$state_dir/installed_files/"
+
+declare -a packages=()
+declare -A assets=()
+
+# For sudo_extract_deb:
+declare -a extract_deb_exclude=(
+    ^usr/share/applications
+    ^usr/share/doc
+    ^usr/share/fish
+    ^usr/share/icons
+    ^usr/share/metainfo
+    ^usr/share/nautilus-python
+)
+declare -a extract_deb_include=(
+    ^etc
+    ^usr/bin
+    ^usr/share
+)
+declare -a extract_deb_rewrite=(
+    's@usr/@@'
+    's@share/zsh/.*/(_[^/]+)$@share/zsh/site-functions/\1@'
+)
 
 # Helper functions for installing assets:
 sudo_untar_tree1() {
-    sudo tar -C "/usr/local" --strip-components=1 -xf "${1:?FILE unset}" "${@:2}"
+    maybe_sudo tar -C "${dest_dir}" --strip-components=1 -xf "${1:?FILE unset}" "${@:2}"
 }
 
 sudo_untar_bin0() {
-    sudo tar -C "/usr/local/bin" -xf "${1:?FILE unset}" --no-anchored "${@:2}"
+    maybe_sudo tar -C "${dest_dir}/bin" -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_untar_bin1() {
-    sudo tar -C "/usr/local/bin" --strip-components=1 -xf "${1:?FILE unset}" --no-anchored "${@:2}"
+    maybe_sudo tar -C "${dest_dir}/bin" --strip-components=1 -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_unzip_bin() {
-    sudo unzip -q -o -j -d "/usr/local/bin" "${1:?FILE unset}" "${@:2}"
+    maybe_sudo unzip -q -o -j -d "${dest_dir}/bin" "${1:?FILE unset}" "${@:2}"
     for file in "${@:2}"; do
-        sudo chmod +x "/usr/local/bin/$file"
+        maybe_sudo chmod +x "${dest_dir}/bin/$file"
     done
 }
 
 sudo_gunzip_bin() {
     local archive="${1:?FILE unset}"
-    local dest="/usr/local/bin/${2:?DEST unset}"
-    sudo -v
-    gunzip -c "${archive}" | sudo tee "${dest}" >/dev/null
-    sudo chmod +x "${dest}"
+    local dest="${dest_dir}/bin/${2:?DEST unset}"
+    maybe_sudo_validate
+    gunzip -c "${archive}" | maybe_sudo tee "${dest}" >/dev/null
+    maybe_sudo chmod +x "${dest}"
 }
 
+# Usage
 sudo_copy_bin() {
-    sudo install -m755 "${1:?FILE unset}" "/usr/local/bin/${2:-$1}"
+    maybe_sudo install -m755 "${1:?FILE unset}" "${dest_dir}/bin/${2:-$1}"
 }
 
+# Usage: sudo_copy_file FILE [DEST]
 sudo_copy_file() {
-    sudo install -m644 "${1:?FILE unset}" "/usr/local/${2:?DEST unset}"
+    maybe_sudo install -m644 "${1:?FILE unset}" "${dest_dir}/${2:?DEST unset}"
 }
 
+# Usage: sudo_install_deb FILE
 sudo_install_deb() {
     sudo dpkg -i "${1:?FILE unset}" >/dev/null
 }
 
+# Usage: sudo_extract_deb FILE
+sudo_extract_deb() {
+    local package="${1:?FILE unset}"
+    local manifest="${manifest_dir}/$(basename "${package}").txt"
+    local tmpdir
+    tmpdir=$(mktemp -d)
+    dpkg-deb -x "$package" "$tmpdir"
+    (
+        cd "$tmpdir"
+        rm -f "$manifest"
+        mkdir -p "${manifest_dir}"
+        find . -type f,l | while read -r file; do
+            extract_deb_file "$manifest" "$file"
+        done
+    )
+    rm -rf "$tmpdir"
+}
+
+# Usage: sudo_untar_fonts FILE
 sudo_untar_fonts() {
     local file="${1:?FILE unset}"
-    local font_dir=/usr/local/share/fonts
+    local font_dir=${dest_dir}/share/fonts
 
-    sudo mkdir -p "$font_dir"
+    maybe_sudo mkdir -p "$font_dir"
     local extract_pattern="*.ttf"
     if tar -tf "$file" | grep -q '.*\.otf$'; then
         extract_pattern="*.otf"
     fi
-    sudo tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern" || return
+    maybe_sudo tar -C "$font_dir" -xf "$file" --wildcards "$extract_pattern" || return
     fc-cache -f "$font_dir"
 }
 
 # Implementation functions:
+maybe_sudo() {
+    if [[ -w "$dest_dir" ]]; then
+        "$@"
+    else
+        sudo "$@"
+    fi
+}
+
+maybe_sudo_validate() {
+    if ! [[ -w "$dest_dir" ]]; then
+        sudo --validate
+    fi
+}
+
+extract_deb_file() {
+    local manifest="$1"
+    local source="${2/.\//}"
+
+    for regex in "${extract_deb_exclude[@]}"; do
+        if echo "$source" | grep -qE "$regex"; then
+            if $verbose; then echo "skip: $source (excluded)"; fi
+            return
+        fi
+    done
+
+    file_ok=false
+    for regex in "${extract_deb_include[@]}"; do
+        if echo "$source" | grep -qE "$regex"; then
+            file_ok=true
+            break
+        fi
+    done
+    if ! $file_ok; then
+        if $verbose; then echo "skip: $source (not included)"; fi
+        return
+    fi
+
+    local target=$source
+    for regex in "${extract_deb_rewrite[@]}"; do
+        target=$(echo "$target" | sed -r "$regex")
+    done
+    if [[ -z "$target" ]]; then
+        echo "error: path rewrite is broken for $source"
+        return
+    fi
+
+    echo "$dest_dir/$target" >> "$manifest"
+    maybe_sudo install -D -T "$source" "$dest_dir/$target" || true
+}
+
 asset_is_marked() {
     test -f "$mark_file" && grep --line-regexp --fixed-strings --quiet "$1" "$mark_file"
 }
@@ -92,6 +186,7 @@ asset_download() {
     echo "$dest"
 }
 
+# Usage: Define packages array and then call this function.
 install_packages() {
     # Install apt packages all in one go, so figure out here
     # what we need to install and what not.
@@ -118,6 +213,7 @@ install_packages() {
     fi
 }
 
+# Usage: Define assets array and then call this function.
 install_assets() {
     mkdir -p "$cache_dir"
     mkdir -p "$state_dir"

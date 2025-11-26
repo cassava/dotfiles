@@ -1,14 +1,27 @@
-{{- if not .do_install -}}
 #!/bin/bash
+set -e
+
+{{ if not .do_install }}
 echo "note: installing packages is disabled."
 exit 0
-{{- else -}}
+{{ else }}
+# Source and configure package_manager.sh:
 {{ template "package_manager.sh" . }}
+cache_dir="{{ .chezmoi.cacheDir }}/packages"
+state_dir="{{ .chezmoi.homeDir }}/.local/state/chezmoi"
+{{ if hasKey . "install_dir" }}
+dest_dir="{{ .install_dir }}"
+{{ end }}
+{{ if hasKey . "install_db" }}
+mark_file="{{ .install_db }}"
+{{ end }}
+
 {{ if (eq .chezmoi.osRelease.id "arch") }}
 {{ template "pkgconfig_archlinux.sh" . }}
 {{ else if (eq .chezmoi.osRelease.id "ubuntu") }}
 {{ template "pkgconfig_ubuntu.sh" . }}
 {{ end }}
+
 install_packages
 install_assets
 {{- end }}

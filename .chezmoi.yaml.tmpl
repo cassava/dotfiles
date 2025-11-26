@@ -27,5 +27,7 @@ data:
   is_headless: {{ $isHeadless }}
   is_private: {{ $isPrivate }}
   do_install: {{ $doInstall }}
+  extract_deb: false
+  install_dir: /usr/local
   sys:
     uname_arch: {{ output "uname" "-m" | trim }}
