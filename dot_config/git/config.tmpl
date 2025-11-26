@@ -64,10 +64,6 @@
 #   http://haacked.com/archive/2014/07/28/github-flow-aliases/
 #
 [alias]
-    cc = commit
-    cf = commit --fixup
-    ca = commit --amend
-
     # Edit this file
     ec = !nvim ~/.local/share/chezmoi/dot_config/git/config.tmpl
 
@@ -90,11 +86,11 @@
     # Open status within Vim using the fugitive plugin.
     # - Make the status window the only one.
     # - Add a buffer mapping that will stage a hunk and move the screen so the cursor is on top.
-    vstatus = !nvim -c Git -c \"silent only\" -c \"autocmd FileType fugitive nmap <buffer> S szt\"
+    vstatus = !nvim -c Git -c 'silent only' -c 'autocmd FileType fugitive nmap <buffer> S szt'
     vs = !git vstatus
 
     # Open log within Vim using the fugitive plugin.
-    vlog = !nvim +"Git\\ log" +"only"
+    vlog = !nvim -c 'Git log' -c 'only'
     vl = !git vlog
 
     # Search the repository for the text
@@ -111,34 +107,36 @@
 # Checking out
     co = checkout
     cob = checkout -b
-    swc = "!f() { git switch -c $1 main; }; f"
+    swc = switch -c
     prev = checkout HEAD~1
     sync = !git submodule sync --recursive && git submodule update --init --recursive
 
 # Cleaning working directory
-    undo = reset HEAD~1 --mixed
-    save = !git add -A && git commit -m 'SAVEPOINT'
-    wip = !git add -u && git commit -m 'WIP'
-    wipe = !git add -A && git commit -qm 'WIPE SAVEPOINT' && git reset HEAD~1 --hard
-    snap = !git add -A && git commit -qm 'SNAP SAVEPOINT' && git reset HEAD~1
     shred = "!f() { git checkout -- ${1-.} && git clean -f ${1-.}; }; f"
-    sweep = "!f() { git clean -n $*; printf 'Clean? [Y/n] '; read answer; if echo ${answer} | grep -Eq '^[nN][oO]?$'; then return; fi; git clean -f $*; }; f"
+    sweep = "!f() { git clean -n "$*"; printf 'Clean? [Y/n] '; read answer; if echo ${answer} | grep -Eq '^[nN][oO]?$'; then return; fi; git clean -f $*; }; f"
 
 # Branch management
     up = pull -p
     usurp = push --force
-    surrender = !git reset --hard $(git rev-parse --abbrev-ref HEAD@{upstream})
-    pushthis = !git push -u origin $(git rev-parse --abbrev-ref HEAD)
+    surrender = "!git reset --hard $(git rev-parse --abbrev-ref HEAD@{upstream})"
+    pushthis = "!git push -u origin $(git rev-parse --abbrev-ref HEAD)"
 
-    mine = "!f() { git branch -r | grep -v -- '"->"' | xargs -L1 git --no-pager show -s --oneline --author="{{ .email }}"; }; f"
-    bclean = "!f() { git branch --merged ${1-main} | grep -v " ${1-main}$" | xargs -r git branch -d; }; f"
+    mine = "!f() { git branch -r | grep -v -- '->' | xargs -L1 git --no-pager show -s --oneline --author='{{ .email }}'; }; f"
+    bclean = "!f() { git branch --merged ${1-main} | grep -v \" ${1-main}$\" | xargs -r git branch -d; }; f"
     bdone = "!f() { git checkout ${1-main} && git pull -p && git bclean ${1-main}; }; f"
+
+# Commiting
+    cc = commit
+    cf = commit --fixup
+    ca = commit --amend
+    stash-as = "!f() { git add -A && git commit -n -m \"${2-stash}\" && git branch -c \"stash/${1?need stash name}\" && git reset HEAD~1 --hard; }; f"
+    reset-last = reset HEAD~1
 
 # Rebasing
     rb = rebase
     rbc = rebase --continue
     rba = rebase --abort
-    rbs = !git rebase -i --autosquash \"${REVIEW_BASE-main}\"
+    rbs = "!f() { git rebase -i --autosquash \"${1-main}\" \"${@:2}\"; }; f"
 
 # Cherry-picking
     cp = cherry-pick
@@ -148,20 +146,20 @@
 # Code review
     shame = blame -w -M
 
-    # List files which have changed since REVIEW_BASE.
-    files = !git diff --name-only $(git merge-base HEAD \"${REVIEW_BASE-main}\")
+    # List files which have changed since $1.
+    files = "!f() { git diff --name-only $(git merge-base HEAD \"${1-main}\") \"${@:2}\"; }; f"
 
-    # List files which have changed since REVIEW_BASE and show diff stat for each.
-    stat = !git diff --stat $(git merge-base HEAD \"${REVIEW_BASE-main}\")
+    # List files which have changed since $1 and show diff stat for each.
+    stat = "!f() { git diff --stat $(git merge-base HEAD \"${1-main}\") \"${@:2}\"; }; f"
 
-    # Open all files changed since REVIEW_BASE in Vim tabs and run fugitive's
+    # Open all files changed since $1 in Vim tabs and run fugitive's
     # :Gdiff in each tab.
-    review = !nvim -p $(git files) +\"tabdo Gdiff ${REVIEW_BASE-main}\"
+    review = "!f() { nvim -p $(git files) -c \"tabdo Gdiff ${1-main}\"; }; f"
 
     # Same as the above, except specify names of files as arguments,
     # instead of opening all files.
-    reviewone = !nvim -p +\"tabdo Gdiff ${REVIEW_BASE-main}\"
+    reviewone = "!f() { nvim -p -c \"tabdo Gdiff ${1-main}\"; }; f"
 
 # Online
     serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
-    package = !sh -c 'git archive --format=tar --prefix=$1/ $2 | gzip > $1.tar.gz' -
+    package = "!f() { git archive --format=tar --prefix=\"$1/\" \"$2\" | gzip > \"$1.tar.gz\"; }; f"
