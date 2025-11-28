@@ -104,46 +104,15 @@ alias vim="nvim"
 alias vi="nvim --clean"
 alias vip="nvim --clean -u NONE -i NONE -n"
 
-function vimi() {
-    chezmoi edit ~/.config/nvim
-}
+function vimi() { chezmoi edit ~/.config/nvim }
+function vimz() { nvim "$(which "$1")" }
+function vimo() { nvim +'lua require("sessions.daily").launch()' }
+function vimc() { nvim +'lua require("codecompanion").chat({window_opts={layout="fullscreen"}})' }
+function vimd() { nvim_picker dir_containing "$@" }
+function vimf() { nvim_picker files "$@" }
+function vimg() { nvim_picker git_files "$@" }
 
-function vimz() {
-    nvim "$(which "$1")"
-}
-
-function vimo() {
-    # Open notes from last recorded day and today side-by-side.
-    # Can't use +Obsidian yesterday because of mini.starter hijacking.
-    local yesterday="$(find ~/notes/dailies | sort | grep -v $(date +"%Y-%m-%d.md") | tail -1)"
-    nvim "$yesterday" +"wincmd v" +"Obsidian today"
-}
-
-function vimc() {
-    nvim +'lua require("codecompanion").chat({window_opts={layout="fullscreen"}})'
-}
-
-function vima() {
-    nvim +'lua Snacks.picker.grep({search="'"$@"'",layout={fullscreen=true}})'
-}
-
-function vimd() {
-    nvim +'lua
-    Snacks.picker.files({
-        search="'"$@"'",
-        preview=function(ctx)
-            return Snacks.picker.preview.cmd(
-                string.format([[lsd --tree "$(dirname %s)"]], ctx.item._path), ctx
-            )
-        end,
-        layout={ fullscreen=true },
-    })'
-}
-
-function vimf() {
-    nvim +'lua Snacks.picker.files({search="'"$@"'",layout={fullscreen=true}})'
-}
-
-function vimg() {
-    nvim +'lua Snacks.picker.git_files({search="'"$@"'",layout={fullscreen=true}})'
+function nvim_picker() {
+    local picker="$1"; shift;
+    nvim +"lua require('sessions.picker').$picker \"$@\""
 }
