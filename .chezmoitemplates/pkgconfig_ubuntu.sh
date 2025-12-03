@@ -29,7 +29,6 @@ declare -ax packages=(
     g++
     gettext
     git
-    git
     htop
     imagemagick
     inetutils-ping
@@ -37,6 +36,7 @@ declare -ax packages=(
     inetutils-tools
     lsof
     mc
+    moreutils
     ripgrep
     pass
     python3-xdg
@@ -56,6 +56,8 @@ declare -ax packages=(
 
 # Use .chezmoi.arch for amd64 and .sys.uname_arch for x86_64
 declare -Ax assets=(
+    ["asciinema"]='{{ gitHubLatestReleaseAssetURL "asciinema/asciinema" (printf "asciinema-%s-unknown-linux-musl" .sys.uname_arch) }}'
+    ["asciinema-agg"]='{{ gitHubLatestReleaseAssetURL "asciinema/agg" (printf "agg-%s-unknown-linux-musl" .sys.uname_arch) }}'
     ["ast-grep"]='{{ gitHubLatestReleaseAssetURL "ast-grep/ast-grep" (printf "app-%s-unknown-linux-gnu.zip" .sys.uname_arch) }}'
     ["bat"]='{{ gitHubLatestReleaseAssetURL "sharkdp/bat" (printf "bat_*_%s.deb" .chezmoi.arch) }}'
     ["bazelisk"]='{{ gitHubLatestReleaseAssetURL "bazelbuild/bazelisk" (printf "bazelisk-%s.deb" .chezmoi.arch) }}'
@@ -96,6 +98,8 @@ declare -Ax assets=(
 # {{ end }}
 )
 
+install_asciinema() { sudo_copy_bin "$1" asciinema; }
+install_asciinema-agg() { sudo_copy_bin "$1" asciinema-agg; }
 install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
 install_bazelisk_zsh() { sudo_copy_file "$1" "share/zsh/site-functions/_bazel"; }
 install_buildifier() { sudo_copy_bin "$1" buildifier; }

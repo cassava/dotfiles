@@ -14,6 +14,7 @@
 #     sudo_untar_fonts FILE
 
 declare -ax packages=(
+    asciinema
     ast-grep
     base-devel
     bat
@@ -71,4 +72,8 @@ declare -ax packages=(
 # {{ end }}
 )
 
-declare -Ax assets=()
+declare -Ax assets=(
+    ["asciinema-agg"]='{{ gitHubLatestReleaseAssetURL "asciinema/agg" (printf "agg-%s-unknown-linux-musl" .sys.uname_arch) }}'
+)
+
+install_asciinema-agg() { sudo_copy_bin "$1" asciinema-agg; }
