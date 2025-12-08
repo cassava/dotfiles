@@ -30,18 +30,22 @@ declare -a extract_deb_rewrite=(
 
 # Helper functions for installing assets:
 sudo_untar_tree1() {
+    maybe_sudo mkdir -p "${dest_dir}"
     maybe_sudo tar -C "${dest_dir}" --strip-components=1 -xf "${1:?FILE unset}" "${@:2}"
 }
 
 sudo_untar_bin0() {
+    maybe_sudo mkdir -p "${dest_dir}/bin"
     maybe_sudo tar -C "${dest_dir}/bin" -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_untar_bin1() {
+    maybe_sudo mkdir -p "${dest_dir}/bin"
     maybe_sudo tar -C "${dest_dir}/bin" --strip-components=1 -xf "${1:?FILE unset}" --no-anchored "${@:2}"
 }
 
 sudo_unzip_bin() {
+    maybe_sudo mkdir -p "${dest_dir}/bin"
     maybe_sudo unzip -q -o -j -d "${dest_dir}/bin" "${1:?FILE unset}" "${@:2}"
     for file in "${@:2}"; do
         maybe_sudo chmod +x "${dest_dir}/bin/$file"
@@ -51,19 +55,19 @@ sudo_unzip_bin() {
 sudo_gunzip_bin() {
     local archive="${1:?FILE unset}"
     local dest="${dest_dir}/bin/${2:?DEST unset}"
-    maybe_sudo_validate
+    maybe_sudo mkdir -p "${dest_dir}/bin"
     gunzip -c "${archive}" | maybe_sudo tee "${dest}" >/dev/null
     maybe_sudo chmod +x "${dest}"
 }
 
 # Usage
 sudo_copy_bin() {
-    maybe_sudo install -m755 "${1:?FILE unset}" "${dest_dir}/bin/${2:-$1}"
+    maybe_sudo install -Dm755 "${1:?FILE unset}" "${dest_dir}/bin/${2:-$1}"
 }
 
 # Usage: sudo_copy_file FILE [DEST]
 sudo_copy_file() {
-    maybe_sudo install -m644 "${1:?FILE unset}" "${dest_dir}/${2:?DEST unset}"
+    maybe_sudo install -Dm644 "${1:?FILE unset}" "${dest_dir}/${2:?DEST unset}"
 }
 
 # Usage: sudo_install_deb FILE
