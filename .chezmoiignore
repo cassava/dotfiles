@@ -1,6 +1,6 @@
 README.md
 
-# Nvim
+# Neovim
 .config/nvim/lazy-lock.json
 
 {{ if .is_headless -}}
