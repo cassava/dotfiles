@@ -1,13 +1,6 @@
 # vim: set ft=yaml:
 # yamllint disable rule:line-length rule:braces
 #
-# {{- $name := promptStringOnce . "name" "Name" "Benjamin Morgan" -}}
-# {{- $email := promptStringOnce . "email" "Email address" "cassava@iexu.de" -}}
-# {{- $githubUser := promptStringOnce . "github_user" "Github user" "cassava" -}}
-# {{- $isContainer := ne (stat "/.dockerenv") nil -}}
-# {{- $isHeadless := or $isContainer (promptBoolOnce . "is_headless" "Is headless" true) -}}
-# {{- $isPrivate := promptBoolOnce . "is_private" "Is private" (ne (stat (joinPath .chezmoi.homeDir ".password-store")) nil) -}}
-# {{- $doInstall := promptBoolOnce . "do_install" "Install packages" false }}
 
 ---
 encryption: gpg
@@ -16,21 +9,23 @@ gpg:
   recipients:
     - "0x2E8E4DC46CDB24CD"
     - "0x0A28F14C19363770"
+
 github:
   refreshPeriod: "168h"
-{{ if $isPrivate -}}
+{{ if (any (stat (joinPath .chezmoi.homeDir ".password-store"))) -}}
 env:
   GITHUB_TOKEN: {{ pass "tokens/github.com" }}
 {{ end -}}
+
 data:
-  name: {{ $name | quote }}
-  email: {{ $email | quote }}
-  github_user: {{ $githubUser | quote }}
-  is_headless: {{ $isHeadless }}
-  is_container: {{ $isContainer }}
-  is_private: {{ $isPrivate }}
-  do_install: {{ $doInstall }}
-  extract_deb: false
-  install_dir: /usr/local
+  name: {{ promptStringOnce . "name" "Name" (env "CHEZMOI_USER_NAME" | default "Benjamin Morgan") | quote }}
+  email: {{ promptStringOnce . "email" "Email address" (env "CHEZMOI_USER_EMAIL" | default "cassava@iexu.de") | quote }}
+  github_user: {{ promptStringOnce . "github_user" "Github user" (env "CHEZMOI_USER_GITHUB" | default "cassava") | quote }}
+  is_headless: {{ ne (output "systemctl" "get-default" | trim) "graphical.target" }}
+  is_container: {{ any (stat "/.dockerenv") }}
+  is_private: {{ (any (stat (joinPath .chezmoi.homeDir ".password-store"))) }}
+  run_install: {{ promptBoolOnce . "run_install" "Install packages" (eq (env "CHEZMOI_RUN_INSTALL") "1" "true") }}
+  extract_deb: {{ promptBoolOnce . "extract_deb" "Extract deb files" (eq (env "CHEZMOI_EXTRACT_DEB") "1" "true") }}
+  install_dir: {{ promptStringOnce . "install_dir" "Install directory" (env "CHEZMOI_INSTALL_DIR" | default "/usr/local") }}
   sys:
-    uname_arch: {{ output "uname" "-m" | trim }}
+    uname_arch: {{ output "uname" "-m" | trim | quote }}

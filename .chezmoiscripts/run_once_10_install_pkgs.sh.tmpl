@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-{{ if not .do_install }}
+{{ if not .run_install }}
 echo "note: installing packages is disabled."
 exit 0
 {{ else }}
