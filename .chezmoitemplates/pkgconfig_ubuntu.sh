@@ -69,6 +69,7 @@ declare -Ax assets=(
     ["delta"]='{{ gitHubLatestReleaseAssetURL "dandavison/delta" (printf "git-delta-musl_*_%s.deb" .chezmoi.arch) }}'
     ["difftastic"]='{{ gitHubLatestReleaseAssetURL "wilfred/difftastic" (printf "difft-%s-unknown-linux-musl.tar.gz" .sys.uname_arch) }}'
     ["diskus"]='{{ gitHubLatestReleaseAssetURL "sharkdp/diskus" (printf "diskus-musl_*_%s.deb" .chezmoi.arch) }}'
+    ["devpod"]='{{ gitHubLatestReleaseAssetURL "loft-sh/devpod" (printf "devpod-linux-*" .chezmoi.arch) }}'
     ["fd"]='{{ gitHubLatestReleaseAssetURL "sharkdp/fd" (printf "fd-musl_*_%s.deb" .chezmoi.arch) }}'
     ["fzf"]='{{ gitHubLatestReleaseAssetURL "junegunn/fzf" (printf "fzf-*-linux_%s.tar.gz" .chezmoi.arch) }}'
     ["gojq"]='{{ gitHubLatestReleaseAssetURL "itchyny/gojq" (printf "gojq_*_linux_%s.tar.gz" .chezmoi.arch) }}'
@@ -104,6 +105,7 @@ install_ast-grep() { sudo_unzip_bin "$1" ast-grep sg; }
 install_bazelisk_zsh() { sudo_copy_file "$1" "share/zsh/site-functions/_bazel"; }
 install_buildifier() { sudo_copy_bin "$1" buildifier; }
 install_buildozer() { sudo_copy_bin "$1" buildozer; }
+install_devpod() { sudo_copy_bin "$1" devpod; }
 install_difftastic() { sudo_untar_bin0 "$1" difft; }
 install_fzf() { sudo_untar_bin0 "$1" fzf; }
 install_gojq() { sudo_untar_bin1 "$1" gojq; }
